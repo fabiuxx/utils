@@ -5,9 +5,9 @@
  */
 package fa.gs.utils.misc;
 
-import fa.gs.utils.criteria.Condition;
-import fa.gs.utils.criteria.Pagination;
-import fa.gs.utils.criteria.Sorting;
+import fa.gs.utils.database.criteria.Condition;
+import fa.gs.utils.database.criteria.Pagination;
+import fa.gs.utils.database.criteria.Sorting;
 import java.io.Serializable;
 import java.util.Collection;
 

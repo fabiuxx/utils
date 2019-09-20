@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.misc;
+package fa.gs.utils.database.facades;
 
-import fa.gs.utils.mixins.Self;
+import fa.gs.utils.adapters.impl.Adapter0;
+import java.io.Serializable;
+import java.util.Map;
 
 /**
  *
  * @author Fabio A. González Sosa
  * @param <T>
  */
-public interface Builder<T extends Builder<T, Q>, Q> extends Self<T> {
-
-    Q build();
+public abstract class Mapper<T> extends Adapter0<Map<String, Object>, T> implements Serializable {
 
 }

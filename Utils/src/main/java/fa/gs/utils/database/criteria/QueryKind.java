@@ -3,17 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.misc;
+package fa.gs.utils.database.criteria;
 
-import fa.gs.utils.mixins.Self;
+import java.io.Serializable;
 
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
  */
-public interface Builder<T extends Builder<T, Q>, Q> extends Self<T> {
-
-    Q build();
-
+public enum QueryKind implements Serializable {
+    COUNT,
+    SELECT,
+    DELETE,
+    INSERT,
+    UPDATE
 }

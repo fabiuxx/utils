@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.misc;
 
-import fa.gs.utils.criteria.column.Column;
+import fa.gs.utils.database.criteria.column.Column;
 import java.lang.reflect.Field;
 
 /**

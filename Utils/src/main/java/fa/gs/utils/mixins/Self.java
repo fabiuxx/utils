@@ -3,17 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.misc;
-
-import fa.gs.utils.mixins.Self;
+package fa.gs.utils.mixins;
 
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
  */
-public interface Builder<T extends Builder<T, Q>, Q> extends Self<T> {
+public interface Self<T> {
 
-    Q build();
+    default T self() {
+        return (T) this;
+    }
 
 }

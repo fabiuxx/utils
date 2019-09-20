@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.collections;
 
-import fa.gs.utils.criteria.column.Column;
+import fa.gs.utils.database.criteria.column.Column;
 import fa.gs.utils.misc.Reflect;
 import java.math.BigDecimal;
 import java.math.BigInteger;
