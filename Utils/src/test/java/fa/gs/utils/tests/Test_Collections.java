@@ -16,7 +16,7 @@ import org.junit.Test;
  *
  * @author Fabio A. González Sosa
  */
-public class Collections__Tests {
+public class Test_Collections {
 
     private static Collection<Point> points;
 

@@ -16,7 +16,7 @@ import org.junit.Test;
  *
  * @author Fabio A. González Sosa
  */
-public class Crypto__Tests {
+public class Test_Crypto {
 
     private static byte[] TEST_KEY;
 
