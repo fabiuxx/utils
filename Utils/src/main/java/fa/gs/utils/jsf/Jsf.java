@@ -132,31 +132,6 @@ public class Jsf {
     }
 
     /**
-     * Construye un identificador JSF completo en base a identificadores de
-     * componentes parciales.
-     *
-     * @param parts Identificadores parciales.
-     * @return Identificador completo.
-     */
-    public static String buildId(String... parts) {
-        return buildId('-', parts);
-    }
-
-    /**
-     * Construye un identificador JSF completo en base a identificadores de
-     * componentes parciales.
-     *
-     * @param separator Separador de identificadores a utilizar.
-     * @param parts Identificadores parciales.
-     * @return Identificador completo.
-     */
-    public static String buildId(char separator, String... parts) {
-        return Joiner.of(parts)
-                .separator(String.valueOf(separator))
-                .join();
-    }
-
-    /**
      * Permite enviar un archivo como respuesta a una peticion JSF no ajax.
      *
      * @param file Archivo a procesar.
