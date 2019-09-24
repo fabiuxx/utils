@@ -11,7 +11,7 @@ import fa.gs.utils.misc.text.StringBuilder2;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
+ * @param <T> Parametro de tipo.
  */
 public class JpaColumn<T> extends AbstractColumn<T> {
 

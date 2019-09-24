@@ -235,9 +235,9 @@ public class Assertions {
     /**
      * Verifica si una coleccion de elementos es nula o esta vacia.
      *
+     * @param <T> Parametro de tipo.
      * @param collection Collection de datos.
-     * @return {@code true} si la coleccion es nula o vacia, {@code false} caso
-     * contrario.
+     * @return si la coleccion es nula o vacia, {@code false} caso contrario.
      */
     public static <T> boolean isNullOrEmpty(T[] collection) {
         return (collection == null || collection.length == 0);

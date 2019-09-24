@@ -8,8 +8,8 @@ package fa.gs.utils.misc;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <A>
- * @param <B>
+ * @param <A> Parametro de tipo 1.
+ * @param <B> Parametro de tipo 2.
  */
 public interface Comparer<A, B> {
 

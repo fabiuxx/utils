@@ -56,10 +56,11 @@ public class CacheableResourceDecorator extends Resource {
     /**
      * Inicializador estatico.
      *
-     * @param wrapped Recurso a extender como cacheable.
+     * @param resource Recurso a extender como cacheable.
      * @param expiration Tiempo de expiracion para el recurso cacheable.
      * @param unit Unidad de tiempo en el que se expresa el tiempo de
      * expiracion.
+     * @return Nueva instancia.
      */
     public static Resource instance(Resource resource, long expiration, TimeUnit unit) {
         return new CacheableResourceDecorator(resource, expiration, unit);

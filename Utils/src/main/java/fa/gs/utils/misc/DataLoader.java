@@ -14,7 +14,7 @@ import java.util.Collection;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
+ * @param <T> Parametro de tipo.
  */
 public interface DataLoader<T> extends Serializable {
 

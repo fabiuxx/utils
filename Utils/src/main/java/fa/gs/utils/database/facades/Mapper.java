@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
+ * @param <T> Parametro de tipo.
  */
 public abstract class Mapper<T> extends Adapter0<Map<String, Object>, T> implements Serializable {
 

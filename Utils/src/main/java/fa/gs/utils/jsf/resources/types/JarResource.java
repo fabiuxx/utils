@@ -26,6 +26,7 @@ public class JarResource extends BaseResource {
      *
      * @param libraryName Nombre de la libreria que contiene el recurso.
      * @param resourceName Identificador del recurso, normalmente un nombre.
+     * @param basePath Path base para recurso.
      */
     public JarResource(String libraryName, String resourceName, String basePath) {
         super(libraryName, resourceName);

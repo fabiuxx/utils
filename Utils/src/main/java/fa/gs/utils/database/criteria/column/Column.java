@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
+ * @param <T> Parametro de tipo.
  */
 public interface Column<T> extends Serializable {
 

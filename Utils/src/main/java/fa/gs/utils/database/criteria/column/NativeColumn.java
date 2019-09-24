@@ -8,7 +8,7 @@ package fa.gs.utils.database.criteria.column;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
+ * @param <T> Parametro de tipo.
  */
 public class NativeColumn<T> extends AbstractColumn<T> {
 

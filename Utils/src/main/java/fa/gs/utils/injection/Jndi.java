@@ -97,6 +97,7 @@ public class Jndi {
     /**
      * Realiza una búsqueda manual para la inyección de managed beans.
      *
+     * @param <T> Parametro de tipo.
      * @param managedBeanClass Clase del bean a inyectar.
      * @return Manged Bean asociado a la clase indicada. Caso contrario,
      * {@code null}.

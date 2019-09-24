@@ -47,6 +47,7 @@ public interface Facade<T> extends Serializable {
      * Crea un nuevo registro para la entidad.
      *
      * @param entity Objeto a ser persistido.
+     * @return Entidad persistida.
      */
     public T create(T entity);
 
@@ -54,6 +55,7 @@ public interface Facade<T> extends Serializable {
      * Guarda los cambios efectuados sobre una entidad.
      *
      * @param entity Objeto cuyas modificaciones seran persistidas.
+     * @return Entidad modificada.
      */
     public T edit(T entity);
 
@@ -68,6 +70,7 @@ public interface Facade<T> extends Serializable {
      * Refresca el estado interno de la entidad.
      *
      * @param entity Objeto a ser refrescado.
+     * @return Entidad actualizada.
      */
     public T refresh(T entity);
 
@@ -75,6 +78,7 @@ public interface Facade<T> extends Serializable {
      * Agrega una entidad no administrada al contexto de persistencia.
      *
      * @param entity Objeto a ser agregado.
+     * @return Entidad incluida en contexto de persistencia.
      */
     public T merge(T entity);
 

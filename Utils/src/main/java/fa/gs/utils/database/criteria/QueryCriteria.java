@@ -7,6 +7,7 @@ package fa.gs.utils.database.criteria;
 
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.database.criteria.column.Column;
+import fa.gs.utils.database.sql.build.Conditions;
 import fa.gs.utils.mixins.Self;
 import java.io.Serializable;
 import java.util.Collection;
@@ -147,11 +148,11 @@ public class QueryCriteria<T extends QueryCriteria<T>> implements Serializable, 
     }
 
     /**
-     * @deprecated usar {@link Criterias criterias}.
-     * @param column
-     * @param operator
-     * @param value
-     * @return
+     * @deprecated usar {@link Conditions conditions}.
+     * @param column Descriptor de columna.
+     * @param operator Operador.
+     * @param value Valor de filtro.
+     * @return Esta misma instancia.
      */
     @Deprecated
     public T where(Column<?> column, Operator operator, Object value) {
@@ -164,11 +165,11 @@ public class QueryCriteria<T extends QueryCriteria<T>> implements Serializable, 
     }
 
     /**
-     * @deprecated usar {@link Criterias criterias}.
-     * @param column
-     * @param operator
-     * @param value
-     * @return
+     * @deprecated usar {@link Conditions conditions}.
+     * @param column Descriptor de columna.
+     * @param operator Operador.
+     * @param value Valores de filtro.
+     * @return Esta misma instancia.
      */
     @Deprecated
     public T where(Column<?> column, Operator operator, Object[] value) {
@@ -194,10 +195,10 @@ public class QueryCriteria<T extends QueryCriteria<T>> implements Serializable, 
     }
 
     /**
-     * @deprecated usar {@link Criterias criterias}.
-     * @param column
-     * @param order
-     * @return
+     * @deprecated usar {@link Conditions conditions}.
+     * @param column Descriptor de columna.
+     * @param order Tipo de ordenamiento.
+     * @return Esta misma instancia.
      */
     @Deprecated
     public T order(Column<?> column, OrderKind order) {
@@ -247,6 +248,12 @@ public class QueryCriteria<T extends QueryCriteria<T>> implements Serializable, 
         return self();
     }
 
+    /**
+     * Establece criterios de agrupacion de registros.
+     *
+     * @param grouping Criterio de agrupacion.
+     * @return Esta misma instancia.
+     */
     public QueryCriteria group(Grouping grouping) {
         this.groupings.add(grouping);
         return self();

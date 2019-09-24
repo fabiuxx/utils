@@ -10,8 +10,8 @@ import java.io.Serializable;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <S>
- * @param <F>
+ * @param <S> Parametro de tipo para valores de exito.
+ * @param <F> Parametro de tipo para valores de fallo.
  */
 public interface Result<S, F> extends Serializable {
 

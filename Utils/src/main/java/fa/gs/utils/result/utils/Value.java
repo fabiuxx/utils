@@ -28,7 +28,7 @@ public final class Value<T> extends Value_Attributes<T> implements Serializable 
     /**
      * Obtiene un nuevo constructor para instancias de esta clase.
      *
-     * @param <T>
+     * @param <T> Parametro de tipo.
      * @return Constructor para instancias de esta clase.
      */
     public static <T> Value.Builder<T> builder() {
@@ -84,7 +84,7 @@ public final class Value<T> extends Value_Attributes<T> implements Serializable 
          * Construye una instancia de
          * {@link fa.gs.utils.result.utils.Value ResultValue}.
          *
-         * @param <T>
+         * @param <T> Parametro de tipo.
          * @return Instancia de
          * {@link fa.gs.utils.result.utils.Value ResultValue}.
          */

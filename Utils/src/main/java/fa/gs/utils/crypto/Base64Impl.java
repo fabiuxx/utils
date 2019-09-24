@@ -668,14 +668,12 @@ class Base64Impl {
                 assert p == len;
             } else // Save the leftovers in tail to be consumed on the next
             // call to encodeInternal.
-            {
-                if (p == len - 1) {
+             if (p == len - 1) {
                     tail[tailLen++] = input[p];
                 } else if (p == len - 2) {
                     tail[tailLen++] = input[p];
                     tail[tailLen++] = input[p + 1];
                 }
-            }
             this.op = op;
             this.count = count;
             return true;
