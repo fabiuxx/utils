@@ -7,10 +7,10 @@ package fa.gs.utils.jsf.resources.injection;
 
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.collections.Maps;
+import fa.gs.utils.collections.Sets;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.text.Text;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -77,23 +77,23 @@ public abstract class ResourceInjector implements SystemEventListener {
         }
     }
 
-    public static void requireStylesheet(String path, String libraryName, ResourcePosition position) {
+    public static void requireStylesheet(String path, String libraryName, Integer priority) {
         Map<String, Object> viewMap = FacesContext.getCurrentInstance().getViewRoot().getViewMap();
         if (!viewMap.containsKey(CSS_RESOURCES_KEY)) {
-            viewMap.put(CSS_RESOURCES_KEY, new HashSet<>());
+            viewMap.put(CSS_RESOURCES_KEY, Sets.empty());
         }
 
-        ResourceRequirement requirement = new ResourceRequirement(path, libraryName, position);
+        ResourceRequirement requirement = new ResourceRequirement(path, libraryName, priority);
         ((Set<ResourceRequirement>) viewMap.get(CSS_RESOURCES_KEY)).add(requirement);
     }
 
-    public static void requireScript(String path, String libraryName, ResourcePosition position) {
+    public static void requireScript(String path, String libraryName, Integer priority) {
         Map<String, Object> viewMap = FacesContext.getCurrentInstance().getViewRoot().getViewMap();
         if (!viewMap.containsKey(SCRIPT_RESOURCES_KEY)) {
-            viewMap.put(SCRIPT_RESOURCES_KEY, new HashSet<>());
+            viewMap.put(SCRIPT_RESOURCES_KEY, Sets.empty());
         }
 
-        ResourceRequirement requirement = new ResourceRequirement(path, libraryName, position);
+        ResourceRequirement requirement = new ResourceRequirement(path, libraryName, priority);
         ((Set<ResourceRequirement>) viewMap.get(SCRIPT_RESOURCES_KEY)).add(requirement);
     }
 
@@ -108,7 +108,7 @@ public abstract class ResourceInjector implements SystemEventListener {
         output.getAttributes().put("name", Text.normalizeSlashes(resourceRequirement.getPath()));
         output.getAttributes().put("library", resourceRequirement.getLibrary());
         output.getAttributes().put("target", "head");
-        output.getAttributes().put("position", resourceRequirement.getPosition().position());
+        output.getAttributes().put("data-priority", resourceRequirement.getPriority());
 
         if (!resourceAlreadyInHead(context, root, output)) {
             root.addComponentResource(context, output, "head");
@@ -132,44 +132,27 @@ public abstract class ResourceInjector implements SystemEventListener {
     }
 
     private void enforceCorrectLoadOrder(FacesContext context, UIViewRoot root) {
-        Collection<UIComponent> any = Lists.empty();
-        Collection<UIComponent> core = Lists.empty();
-        Collection<UIComponent> first = Lists.empty();
-        Collection<UIComponent> middle = Lists.empty();
-        Collection<UIComponent> last = Lists.empty();
+        Map<Integer, Collection<UIComponent>> resources = Maps.empty();
         Collection<UIComponent> resourcesToRemove = Lists.empty();
 
         for (UIComponent resource : getResourcesInHead(context, root)) {
             if (isLibraryComponent(resource)) {
-                ResourcePosition position = ResourcePosition.from((String) resource.getAttributes().get("position"));
-                switch (position) {
-                    case CORE:
-                        core.add(resource);
-                        break;
-                    case FIRST:
-                        first.add(resource);
-                        break;
-                    case MIDDLE:
-                        middle.add(resource);
-                        break;
-                    case LAST:
-                        last.add(resource);
-                        break;
-                    case ANY:
-                    default:
-                        any.add(resource);
+                if (!resource.getAttributes().containsKey("data-priority")) {
+                    resource.getAttributes().put("data-priority", ResourceRequirement.MAX_PRIORITY - 1);
                 }
-
+                Integer priority = (Integer) resource.getAttributes().get("data-priority");
+                Collection<UIComponent> resources0 = resources.getOrDefault(priority, Lists.empty());
+                resources0.add(resource);
+                resources.put(priority, resources0);
                 resourcesToRemove.add(resource);
             }
         }
 
         removeResourcesFromHead(context, root, resourcesToRemove);
-        addResourcesToHead(context, root, core);
-        addResourcesToHead(context, root, first);
-        addResourcesToHead(context, root, middle);
-        addResourcesToHead(context, root, any);
-        addResourcesToHead(context, root, last);
+        for (Integer priority : resources.keySet()) {
+            Collection<UIComponent> resources0 = resources.get(priority);
+            addResourcesToHead(context, root, resources0);
+        }
     }
 
     private Collection<UIComponent> getResourcesInHead(FacesContext context, UIViewRoot root) {

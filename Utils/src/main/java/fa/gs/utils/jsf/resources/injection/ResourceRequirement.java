@@ -14,18 +14,22 @@ import java.util.Objects;
  */
 public class ResourceRequirement {
 
+    public static final Integer MIN_PRIORITY = 100;
+
+    public static final Integer MAX_PRIORITY = 0;
+
     private final String path;
     private final String library;
-    private final ResourcePosition position;
+    private final Integer priority;
 
     public ResourceRequirement(String path, String library) {
-        this(path, library, ResourcePosition.ANY);
+        this(path, library, Integer.MAX_VALUE);
     }
 
-    public ResourceRequirement(String path, String library, ResourcePosition position) {
+    public ResourceRequirement(String path, String library, Integer priority) {
         this.path = Text.normalizeSlashes(path);
         this.library = library;
-        this.position = position;
+        this.priority = Math.max(priority, MAX_PRIORITY);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getters y Setters">
@@ -37,8 +41,8 @@ public class ResourceRequirement {
         return library;
     }
 
-    public ResourcePosition getPosition() {
-        return position;
+    public Integer getPriority() {
+        return priority;
     }
     //</editor-fold>
 
@@ -47,7 +51,7 @@ public class ResourceRequirement {
         int hash = 7;
         hash = 29 * hash + Objects.hashCode(this.path);
         hash = 29 * hash + Objects.hashCode(this.library);
-        hash = 29 * hash + Objects.hashCode(this.position);
+        hash = 29 * hash + Objects.hashCode(this.priority);
         return hash;
     }
 
@@ -69,7 +73,7 @@ public class ResourceRequirement {
         if (!Objects.equals(this.library, other.library)) {
             return false;
         }
-        if (this.position != other.position) {
+        if (!Objects.equals(this.priority, other.priority)) {
             return false;
         }
         return true;
