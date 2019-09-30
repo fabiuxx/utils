@@ -5,6 +5,8 @@
  */
 package fa.gs.utils.misc.text;
 
+import fa.gs.utils.misc.Assertions;
+
 /**
  *
  * @author Acer
@@ -14,6 +16,22 @@ public class Strings {
     public static final char[] HEX_DIGITS = {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
     };
+
+    /**
+     * Formatea una cadena y sus argumentos, si hubieren.
+     *
+     * @param fmt Formato de cadena.
+     * @param args Argumentos de formateo de cadena, que se consideran solo si
+     * existe al menos uno.
+     * @return Cadena formateada.
+     */
+    public static String format(String fmt, Object... args) {
+        String msg = fmt;
+        if (!Assertions.isNullOrEmpty(args)) {
+            msg = String.format(fmt, args);
+        }
+        return msg;
+    }
 
     /**
      * Obtiene los bytes que conforman un texto.

@@ -13,6 +13,8 @@ import fa.gs.utils.result.simple.Results;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T>
+ * @param <Q>
  */
 public abstract class AbstractAuthenticator<T extends AuthenticationInfo, Q> {
 

@@ -6,6 +6,7 @@
 package fa.gs.utils.database.criteria;
 
 import fa.gs.utils.collections.Lists;
+import fa.gs.utils.collections.Maps;
 import fa.gs.utils.database.criteria.column.Column;
 import fa.gs.utils.database.sql.build.Conditions;
 import fa.gs.utils.mixins.Self;
@@ -16,6 +17,7 @@ import java.util.Map;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T> Parametro de tipo.
  */
 public class QueryCriteria<T extends QueryCriteria<T>> implements Serializable, Self<T> {
 
@@ -47,14 +49,14 @@ public class QueryCriteria<T extends QueryCriteria<T>> implements Serializable, 
     protected final Collection<Join> joins;
 
     /**
-     * Coleccion de criterios de ordenacion.
-     */
-    protected Collection<Sorting> sorts;
-
-    /**
      * Coleccion de criterios de filtrado.
      */
     protected Collection<Condition> filters;
+
+    /**
+     * Coleccion de criterios de ordenacion.
+     */
+    protected Collection<Sorting> sorts;
 
     /**
      * Coleccion de criterios de agrupacion.
@@ -88,7 +90,12 @@ public class QueryCriteria<T extends QueryCriteria<T>> implements Serializable, 
         this.from = null;
         this.projections = Lists.empty();
         this.joins = Lists.empty();
+        this.filters = Lists.empty();
+        this.sorts = Lists.empty();
         this.groupings = Lists.empty();
+        this.limit = null;
+        this.offset = null;
+        this.hints = Maps.empty();
     }
 
     /**
