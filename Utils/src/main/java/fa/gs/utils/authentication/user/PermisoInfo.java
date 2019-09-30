@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.authentication;
+package fa.gs.utils.authentication.user;
 
 import java.io.Serializable;
 

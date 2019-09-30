@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.authentication;
+package fa.gs.utils.authentication.user;
 
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.misc.Assertions;
@@ -15,7 +15,7 @@ import java.util.Objects;
  *
  * @author Fabio A. González Sosa
  */
-public abstract class AbstractAuthenticationInfo implements AuthenticationInfo {
+public class BaseAuthenticationInfo implements AuthenticationInfo {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     /**
@@ -41,14 +41,14 @@ public abstract class AbstractAuthenticationInfo implements AuthenticationInfo {
     /**
      * Constructor.
      */
-    public AbstractAuthenticationInfo() {
+    public BaseAuthenticationInfo() {
         this.usuario = null;
         this.permisos = Lists.empty();
     }
 
     @Override
     public String getName() {
-        return (usuario != null) ? usuario.username() : null;
+        return (getUsuario() != null) ? getUsuario().username() : null;
     }
 
     @Override
@@ -59,7 +59,7 @@ public abstract class AbstractAuthenticationInfo implements AuthenticationInfo {
     @Override
     public boolean isUserInRole(String roleName) {
         // Control de seguridad.
-        if (usuario == null) {
+        if (getUsuario() == null) {
             return false;
         }
 
@@ -74,7 +74,7 @@ public abstract class AbstractAuthenticationInfo implements AuthenticationInfo {
         }
 
         // Verificar si el usuario tiene asignado el permiso indicado.
-        for (PermisoInfo permiso : permisos) {
+        for (PermisoInfo permiso : getPermisos()) {
             if (Objects.equals(roleName, permiso.name())) {
                 return true;
             }
@@ -96,20 +96,20 @@ public abstract class AbstractAuthenticationInfo implements AuthenticationInfo {
 
     //<editor-fold defaultstate="collapsed" desc="Getters y Setters">
     @Override
-    public UsuarioInfo getUsuario() {
+    public final UsuarioInfo getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(UsuarioInfo usuario) {
+    public final void setUsuario(UsuarioInfo usuario) {
         this.usuario = usuario;
     }
 
     @Override
-    public Collection<PermisoInfo> getPermisos() {
+    public final Collection<PermisoInfo> getPermisos() {
         return permisos;
     }
 
-    public void setPermisos(Collection<PermisoInfo> permisos) {
+    public final void setPermisos(Collection<PermisoInfo> permisos) {
         this.permisos = permisos;
     }
     //</editor-fold>

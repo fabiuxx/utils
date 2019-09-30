@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.authentication.tokens.jwt;
 
-import fa.gs.utils.authentication.AbstractAuthenticationInfo;
+import fa.gs.utils.authentication.user.BaseAuthenticationInfo;
 import fa.gs.utils.misc.Assertions;
 import java.net.URLDecoder;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class JwtTokenExtractor {
 
     public static final String HEADER_NAME = HttpHeaders.AUTHORIZATION;
 
-    public static final String HEADER_AUTHENTICATION_SCHEME = AbstractAuthenticationInfo.AUTHENTICATION_SCHEME;
+    public static final String HEADER_AUTHENTICATION_SCHEME = BaseAuthenticationInfo.AUTHENTICATION_SCHEME;
 
     public static final String COOKIE_NAME = "APP_SESSION_TOKEN";
 

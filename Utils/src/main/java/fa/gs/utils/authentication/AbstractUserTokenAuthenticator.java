@@ -6,6 +6,8 @@
 package fa.gs.utils.authentication;
 
 import fa.gs.utils.authentication.tokens.TokenDecoder;
+import fa.gs.utils.authentication.user.AuthenticationInfo;
+import fa.gs.utils.misc.Args;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.simple.Results;
@@ -13,13 +15,20 @@ import fa.gs.utils.result.simple.Results;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
- * @param <Q>
+ * @param <T> Parametro de tipo par ainformacion de usuario.
+ * @param <Q> Parametro de tipo para tipo de payload de token.
  */
-public abstract class AbstractAuthenticator<T extends AuthenticationInfo, Q> {
+public abstract class AbstractUserTokenAuthenticator<Q> implements Authenticator<AuthenticationInfo> {
 
-    public Result<T> authenticate(String token) {
-        Result<T> result;
+    @Override
+    @Deprecated
+    public final Result<AuthenticationInfo> authenticate(Object... params) {
+        String token = Args.argv(params, 0);
+        return authenticateUserToken(token);
+    }
+
+    public Result<AuthenticationInfo> authenticateUserToken(String token) {
+        Result<AuthenticationInfo> result;
 
         try {
             // Decodificar Token
@@ -32,7 +41,7 @@ public abstract class AbstractAuthenticator<T extends AuthenticationInfo, Q> {
             }
 
             // Crear contexto de autenticacion.
-            T authenticationInfo = parseTokenPayload(payload);
+            AuthenticationInfo authenticationInfo = parseTokenPayload(payload);
             result = Results.ok()
                     .value(authenticationInfo)
                     .build();
@@ -48,6 +57,6 @@ public abstract class AbstractAuthenticator<T extends AuthenticationInfo, Q> {
 
     protected abstract TokenDecoder<Q> getTokenDecoder();
 
-    protected abstract T parseTokenPayload(Q payload) throws Throwable;
+    protected abstract AuthenticationInfo parseTokenPayload(Q payload) throws Throwable;
 
 }
