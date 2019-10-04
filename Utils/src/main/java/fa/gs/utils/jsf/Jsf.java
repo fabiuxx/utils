@@ -6,6 +6,7 @@
 package fa.gs.utils.jsf;
 
 import fa.gs.utils.collections.Maps;
+import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Type;
 import fa.gs.utils.misc.text.StringTyper;
 import fa.gs.utils.misc.text.Text;
@@ -15,6 +16,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Map;
+import javax.faces.application.ConfigurableNavigationHandler;
+import javax.faces.application.NavigationCase;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.FaceletContext;
@@ -104,6 +107,26 @@ public class Jsf {
     public static <T> T getRequestParameter(ExternalContext ctx, String name, Type type, T fallback) {
         String param = getRequestParameter0(ctx, name, null);
         return StringTyper.typeCast(param, type, fallback);
+    }
+
+    public static String resolveNavigationOutcome(FacesContext ctx, String outcome) {
+        if (Assertions.stringNullOrEmpty(outcome)) {
+            return "#";
+        }
+
+        ConfigurableNavigationHandler navigationHandler = (ConfigurableNavigationHandler) ctx.getApplication().getNavigationHandler();
+        NavigationCase navigationCase = navigationHandler.getNavigationCase(ctx, null, outcome);
+        if (navigationCase == null) {
+            return ctx.getExternalContext().encodeActionURL(outcome);
+        }
+
+        String viewId = navigationCase.getToViewId(ctx);
+        String url = ctx.getApplication().getViewHandler().getBookmarkableURL(ctx, viewId, Maps.empty(), false);
+        if (!Assertions.stringNullOrEmpty(url)) {
+            return url;
+        } else {
+            return ctx.getExternalContext().encodeActionURL(url);
+        }
     }
 
     /**

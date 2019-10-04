@@ -13,7 +13,7 @@ import org.apache.logging.log4j.message.MapMessage;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
+ * @param <T> Parametro de tipo.
  */
 public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>> extends AbstractLogger {
 
@@ -88,8 +88,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
 
     //<editor-fold defaultstate="collapsed" desc="Implementaciones para compatibilidad con API existente">
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Deprecated
     @Override
@@ -98,8 +97,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
     }
 
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Override
     public void trace(Throwable thr, String fmt, Object... args) {
@@ -107,8 +105,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
     }
 
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Override
     public void debug(String fmt, Object... args) {
@@ -116,8 +113,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
     }
 
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Override
     public void debug(Throwable thr, String fmt, Object... args) {
@@ -125,8 +121,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
     }
 
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Override
     public void info(String fmt, Object... args) {
@@ -134,8 +129,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
     }
 
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Override
     public void info(Throwable thr, String fmt, Object... args) {
@@ -143,8 +137,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
     }
 
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Override
     public void warning(String fmt, Object... args) {
@@ -152,8 +145,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
     }
 
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Override
     public void warning(Throwable thr, String fmt, Object... args) {
@@ -161,8 +153,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
     }
 
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Override
     public void error(String fmt, Object... args) {
@@ -170,8 +161,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
     }
 
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Override
     public void error(Throwable thr, String fmt, Object... args) {
@@ -179,8 +169,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
     }
 
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Override
     public void fatal(String fmt, Object... args) {
@@ -188,8 +177,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
     }
 
     /**
-     * @deprecated Usar
-     * {@link fa.gs.logging.log4j2.impl.ParametrizedLogger#trace() trace}.
+     * @deprecated Usar {@link ParametrizedLogger#trace() trace}.
      */
     @Override
     public void fatal(Throwable thr, String fmt, Object... args) {
@@ -211,7 +199,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
      * Clase que permite "dirigir" la forma en que se emiten los mensajes de
      * log.
      *
-     * @param <T>
+     * @param <T> Parametro de tipo.
      */
     public static class Driver<T extends Driver<T>> {
 
