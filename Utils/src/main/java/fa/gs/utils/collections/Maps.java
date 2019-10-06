@@ -94,6 +94,14 @@ public class Maps {
         return get(map, key, fallback, Integer.class);
     }
 
+    public static <K, V> Long long0(Map<K, V> map, K key) {
+        return long0(map, key, null);
+    }
+
+    public static <K, V> Long long0(Map<K, V> map, K key, Long fallback) {
+        return get(map, key, fallback, Long.class);
+    }
+
     public static <K, V> BigInteger biginteger(Map<K, V> map, K key) {
         return biginteger(map, key, null);
     }

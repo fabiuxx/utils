@@ -23,6 +23,10 @@ public class SqlLiterals {
 
     public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    public static final String TRUE_CHAR = "1";
+
+    public static final String FALSE_CHAR = "0";
+
     public static String fecha(Date fecha) {
         return formatFecha(fecha, DATE_FORMAT);
     }
