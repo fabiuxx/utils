@@ -43,8 +43,7 @@ public class ProjectionFormatter {
             StringBuilder2 builder = new StringBuilder2();
             builder.append("%s", projection.getProjection());
             if (!Assertions.stringNullOrEmpty(projection.getAs())) {
-                // Agregar comillas para preservar el case. Fuente: https://stackoverflow.com/a/43112096.
-                builder.append(" as \"%s\"", projection.getAs());
+                builder.append(" as %s", projection.getAs());
             }
             return builder.toString().trim();
         }
