@@ -6,6 +6,7 @@
 package fa.gs.utils.misc;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -86,6 +87,41 @@ public class Numeric {
      */
     public static final int MAX_FRACTION_DIGITS = 20;
     //</editor-fold>
+
+    /**
+     * Adapta un valor numerico de tipo indeterminado a un valor concreto de
+     * tipo {@link java.lang.Long Long}.
+     *
+     * @param obj Valor numerico arbitratio.
+     * @return Valor numerico adaptado.
+     */
+    public static Long adaptAsLong(Object obj) {
+        if (obj instanceof Short) {
+            return (Long) obj;
+        }
+
+        if (obj instanceof Integer) {
+            return (Long) obj;
+        }
+
+        if (obj instanceof Long) {
+            return (Long) obj;
+        }
+
+        if (obj instanceof BigInteger) {
+            return ((BigInteger) obj).longValue();
+        }
+
+        if (obj instanceof BigDecimal) {
+            return ((BigDecimal) obj).longValue();
+        }
+
+        if (obj == null) {
+            throw new IllegalArgumentException("Parámetro es nulo");
+        }
+
+        throw new IllegalArgumentException(String.format("No se puede convertir '%s' a Long.", obj.getClass().getCanonicalName()));
+    }
 
     /**
      * Normaliza un valor porcentual entre 0.0 y 100.0 a un valor entre 0.0 y
