@@ -40,10 +40,10 @@ public class Maps {
         }
         return map;
     }
-    
+
     public static <K, V> CollectionGroupMap<K, V> groupBy(Collection<V> values, String attribute, Class<K> type) {
         CollectionGroupMap<K, V> groups = new CollectionGroupMap<>();
-        for(V value : values) {
+        for (V value : values) {
             K key = Reflect.get(value, attribute, type);
             groups.put(key, value);
         }

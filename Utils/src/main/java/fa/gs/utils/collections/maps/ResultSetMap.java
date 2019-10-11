@@ -154,7 +154,7 @@ public class ResultSetMap {
     }
 
     public Date date(Column<Date> key) {
-        return date(key.getName(), null);
+        return date(resolveColumnName(key), null);
     }
 
     public Date date(String key, Date fallback) {
