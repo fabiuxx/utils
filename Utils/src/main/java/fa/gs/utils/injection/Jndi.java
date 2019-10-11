@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.injection;
 
-import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.simple.Results;
 import javax.enterprise.context.spi.CreationalContext;
@@ -24,7 +23,7 @@ import javax.persistence.Persistence;
  */
 public class Jndi {
 
-    //<editor-fold defaultstate="collapsed" desc="EJB">
+    //<editor-fold defaultstate="collapsed" desc="JNDI">
     /**
      * Realiza una búsqueda manual para la inyección de beans a través de JNDI.
      *
@@ -34,11 +33,40 @@ public class Jndi {
      */
     public static <T> Result<T> lookup(String jndi) {
         Result<T> result;
-        try {
-            Context c = new InitialContext();
-            Object obj = c.lookup(jndi);
-            Assertions.raiseIfNull(obj);
 
+        try {
+            Context context = new InitialContext();
+            result = lookup(context, jndi);
+        } catch (Throwable thr) {
+            result = Results.ko()
+                    .cause(thr)
+                    .message("Ocurrió un error inyectando objeto")
+                    .tag("jndi", jndi)
+                    .build();
+        }
+
+        return result;
+    }
+
+    /**
+     * Realiza una búsqueda manual para la inyección de beans a través de JNDI.
+     *
+     * @param <T> Tipo esperado del bean a inyectar.
+     * @param context Contexto de busqueda.
+     * @param jndi Nombre JNDI del bean a inyectar.
+     * @return Bean asociado al nombre dado. Caso contrario, {@code null}.
+     */
+    public static <T> Result<T> lookup(Context context, String jndi) {
+        Result<T> result;
+
+        try {
+            if (context == null) {
+                return Results.ko()
+                        .message("Contexto de inyección inválido")
+                        .build();
+            }
+
+            Object obj = context.lookup(jndi);
             T injected = (T) obj;
             result = Results.ok()
                     .value(injected)
@@ -48,32 +76,11 @@ public class Jndi {
                     .cause(thr)
                     .message("Ocurrió un error inyectando objeto")
                     .tag("jndi", jndi)
+                    .tag("context", context.getClass().getCanonicalName())
                     .build();
         }
-        return result;
-    }
 
-    /**
-     * Realiza una búsqueda manual para la inyeccion de beans a través de JNDI
-     * utilizando clases dentro de este mismo módulo.
-     *
-     * @param <T> Tipo esperado del bean a inyectar.
-     * @param namespace Espacio de nombres para la busqueda.
-     * @param module Nombre del modulo en el cual se realiza la busqueda del
-     * bean.
-     * @param beanClass Clase del bean a inyectar.
-     * @return Instancia del bean indicado. Caso contrario, {@code null}.
-     */
-    public static <T> Result<T> lookup(String namespace, String module, Class<T> beanClass) {
-        String jndi = "java:global";
-        if (!Assertions.stringNullOrEmpty(namespace)) {
-            jndi = jndi + "/" + namespace;
-        }
-        if (!Assertions.stringNullOrEmpty(module)) {
-            jndi = jndi + "/" + module;
-        }
-        jndi = jndi + "/" + beanClass.getSimpleName();
-        return lookup(jndi);
+        return result;
     }
     //</editor-fold>
 
