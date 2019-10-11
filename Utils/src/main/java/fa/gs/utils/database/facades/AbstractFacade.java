@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.database.facades;
 
+import fa.gs.utils.collections.maps.ResultSetMap;
 import fa.gs.utils.database.criteria.Condition;
 import fa.gs.utils.database.criteria.Operator;
 import fa.gs.utils.database.criteria.OrderKind;
@@ -295,7 +296,7 @@ public abstract class AbstractFacade<T> implements Facade<T> {
         // Mapear cada registro a un objeto.
         Collection<T> objects = new LinkedList<>();
         for (Map<String, Object> map : maps) {
-            T obj = mapper.adapt(map);
+            T obj = mapper.adapt(new ResultSetMap(map));
             if (obj != null) {
                 objects.add(obj);
             }

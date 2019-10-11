@@ -34,6 +34,7 @@ public class Criterias {
         if (criteria != null) {
             where(selectCriteria, criteria.getFilters());
             order(selectCriteria, criteria.getSorts());
+            group(selectCriteria, criteria.getGroupings());
             limit(selectCriteria, criteria);
         }
         return selectCriteria;
@@ -106,6 +107,22 @@ public class Criterias {
     public static <T extends QueryCriteria> T order(T criteria, String expression, OrderKind order) {
         Sorting s = new Sorting(expression, order);
         criteria.order(s);
+        return criteria;
+    }
+
+    public static <T extends QueryCriteria> T group(T criteria, Collection<Grouping> groupings) {
+        if (!Assertions.isNullOrEmpty(groupings)) {
+            for (Grouping grouping : groupings) {
+                group(criteria, grouping);
+            }
+        }
+        return criteria;
+    }
+
+    public static <T extends QueryCriteria> T group(T criteria, Grouping grouping) {
+        if (grouping != null) {
+            criteria.group(grouping);
+        }
         return criteria;
     }
 
