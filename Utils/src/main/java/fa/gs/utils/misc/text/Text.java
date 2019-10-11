@@ -15,6 +15,15 @@ import java.util.Objects;
 public class Text {
 
     /**
+     * Retorna el separador de linea por defecto del sistema.
+     *
+     * @return Separador de linea.
+     */
+    public static String nl() {
+        return System.lineSeparator();
+    }
+
+    /**
      * Retorna una cadena por defecto a utilizar cuando un valor no esta
      * disponible para su representacion en forma de texto.
      *

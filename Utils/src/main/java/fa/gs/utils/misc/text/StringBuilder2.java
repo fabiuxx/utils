@@ -140,9 +140,9 @@ public class StringBuilder2 {
      * @param args Parametros de formato.
      * @return Esta misma instancia.
      */
-    public StringBuilder2 appendln(String fmt, Object... args) {
+    public synchronized StringBuilder2 appendln(String fmt, Object... args) {
         append(fmt, args);
-        append("\n");
+        append(Text.nl());
         return this;
     }
 
@@ -155,10 +155,10 @@ public class StringBuilder2 {
      * @param args Parametros de formato.
      * @return Esta misma instancia.
      */
-    public StringBuilder2 appendln(boolean flag, String fmt, Object... args) {
+    public synchronized StringBuilder2 appendln(boolean flag, String fmt, Object... args) {
         if (flag) {
             append(fmt, args);
-            append("\n");
+            append(Text.nl());
         }
         return this;
     }
