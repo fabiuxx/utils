@@ -18,8 +18,8 @@ import java.util.Collection;
  */
 public interface DataLoader<T> extends Serializable {
 
-    Long countItems(Collection<Condition> conditions);
+    Long countItems(Condition[] conditions);
 
-    Collection<T> loadItems(Pagination pagination, Collection<Condition> conditions, Collection<Sorting> sortings);
+    Collection<T> loadItems(Pagination pagination, Condition[] conditions, Sorting[] sortings);
 
 }

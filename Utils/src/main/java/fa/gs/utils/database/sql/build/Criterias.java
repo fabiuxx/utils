@@ -49,9 +49,11 @@ public class Criterias {
         return criteria;
     }
 
-    public static <T extends QueryCriteria> T where(T criteria, Condition condition) {
-        if (condition != null) {
-            criteria.where(condition);
+    public static <T extends QueryCriteria> T where(T criteria, Condition... conditions) {
+        for (Condition condition : conditions) {
+            if (condition != null) {
+                criteria.where(condition);
+            }
         }
         return criteria;
     }
@@ -85,9 +87,11 @@ public class Criterias {
         return criteria;
     }
 
-    public static <T extends QueryCriteria> T order(T criteria, Sorting sorting) {
-        if (sorting != null) {
-            criteria.order(sorting);
+    public static <T extends QueryCriteria> T order(T criteria, Sorting... sortings) {
+        for (Sorting sorting : sortings) {
+            if (sorting != null) {
+                criteria.order(sorting);
+            }
         }
         return criteria;
     }
@@ -119,9 +123,11 @@ public class Criterias {
         return criteria;
     }
 
-    public static <T extends QueryCriteria> T group(T criteria, Grouping grouping) {
-        if (grouping != null) {
-            criteria.group(grouping);
+    public static <T extends QueryCriteria> T group(T criteria, Grouping... groupings) {
+        for (Grouping grouping : groupings) {
+            if (grouping != null) {
+                criteria.group(grouping);
+            }
         }
         return criteria;
     }
