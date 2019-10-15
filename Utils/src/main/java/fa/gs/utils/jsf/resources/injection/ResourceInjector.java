@@ -13,6 +13,7 @@ import fa.gs.utils.misc.text.Text;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
@@ -136,11 +137,23 @@ public abstract class ResourceInjector implements SystemEventListener {
         Collection<UIComponent> resourcesToRemove = Lists.empty();
 
         for (UIComponent resource : getResourcesInHead(context, root)) {
-            if (isLibraryComponent(resource)) {
-                if (!resource.getAttributes().containsKey("data-priority")) {
-                    resource.getAttributes().put("data-priority", ResourceRequirement.MAX_PRIORITY - 1);
+            boolean isFromThisLibrary = isLibraryComponent(resource);
+            boolean hasPriority = resource.getAttributes().containsKey("data-priority");
+            boolean a = isFromThisLibrary;
+            boolean b = !isFromThisLibrary && hasPriority;
+
+            if (a || b) {
+                Integer priority = ResourceRequirement.MIN_PRIORITY - 1;
+                if (hasPriority) {
+                    Object priority0 = resource.getAttributes().get("data-priority");
+                    if (priority0 instanceof Number) {
+                        priority = ((Number) priority0).intValue();
+                    }
+                    if (priority0 instanceof String) {
+                        priority = Integer.valueOf((String) priority0);
+                    }
                 }
-                Integer priority = (Integer) resource.getAttributes().get("data-priority");
+
                 Collection<UIComponent> resources0 = resources.getOrDefault(priority, Lists.empty());
                 resources0.add(resource);
                 resources.put(priority, resources0);
@@ -149,7 +162,9 @@ public abstract class ResourceInjector implements SystemEventListener {
         }
 
         removeResourcesFromHead(context, root, resourcesToRemove);
-        for (Integer priority : resources.keySet()) {
+
+        Set<Integer> keys = new TreeSet<>(resources.keySet());
+        for (Integer priority : keys) {
             Collection<UIComponent> resources0 = resources.get(priority);
             addResourcesToHead(context, root, resources0);
         }
