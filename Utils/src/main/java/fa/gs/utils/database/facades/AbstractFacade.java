@@ -11,6 +11,7 @@ import fa.gs.utils.database.criteria.Operator;
 import fa.gs.utils.database.criteria.OrderKind;
 import fa.gs.utils.database.criteria.QueryCriteria;
 import fa.gs.utils.database.criteria.Sorting;
+import fa.gs.utils.database.utils.ResultSetMapper;
 import fa.gs.utils.misc.Assertions;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -289,7 +290,7 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      * @return Coleccion de objetos que encapsulan la informacion de las
      * diferentes filas encontradas.
      */
-    public Collection<T> select(String sql, Mapper<T> mapper) {
+    public Collection<T> select(String sql, ResultSetMapper<T> mapper) {
         // Ejecutar la query y obtener la coleccion de mapas que representan el resultset.
         Collection<Map<String, Object>> maps = select(sql);
 

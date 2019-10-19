@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.facades;
+package fa.gs.utils.database.utils;
 
 import fa.gs.utils.adapters.impl.Adapter0;
 import fa.gs.utils.collections.maps.ResultSetMap;
@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author Fabio A. González Sosa
  * @param <T> Parametro de tipo.
  */
-public abstract class Mapper<T> extends Adapter0<ResultSetMap, T> implements Serializable {
+public abstract class ResultSetMapper<T> extends Adapter0<ResultSetMap, T> implements Serializable {
 
     protected abstract T getEmptyAdaptee();
 
