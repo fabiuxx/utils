@@ -9,6 +9,7 @@ import fa.gs.utils.collections.Maps;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Type;
 import fa.gs.utils.misc.text.StringTyper;
+import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +22,7 @@ import javax.faces.application.NavigationCase;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.FaceletContext;
+import org.omnifaces.util.Ajax;
 
 /**
  *
@@ -207,6 +209,11 @@ public class Jsf {
 
     public static JsfMessageBuilder msg() {
         return new JsfMessageBuilder();
+    }
+
+    public static void javascript(String fmt, Object ... args) {
+        String code = Strings.format(fmt, args);
+        Ajax.oncomplete(code);
     }
 
 }
