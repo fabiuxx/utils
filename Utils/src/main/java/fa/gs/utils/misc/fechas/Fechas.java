@@ -434,4 +434,29 @@ public class Fechas {
         }
     }
 
+    public static boolean menor(Date a, Date b) {
+        int compare = a.compareTo(b);
+        return compare < 0;
+    }
+
+    public static boolean mayor(Date a, Date b) {
+        int compare = a.compareTo(b);
+        return compare > 0;
+    }
+
+    public static boolean igual(Date a, Date b) {
+        int compare = a.compareTo(b);
+        return compare == 0;
+    }
+
+    public static boolean menorIgual(Date a, Date b) {
+        int compare = a.compareTo(b);
+        return compare <= 0;
+    }
+
+    public static boolean mayorIgual(Date a, Date b) {
+        int compare = a.compareTo(b);
+        return compare >= 0;
+    }
+
 }
