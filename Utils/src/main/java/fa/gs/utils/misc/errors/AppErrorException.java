@@ -29,7 +29,7 @@ public class AppErrorException extends Exception {
         return failure.cause();
     }
 
-    public int errno() {
+    public Errno errno() {
         return failure.errno();
     }
 
@@ -45,7 +45,7 @@ public class AppErrorException extends Exception {
 
         public AppErrorException.Builder message(String fmt, Object... args);
 
-        public AppErrorException.Builder errno(int errno);
+        public AppErrorException.Builder errno(Errno errno);
 
         public AppErrorException.Builder tag(String tag, Object value);
 

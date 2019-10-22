@@ -44,7 +44,7 @@ class AppErrorExceptionBuilder implements AppErrorException.Builder {
     }
 
     @Override
-    public AppErrorException.Builder errno(int errno) {
+    public AppErrorException.Builder errno(Errno errno) {
         builder.errno(errno);
         return this;
     }

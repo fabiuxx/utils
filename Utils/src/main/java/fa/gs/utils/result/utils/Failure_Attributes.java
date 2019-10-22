@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.result.utils;
 
+import fa.gs.utils.misc.errors.Errno;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,7 @@ class Failure_Attributes implements Serializable {
     /**
      * Código numérico que mapea el error producido.
      */
-    protected int errno;
+    protected Errno errno;
 
     /**
      * Coleccion de objetos asociados que sirven como contexto para entender el
@@ -42,7 +43,7 @@ class Failure_Attributes implements Serializable {
     public Failure_Attributes() {
         this.message = "";
         this.cause = null;
-        this.errno = 0;
+        this.errno = null;
         this.tags = new HashMap<>();
     }
 

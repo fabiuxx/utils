@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.result.simple;
 
+import fa.gs.utils.misc.errors.Errno;
 import fa.gs.utils.result.utils.Failure;
 import fa.gs.utils.result.utils.Failure_Builder_Methods;
 import fa.gs.utils.result.utils.Value;
@@ -120,7 +121,7 @@ public class Results {
         }
 
         @Override
-        public Builder<S> errno(int errno) {
+        public Builder<S> errno(Errno errno) {
             failureBuilder.errno(errno);
             return this;
         }

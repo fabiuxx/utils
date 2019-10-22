@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.result.utils;
 
+import fa.gs.utils.misc.errors.Errno;
 import java.util.Map;
 
 /**
@@ -40,7 +41,7 @@ public interface Failure_Builder_Methods<B extends Failure_Builder_Methods<B>> {
      * @param errno Codigo numerico de error.
      * @return Esta misma instancia.
      */
-    public B errno(int errno);
+    public B errno(Errno errno);
 
     /**
      * Agrega un nuevo tag a {@link fa.gs.utils.result.utils.Failure#tags tags}.

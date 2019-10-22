@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.result.utils;
 
+import fa.gs.utils.misc.errors.Errno;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public final class Failure extends Failure_Attributes implements Serializable {
      * @param tags Coleccion de objetos asociados que sirven como contexto para
      * entender el error producido.
      */
-    Failure(String message, Throwable cause, int errno, Map<String, Object> tags) {
+    Failure(String message, Throwable cause, Errno errno, Map<String, Object> tags) {
         this.message = message;
         this.cause = cause;
         this.errno = errno;
@@ -64,7 +65,7 @@ public final class Failure extends Failure_Attributes implements Serializable {
      *
      * @return Código numérico.
      */
-    public int errno() {
+    public Errno errno() {
         return errno;
     }
 

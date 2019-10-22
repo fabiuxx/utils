@@ -7,6 +7,7 @@ package fa.gs.utils.api.responses;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import fa.gs.utils.misc.errors.Errno;
 import fa.gs.utils.misc.fechas.Fechas;
 
 /**
@@ -40,7 +41,7 @@ public class JsonResponseWrapper {
      * @return Respuesta de fallo.
      */
     public static JsonObject failure(JsonElement raw) {
-        return failure(raw, "Error Interno", 0);
+        return failure(raw, "Error Interno", null);
     }
 
     /**
@@ -51,7 +52,7 @@ public class JsonResponseWrapper {
      * @return Respuesta de fallo.
      */
     public static JsonObject failure(JsonElement raw, Throwable cause) {
-        return failure(raw, cause.getLocalizedMessage(), 0);
+        return failure(raw, cause.getLocalizedMessage(), null);
     }
 
     /**
@@ -61,7 +62,7 @@ public class JsonResponseWrapper {
      * @param errno Codigo numerico que representa el fallo puntual producido.
      * @return Respuesta de fallo.
      */
-    public static JsonObject failure(JsonElement raw, int errno) {
+    public static JsonObject failure(JsonElement raw, Errno errno) {
         return failure(raw, "Error Interno", errno);
     }
 
@@ -73,7 +74,7 @@ public class JsonResponseWrapper {
      * @return Respuesta de fallo.
      */
     public static JsonObject failure(JsonElement raw, String cause) {
-        return failure(raw, cause, 0);
+        return failure(raw, cause, null);
     }
 
     /**
@@ -84,7 +85,7 @@ public class JsonResponseWrapper {
      * @param errno Codigo numerico que representa el fallo puntual producido.
      * @return Respuesta de fallo.
      */
-    public static JsonObject failure(JsonElement raw, Throwable cause, int errno) {
+    public static JsonObject failure(JsonElement raw, Throwable cause, Errno errno) {
         return failure(raw, cause.getLocalizedMessage(), errno);
     }
 
@@ -96,12 +97,12 @@ public class JsonResponseWrapper {
      * @param errno Codigo numerico que representa el fallo puntual producido.
      * @return Respuesta de fallo.
      */
-    public static JsonObject failure(JsonElement raw, String cause, int errno) {
+    public static JsonObject failure(JsonElement raw, String cause, Errno errno) {
         JsonObject status = new JsonObject();
         status.addProperty("timestamp", Fechas.epoch());
         status.addProperty("success", false);
         status.addProperty("cause", cause);
-        status.addProperty("errno", errno);
+        status.addProperty("errno", String.valueOf(errno));
         JsonObject json = new JsonObject();
         json.add("status", status);
         if (raw != null) {

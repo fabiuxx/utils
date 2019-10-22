@@ -7,6 +7,7 @@ package fa.gs.utils.result.utils;
 
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.errors.AppErrorException;
+import fa.gs.utils.misc.errors.Errno;
 import java.util.Map;
 
 /**
@@ -48,7 +49,7 @@ class Failure_Builder extends Failure_Attributes implements Failure.Builder {
     }
 
     @Override
-    public Failure.Builder errno(int errno) {
+    public Failure.Builder errno(Errno errno) {
         this.errno = errno;
         return this;
     }

@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fa.gs.utils.api.exceptions.ApiRollbackException;
 import fa.gs.utils.misc.Files;
+import fa.gs.utils.misc.errors.Errno;
 import fa.gs.utils.result.simple.Result;
 import java.io.File;
 import java.io.FileInputStream;
@@ -312,7 +313,7 @@ public class ServiceResponse {
         /**
          * Codigo de error interno.
          */
-        protected int errno;
+        protected Errno errno;
 
         /**
          * Mensaje que indica la causa del error producido.
@@ -331,7 +332,7 @@ public class ServiceResponse {
          */
         private KO() {
             status = HTTP_OK;
-            errno = 0;
+            errno = null;
             cause = "ERROR";
             raw = null;
         }
@@ -348,7 +349,7 @@ public class ServiceResponse {
             return this;
         }
 
-        public KO errno(int errno) {
+        public KO errno(Errno errno) {
             this.errno = errno;
             return this;
         }
