@@ -211,7 +211,24 @@ public class Jsf {
         return new JsfMessageBuilder();
     }
 
-    public static void javascript(String fmt, Object ... args) {
+    /**
+     * Permite indicar componentes a redibujar durante el ciclo de procesamiento
+     * JSF.
+     *
+     * @param ids Identificadores de componentes.
+     */
+    public static void update(String... ids) {
+        Ajax.update(ids);
+    }
+
+    /**
+     * Permite agregar codigo javascript a ejecutar en el cliente al finalizar
+     * el ciclo de procesamiento JSF.
+     *
+     * @param fmt Cadena de formato.
+     * @param args Parametros para formato, si hubieren.
+     */
+    public static void eval(String fmt, Object... args) {
         String code = Strings.format(fmt, args);
         Ajax.oncomplete(code);
     }
