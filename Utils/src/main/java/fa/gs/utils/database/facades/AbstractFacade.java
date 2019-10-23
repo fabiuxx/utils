@@ -98,7 +98,8 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      */
     @Override
     public void detach(T entity) {
-        getEntityManager().detach(entity);
+        EntityManager em = getEntityManager();
+        em.detach(entity);
     }
 
     /**
@@ -110,8 +111,9 @@ public abstract class AbstractFacade<T> implements Facade<T> {
     public T create(T entity) {
         boolean valid = checkConstraints(entity);
         if (valid) {
-            getEntityManager().persist(entity);
-            getEntityManager().flush();
+            EntityManager em = getEntityManager();
+            em.persist(entity);
+            em.flush();
         }
         return entity;
     }
@@ -125,8 +127,9 @@ public abstract class AbstractFacade<T> implements Facade<T> {
     public T edit(T entity) {
         boolean valid = checkConstraints(entity);
         if (valid) {
-            getEntityManager().merge(entity);
-            getEntityManager().flush();
+            EntityManager em = getEntityManager();
+            em.merge(entity);
+            em.flush();
         }
         return entity;
     }
@@ -138,8 +141,9 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      */
     @Override
     public void remove(T entity) {
-        T entity0 = getEntityManager().merge(entity);
-        getEntityManager().remove(entity0);
+        EntityManager em = getEntityManager();
+        T entity0 = em.merge(entity);
+        em.remove(entity0);
     }
 
     /**
@@ -149,7 +153,8 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      */
     @Override
     public T refresh(T entity) {
-        getEntityManager().refresh(entity);
+        EntityManager em = getEntityManager();
+        em.refresh(entity);
         return entity;
     }
 
@@ -160,7 +165,8 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      */
     @Override
     public T merge(T entity) {
-        getEntityManager().merge(entity);
+        EntityManager em = getEntityManager();
+        em.merge(entity);
         return entity;
     }
 
@@ -172,7 +178,9 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      */
     @Override
     public T find(Object id) {
-        return getEntityManager().find(entityClass, id);
+        EntityManager em = getEntityManager();
+        T entity = em.find(entityClass, id);
+        return entity;
     }
 
     /**
@@ -185,8 +193,10 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      */
     @Override
     public List<T> find(QueryCriteria criteria) {
+        EntityManager em = getEntityManager();
+
         // Seleccion.
-        javax.persistence.criteria.CriteriaBuilder qb = getEntityManager().getCriteriaBuilder();
+        javax.persistence.criteria.CriteriaBuilder qb = em.getCriteriaBuilder();
         javax.persistence.criteria.CriteriaQuery cq = qb.createQuery();
         javax.persistence.criteria.Root<T> root = cq.from(entityClass);
         cq.select(root);
@@ -204,7 +214,7 @@ public abstract class AbstractFacade<T> implements Facade<T> {
         }
 
         // Preparacion de la consulta.
-        javax.persistence.Query q = getEntityManager().createQuery(cq);
+        javax.persistence.Query q = em.createQuery(cq);
 
         // Limite de cantidad de registros.
         if (criteria.getLimit() != null) {
@@ -236,9 +246,10 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      */
     @Override
     public List<T> findAll() {
-        javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        EntityManager em = getEntityManager();
+        javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
         cq.select(cq.from(entityClass));
-        javax.persistence.Query q = getEntityManager().createQuery(cq);
+        javax.persistence.Query q = em.createQuery(cq);
         return q.getResultList();
     }
 
@@ -273,8 +284,10 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      * diferentes filas encontradas.
      */
     public Collection<Map<String, Object>> select(String sql) {
+        EntityManager em = getEntityManager();
+
         // Ejecutar la query e indicar que necesitamos mapear el resultset a un mapa, valga la redundancia.
-        org.hibernate.Query query = getEntityManager().createNativeQuery(sql)
+        org.hibernate.Query query = em.createNativeQuery(sql)
                 .unwrap(org.hibernate.Query.class)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 
@@ -313,10 +326,11 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      */
     @Override
     public Integer count() {
-        javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        EntityManager em = getEntityManager();
+        javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
         javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
-        cq.select(getEntityManager().getCriteriaBuilder().count(rt));
-        javax.persistence.Query q = getEntityManager().createQuery(cq);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        javax.persistence.Query q = em.createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
 
@@ -330,8 +344,10 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      */
     @Override
     public Integer count(QueryCriteria criteria) {
+        EntityManager em = getEntityManager();
+
         // Seleccion.
-        javax.persistence.criteria.CriteriaBuilder qb = getEntityManager().getCriteriaBuilder();
+        javax.persistence.criteria.CriteriaBuilder qb = em.getCriteriaBuilder();
         javax.persistence.criteria.CriteriaQuery cq = qb.createQuery(Long.class);
         javax.persistence.criteria.Root<T> root = cq.from(entityClass);
         cq.select(qb.count(root));
@@ -343,7 +359,7 @@ public abstract class AbstractFacade<T> implements Facade<T> {
         }
 
         // Preparacion de la consulta.
-        javax.persistence.Query q = getEntityManager().createQuery(cq);
+        javax.persistence.Query q = em.createQuery(cq);
 
         // Hints.
         if (!Assertions.isNullOrEmpty(criteria.getHints())) {
