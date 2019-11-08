@@ -25,5 +25,25 @@ public class Lists {
             return null;
         }
     }
+    
+    public static <T> Collection<T> wrap(Iterable<T> iterable) {
+        Collection<T> items = Lists.empty();
+        if (iterable != null) {
+            for (T item0 : iterable) {
+                items.add(item0);
+            }
+        }
+        return items;
+    }
+
+    public static <T> Collection<T> wrap(T[] items0) {
+        Collection<T> items = Lists.empty();
+        if (!Assertions.isNullOrEmpty(items0)) {
+            for (T item0 : items0) {
+                items.add(item0);
+            }
+        }
+        return items;
+    }
 
 }

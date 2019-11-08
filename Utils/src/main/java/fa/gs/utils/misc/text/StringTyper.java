@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.misc.text;
 
-import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Type;
 import fa.gs.utils.misc.fechas.Fechas;
 import fa.gs.utils.misc.json.Json;
@@ -21,7 +20,7 @@ public class StringTyper {
     public static <T> T typeCast(String string, Type type, T fallback) {
         try {
             Object obj;
-            if (Assertions.stringNullOrEmpty(string)) {
+            if (string == null) {
                 obj = null;
             } else {
                 // Obtener objeto en elemento json en base a enumeracion de tipo indicado.

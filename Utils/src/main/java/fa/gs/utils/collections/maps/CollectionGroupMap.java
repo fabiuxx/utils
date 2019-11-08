@@ -7,9 +7,11 @@ package fa.gs.utils.collections.maps;
 
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.collections.Maps;
+import fa.gs.utils.collections.Sets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -17,7 +19,7 @@ import java.util.Map;
  */
 public class CollectionGroupMap<K, V> {
 
-    private final Map<K, Collection<V>> map;
+    private final Map<K, Set<V>> map;
 
     public CollectionGroupMap() {
         this.map = Maps.empty();
@@ -28,19 +30,32 @@ public class CollectionGroupMap<K, V> {
             return;
         }
 
-        Collection<V> collection = Maps.get(map, key, Lists.empty());
-        collection.add(value);
-        map.put(key, collection);
+        Set<V> set = Maps.get(map, key, Sets.empty());
+        set.add(value);
+        map.put(key, set);
     }
 
     public void put(K key, Collection<V> values) {
-        Collection<V> collection = Maps.get(map, key, Lists.empty());
-        collection.addAll(values);
-        map.put(key, collection);
+        Set<V> set = Maps.get(map, key, Sets.empty());
+        set.addAll(values);
+        map.put(key, set);
     }
 
     public Map<K, Collection<V>> getMap() {
-        return Collections.unmodifiableMap(map);
+        /**
+         * Se transforma la coleccion de itemes desde un 'set' a una 'lista' ya
+         * que la primera estructura de datos no es soportada totalmente por
+         * tags JSF. Fuente: https://stackoverflow.com/a/4017852/1284724
+         */
+        Map<K, Collection<V>> map0 = Maps.empty();
+
+        for (Map.Entry<K, Set<V>> entry : map.entrySet()) {
+            K key = entry.getKey();
+            Set<V> set = entry.getValue();
+            map0.put(key, Lists.wrap(set));
+        }
+
+        return Collections.unmodifiableMap(map0);
     }
 
 }
