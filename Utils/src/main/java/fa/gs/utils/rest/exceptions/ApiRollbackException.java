@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.api.exceptions;
+package fa.gs.utils.rest.exceptions;
 
 import javax.ejb.ApplicationException;
 import javax.ws.rs.WebApplicationException;

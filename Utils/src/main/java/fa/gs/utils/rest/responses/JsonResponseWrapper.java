@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.api.responses;
+package fa.gs.utils.rest.responses;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fa.gs.utils.misc.errors.Errno;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.fechas.Fechas;
 
 /**
@@ -98,11 +99,16 @@ public class JsonResponseWrapper {
      * @return Respuesta de fallo.
      */
     public static JsonObject failure(JsonElement raw, String cause, Errno errno) {
+        // Control de seguridad.
+        if (errno == null) {
+            errno = Errors.errno("API", "000000");
+        }
+
         JsonObject status = new JsonObject();
         status.addProperty("timestamp", Fechas.epoch());
         status.addProperty("success", false);
         status.addProperty("cause", cause);
-        status.addProperty("errno", String.valueOf(errno));
+        status.addProperty("errno", errno.getErrnoString());
         JsonObject json = new JsonObject();
         json.add("status", status);
         if (raw != null) {

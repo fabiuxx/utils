@@ -3,30 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.api.exceptions;
+package fa.gs.utils.rest.exceptions;
 
 import javax.ejb.ApplicationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 /**
- * Clase que encapsula un error de autenticacion, indicando que se requiere una
- * autenticacion previa para la ejecucion de cierta operacion.
+ * Clase que encapsula un error debido a datos incompletos o con un formato
+ * incorrecto, recibidos como parte de una peticion.
  *
  * @author Fabio A. González Sosa
  */
 @ApplicationException(rollback = true)
-public class ApiUnauthorizedException extends WebApplicationException {
+public class ApiBadRequestException extends WebApplicationException {
 
-    public ApiUnauthorizedException() {
+    public ApiBadRequestException() {
         super();
     }
 
-    public ApiUnauthorizedException(Throwable cause) {
+    public ApiBadRequestException(Throwable cause) {
         super(cause);
     }
 
-    public ApiUnauthorizedException(Response response) {
+    public ApiBadRequestException(Response response) {
         super(response);
     }
 

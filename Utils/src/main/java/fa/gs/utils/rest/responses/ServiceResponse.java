@@ -3,22 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.api.responses;
+package fa.gs.utils.rest.responses;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import fa.gs.utils.api.exceptions.ApiRollbackException;
-import fa.gs.utils.misc.Files;
 import fa.gs.utils.misc.errors.Errno;
+import fa.gs.utils.rest.exceptions.ApiRollbackException;
 import fa.gs.utils.result.simple.Result;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 
 /**
  *
@@ -124,16 +117,6 @@ public class ServiceResponse {
     }
 
     /**
-     * Obtiene un constructor de respuestas para operaciones donde el recurso no
-     * puede ser identificado.
-     *
-     * @return Constructor de respuestas.
-     */
-    public static KO notFound() {
-        return new NOT_FOUND();
-    }
-
-    /**
      * Construye una respuesta segun el formato base definido por el servicio
      * del API REST.
      *
@@ -146,79 +129,6 @@ public class ServiceResponse {
                 .status(status)
                 .entity(payload.toString())
                 .type(MediaType.APPLICATION_JSON);
-        return builder.build();
-    }
-
-    /**
-     * Construye una respuesta para el envio de bytes puros obtenidos desde un
-     * archivo. La respuesta no es encapsulada en el formato de respuestas por
-     * defecto.
-     *
-     * @param file Archivo de entrada.
-     * @param name Nombre de archivo.
-     * @param deleteAfter Indica si el archivo debe ser eliminado luego de su
-     * uso.
-     * @return Respuesta.
-     */
-    public static Response file(File file, String name, final boolean deleteAfter) {
-        return file(file, name, MediaType.APPLICATION_OCTET_STREAM, deleteAfter);
-    }
-
-    /**
-     * Construye una respuesta para el envio de bytes puros obtenidos desde un
-     * archivo. La respuesta no es encapsulada en el formato de respuestas por
-     * defecto.
-     *
-     * @param file Archivo de entrada.
-     * @param name Nombre de archivo.
-     * @param mediaType MIME Type de tipo de archivo.
-     * @param deleteAfter Indica si el archivo debe ser eliminado luego de su
-     * uso.
-     * @return Respuesta.
-     */
-    public static Response file(final File file, String name, String mediaType, final boolean deleteAfter) {
-        return file(file, name, mediaType, deleteAfter, -1);
-    }
-
-    /**
-     * Construye una respuesta para el envio de bytes puros obtenidos desde un
-     * archivo. La respuesta no es encapsulada en el formato de respuestas por
-     * defecto.
-     *
-     * @param file Archivo de entrada.
-     * @param name Nombre de archivo.
-     * @param mediaType MIME Type de tipo de archivo.
-     * @param deleteAfter Indica si el archivo debe ser eliminado luego de su
-     * uso.
-     * @param cacheSeconds Cantidad de segundos para expiracion de imagen en
-     * cache.
-     * @return Respuesta.
-     */
-    public static Response file(final File file, String name, String mediaType, final boolean deleteAfter, final long cacheSeconds) {
-        StreamingOutput stream = new StreamingOutput() {
-            @Override
-            public void write(OutputStream output) throws IOException, WebApplicationException {
-                try (FileInputStream reader = new FileInputStream(file)) {
-                    byte[] chunk = new byte[4096];
-                    int read = 0;
-                    while ((read = reader.read(chunk)) > 0) {
-                        output.write(chunk, 0, read);
-                    }
-                } finally {
-                    if (deleteAfter) {
-                        Files.delete(file);
-                    }
-                }
-            }
-        };
-
-        Response.ResponseBuilder builder = Response
-                .status(HTTP_OK)
-                .entity(stream)
-                .header("Cache-Control", String.format("max-age=%d", Math.max(0, cacheSeconds)))
-                .header("Content-Disposition", "attachment; filename=\"" + name + "\"")
-                .header("X-Epos-Filename", name)
-                .type(mediaType);
         return builder.build();
     }
 
@@ -436,23 +346,6 @@ public class ServiceResponse {
             this.cause = "UNAUTHORIZED";
             this.status = HTTP_UNAUTHORIZED;
         }
-    }
-
-    /**
-     * Permite construir una respuesta apropiada para casos donde no se puede
-     * encontrar un recurso dado.
-     */
-    public static class NOT_FOUND extends KO {
-
-        /**
-         * Constructor.
-         */
-        public NOT_FOUND() {
-            super();
-            this.cause = "NOT_FOUND";
-            this.status = HTTP_NOT_FOUND;
-        }
-
     }
 
     /**
