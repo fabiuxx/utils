@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.misc.errors;
 
+import fa.gs.utils.misc.text.Strings;
 import java.io.Serializable;
 
 /**
@@ -27,5 +28,14 @@ public interface Errno extends Serializable {
      * @return Cadena que describe el codigo concreto de error.
      */
     public String getCode();
+
+    /**
+     * Obtiene la cadena completa que identifica al codigo de error.
+     *
+     * @return Cadena de codigo de error.
+     */
+    default String getErrnoString() {
+        return Strings.format("%s%s", getDescriptor(), getCode());
+    }
 
 }

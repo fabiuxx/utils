@@ -7,8 +7,6 @@ package fa.gs.utils.database.criteria;
 
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.collections.Maps;
-import fa.gs.utils.database.criteria.column.Column;
-import fa.gs.utils.database.sql.build.Conditions;
 import fa.gs.utils.mixins.Self;
 import java.io.Serializable;
 import java.util.Collection;
@@ -116,27 +114,27 @@ public class QueryCriteria<T extends QueryCriteria<T>> implements Serializable, 
         return new QueryCriteria(QueryKind.SELECT);
     }
 
-    public QueryCriteria from(Projection value) {
+    public T from(Projection value) {
         this.from = value;
         return self();
     }
 
-    public QueryCriteria projection(Projection value) {
+    public T projection(Projection value) {
         this.projections.add(value);
         return self();
     }
 
-    public QueryCriteria projection(Collection<Projection> values) {
+    public T projection(Collection<Projection> values) {
         this.projections.addAll(values);
         return self();
     }
 
-    public QueryCriteria join(Join value) {
+    public T join(Join value) {
         this.joins.add(value);
         return self();
     }
 
-    public QueryCriteria join(Collection<Join> value) {
+    public T join(Collection<Join> value) {
         this.joins.addAll(value);
         return self();
     }
@@ -155,40 +153,6 @@ public class QueryCriteria<T extends QueryCriteria<T>> implements Serializable, 
     }
 
     /**
-     * @deprecated usar {@link Conditions conditions}.
-     * @param column Descriptor de columna.
-     * @param operator Operador.
-     * @param value Valor de filtro.
-     * @return Esta misma instancia.
-     */
-    @Deprecated
-    public T where(Column<?> column, Operator operator, Object value) {
-        if (!column.accepts(value)) {
-            throw new IllegalArgumentException("Valor no aceptado por columna");
-        }
-
-        where(new Condition(column.getName(), operator, value));
-        return self();
-    }
-
-    /**
-     * @deprecated usar {@link Conditions conditions}.
-     * @param column Descriptor de columna.
-     * @param operator Operador.
-     * @param value Valores de filtro.
-     * @return Esta misma instancia.
-     */
-    @Deprecated
-    public T where(Column<?> column, Operator operator, Object[] value) {
-        if (!column.accepts(value)) {
-            throw new IllegalArgumentException("Valor no aceptado por columna");
-        }
-
-        where(new Condition(column.getName(), operator, value));
-        return self();
-    }
-
-    /**
      * Establece un criterio de ordenacion para la consulta.
      *
      * @param sorting Criterio de ordenacion.
@@ -198,19 +162,6 @@ public class QueryCriteria<T extends QueryCriteria<T>> implements Serializable, 
         if (sorting != null) {
             this.sorts.add(sorting);
         }
-        return self();
-    }
-
-    /**
-     * @deprecated usar {@link Conditions conditions}.
-     * @param column Descriptor de columna.
-     * @param order Tipo de ordenamiento.
-     * @return Esta misma instancia.
-     */
-    @Deprecated
-    public T order(Column<?> column, OrderKind order) {
-        Sorting sorting = new Sorting(column.getName(), order);
-        order(sorting);
         return self();
     }
 
@@ -261,7 +212,7 @@ public class QueryCriteria<T extends QueryCriteria<T>> implements Serializable, 
      * @param grouping Criterio de agrupacion.
      * @return Esta misma instancia.
      */
-    public QueryCriteria group(Grouping grouping) {
+    public T group(Grouping grouping) {
         this.groupings.add(grouping);
         return self();
     }

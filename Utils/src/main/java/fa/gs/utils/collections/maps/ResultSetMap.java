@@ -12,6 +12,7 @@ import fa.gs.utils.database.criteria.column.NativeColumn;
 import fa.gs.utils.misc.Numeric;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
@@ -28,6 +29,10 @@ public class ResultSetMap {
         if (rows != null) {
             this.map.putAll(rows);
         }
+    }
+
+    public Map<String, Object> getMap() {
+        return Collections.unmodifiableMap(map);
     }
 
     private String resolveColumnName(Column<?> column) {

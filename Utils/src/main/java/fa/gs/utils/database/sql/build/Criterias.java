@@ -16,6 +16,7 @@ import fa.gs.utils.database.criteria.Projection;
 import fa.gs.utils.database.criteria.QueryCriteria;
 import fa.gs.utils.database.criteria.Sorting;
 import fa.gs.utils.database.criteria.column.Column;
+import fa.gs.utils.database.mapping.Mapping;
 import fa.gs.utils.database.sql.format.SelectCriteriaFormatter;
 import fa.gs.utils.misc.Assertions;
 import java.util.Collection;
@@ -138,6 +139,14 @@ public class Criterias {
 
     public static <T extends QueryCriteria> T select(T criteria, String name, Column<?> as) {
         return select(criteria, name, as.getName());
+    }
+
+    public static <T extends QueryCriteria> T select(T criteria, Column<?> name, Column<?> as) {
+        return select(criteria, name.getName(), as.getName());
+    }
+
+    public static <T extends QueryCriteria> T select(T criteria, Column<?> name, Mapping<?> as) {
+        return select(criteria, name.getName(), as.symbol().getName());
     }
 
     public static <T extends QueryCriteria> T select(T criteria, String name, String as) {

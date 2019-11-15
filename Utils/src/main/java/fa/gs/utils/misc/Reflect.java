@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.misc;
 
-import fa.gs.utils.database.criteria.column.Column;
 import java.lang.reflect.Field;
 
 /**
@@ -13,19 +12,6 @@ import java.lang.reflect.Field;
  * @author Fabio A. González Sosa
  */
 public class Reflect {
-
-    /**
-     * Obtiene el valor de un atributo dentro de un objeto.
-     *
-     * @param <T> Parametro de tipo de atributo.
-     * @param obj Objeto a procesar.
-     * @param column Descripcion de atributo columna, en caso que el objeto sea
-     * una entidad.
-     * @return Valor de atributo, si hubiere. Caso contrario {@code null}.
-     */
-    public static <T> T get(Object obj, Column<T> column) {
-        return get(obj, column.getName(), column.getType());
-    }
 
     /**
      * Obtiene el valor de un atributo dentro de un objeto.
@@ -45,8 +31,19 @@ public class Reflect {
                 return null;
             }
             return type.cast(value);
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+        } catch (Throwable thr) {
             return null;
+        }
+    }
+
+    public static boolean set(Object obj, String attribute, Object value) {
+        try {
+            Field field = obj.getClass().getDeclaredField(attribute);
+            field.setAccessible(true);
+            field.set(obj, value);
+            return true;
+        } catch (Throwable thr) {
+            return false;
         }
     }
 

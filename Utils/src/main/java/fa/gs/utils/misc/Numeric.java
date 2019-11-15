@@ -90,6 +90,41 @@ public class Numeric {
 
     /**
      * Adapta un valor numerico de tipo indeterminado a un valor concreto de
+     * tipo {@link java.lang.Integer Integer}.
+     *
+     * @param obj Valor numerico arbitratio.
+     * @return Valor numerico adaptado.
+     */
+    public static Integer adaptAsInteger(Object obj) {
+        if (obj instanceof Short) {
+            return (Integer) obj;
+        }
+
+        if (obj instanceof Integer) {
+            return (Integer) obj;
+        }
+
+        if (obj instanceof Long) {
+            return ((Long) obj).intValue();
+        }
+
+        if (obj instanceof BigInteger) {
+            return ((BigInteger) obj).intValue();
+        }
+
+        if (obj instanceof BigDecimal) {
+            return ((BigDecimal) obj).intValue();
+        }
+
+        if (obj == null) {
+            throw new IllegalArgumentException("Parámetro es nulo");
+        }
+
+        throw new IllegalArgumentException(String.format("No se puede convertir '%s' a Integer.", obj.getClass().getCanonicalName()));
+    }
+
+    /**
+     * Adapta un valor numerico de tipo indeterminado a un valor concreto de
      * tipo {@link java.lang.Long Long}.
      *
      * @param obj Valor numerico arbitratio.
@@ -121,6 +156,86 @@ public class Numeric {
         }
 
         throw new IllegalArgumentException(String.format("No se puede convertir '%s' a Long.", obj.getClass().getCanonicalName()));
+    }
+
+    /**
+     * Adapta un valor numerico de tipo indeterminado a un valor concreto de
+     * tipo {@link java.math.BigInteger BigInteger}.
+     *
+     * @param obj Valor numerico arbitratio.
+     * @return Valor numerico adaptado.
+     */
+    public static BigInteger adaptAsBigInteger(Object obj) {
+        if (obj instanceof Short) {
+            String val = String.valueOf(obj);
+            return new BigInteger(val, 10);
+        }
+
+        if (obj instanceof Integer) {
+            String val = String.valueOf(obj);
+            return new BigInteger(val, 10);
+        }
+
+        if (obj instanceof Long) {
+            return BigInteger.valueOf((Long) obj);
+        }
+
+        if (obj instanceof BigInteger) {
+            return ((BigInteger) obj);
+        }
+
+        if (obj instanceof BigDecimal) {
+            return ((BigDecimal) obj).toBigInteger();
+        }
+
+        if (obj == null) {
+            throw new IllegalArgumentException("Parámetro es nulo");
+        }
+
+        throw new IllegalArgumentException(String.format("No se puede convertir '%s' a BigInteger.", obj.getClass().getCanonicalName()));
+    }
+
+    /**
+     * Adapta un valor numerico de tipo indeterminado a un valor concreto de
+     * tipo {@link java.math.BigDecimal BigDecimal}.
+     *
+     * @param obj Valor numerico arbitratio.
+     * @return Valor numerico adaptado.
+     */
+    public static BigDecimal adaptAsBigDecimal(Object obj) {
+        if (obj instanceof Short) {
+            return new BigDecimal((Short) obj);
+        }
+
+        if (obj instanceof Integer) {
+            return new BigDecimal((Integer) obj);
+        }
+
+        if (obj instanceof Long) {
+            return new BigDecimal((Long) obj);
+        }
+
+        if (obj instanceof Float) {
+            return new BigDecimal((Float) obj);
+        }
+
+        if (obj instanceof Double) {
+            return new BigDecimal((Double) obj);
+        }
+
+        if (obj instanceof BigInteger) {
+            return new BigDecimal((BigInteger) obj);
+        }
+
+        if (obj instanceof BigDecimal) {
+            return (BigDecimal) obj;
+        }
+
+        if (obj == null) {
+            throw new IllegalArgumentException("Parámetro es nulo");
+        }
+
+        throw new IllegalArgumentException(String.format("No se puede convertir '%s' a BigDecimal.", obj.getClass().getCanonicalName()));
     }
 
     /**
@@ -248,6 +363,17 @@ public class Numeric {
      */
     public static BigDecimal wrap(double value) {
         return BigDecimal.valueOf(value);
+    }
+
+    /**
+     * Toma un valor de tipo {@code Number} y retorna su equivalente en el tipo
+     * de dato {@code BigDecimal}.
+     *
+     * @param value Valor numerico.
+     * @return valor numerico como {@code BigDecimal}.
+     */
+    public static BigDecimal wrap(Number value) {
+        return new BigDecimal(String.valueOf(value));
     }
 
     /**

@@ -17,6 +17,7 @@ public enum Operator implements Serializable {
     NOT_EQUALS("neq", "!="),
     LIKE("like", "like"),
     IN("in", "in"),
+    NOT_IN("not in", "not in"),
     IS("is", "is"),
     GREATER("get", ">"),
     GREATER_EQUAL("geq", ">="),

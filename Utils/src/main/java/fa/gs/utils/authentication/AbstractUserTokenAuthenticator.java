@@ -15,10 +15,9 @@ import fa.gs.utils.result.simple.Results;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T> Parametro de tipo par ainformacion de usuario.
- * @param <Q> Parametro de tipo para tipo de payload de token.
+ * @param <T> Parametro de tipo para tipo de payload de token.
  */
-public abstract class AbstractUserTokenAuthenticator<Q> implements Authenticator<AuthenticationInfo> {
+public abstract class AbstractUserTokenAuthenticator<T> implements Authenticator<AuthenticationInfo> {
 
     @Override
     @Deprecated
@@ -32,8 +31,8 @@ public abstract class AbstractUserTokenAuthenticator<Q> implements Authenticator
 
         try {
             // Decodificar Token
-            TokenDecoder<Q> decoder = getTokenDecoder();
-            Q payload = decoder.decodeToken(token);
+            TokenDecoder<T> decoder = getTokenDecoder();
+            T payload = decoder.decodeToken(token);
             if (payload == null) {
                 throw Errors.builder()
                         .message("Tóken invalido")
@@ -55,8 +54,8 @@ public abstract class AbstractUserTokenAuthenticator<Q> implements Authenticator
         return result;
     }
 
-    protected abstract TokenDecoder<Q> getTokenDecoder();
+    protected abstract TokenDecoder<T> getTokenDecoder();
 
-    protected abstract AuthenticationInfo parseTokenPayload(Q payload) throws Throwable;
+    protected abstract AuthenticationInfo parseTokenPayload(T payload) throws Throwable;
 
 }

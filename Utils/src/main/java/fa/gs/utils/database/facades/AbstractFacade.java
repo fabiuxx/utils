@@ -394,6 +394,16 @@ public abstract class AbstractFacade<T> implements Facade<T> {
                     case IN:
                         if (value instanceof Object[]) {
                             predicate = cb.and(predicate, path.in((Object[]) value));
+                        } else {
+                            throw new IllegalArgumentException("Se esperaba un array de datos para operador IN.");
+                        }
+                        break;
+                    case NOT_IN:
+                        if (value instanceof Object[]) {
+                            javax.persistence.criteria.Predicate in0 = path.in((Object[]) value);
+                            predicate = cb.and(predicate, cb.not(in0));
+                        } else {
+                            throw new IllegalArgumentException("Se esperaba un array de datos para operador NOT IN.");
                         }
                         break;
                     case LIKE:

@@ -25,7 +25,7 @@ public class Lists {
             return null;
         }
     }
-    
+
     public static <T> Collection<T> wrap(Iterable<T> iterable) {
         Collection<T> items = Lists.empty();
         if (iterable != null) {

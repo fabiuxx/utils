@@ -14,6 +14,22 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     
+    <repositories>
+        <repository>
+            <id>librerias-java</id>
+            <name>librerias-java</name>
+            <url>http://192.168.0.192:8081/artifactory/librerias-java</url>
+        </repository>
+    </repositories>
+  
+    <distributionManagement>
+        <repository>
+            <id>librerias-java</id>
+            <name>librerias-java</name>
+            <url>http://192.168.0.192:8081/artifactory/librerias-java</url>
+        </repository>
+    </distributionManagement>
+    
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
@@ -22,6 +38,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>

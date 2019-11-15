@@ -15,6 +15,10 @@ import java.io.PrintStream;
  */
 public class Errors {
 
+    public static Errno errno(String codigo, String descripcion) {
+        return new ErrnoImpl(codigo, descripcion);
+    }
+
     public static AppErrorException.Builder builder() {
         return new AppErrorExceptionBuilder();
     }
@@ -84,4 +88,25 @@ public class Errors {
         return builder.toString();
     }
 
+    private static class ErrnoImpl implements Errno {
+
+        private final String codigo;
+        private final String descriptor;
+
+        ErrnoImpl(String codigo, String descriptor) {
+            this.codigo = codigo;
+            this.descriptor = descriptor;
+        }
+
+        @Override
+        public String getDescriptor() {
+            return descriptor;
+        }
+
+        @Override
+        public String getCode() {
+            return codigo;
+        }
+
+    }
 }
