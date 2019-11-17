@@ -18,22 +18,23 @@ public class NativeColumn<T> extends AbstractColumn<T> {
 
     protected final String tableName;
 
-    protected NativeColumn(String tableName, String name, Class<T> type, boolean acceptsNull) {
-        super(null, name, type, acceptsNull);
+    protected NativeColumn(String tableName, String name, Class<T> type) {
+        super(null, name, type, true);
         this.tableName = tableName;
     }
 
+    @Deprecated
     public static <T> NativeColumn<T> instance(String name, Class<T> type) {
-        return instance(name, type, false);
-    }
-
-    public static <T> NativeColumn<T> instance(String name, Class<T> type, boolean acceptsNull) {
         String[] parts = name.split(Pattern.quote("."));
         if (parts.length > 1) {
-            return new NativeColumn<>(parts[0], parts[1], type, acceptsNull);
+            return instance(parts[0], parts[1], type);
         } else {
-            return new NativeColumn<>(null, name, type, acceptsNull);
+            return instance(null, name, type);
         }
+    }
+
+    public static <T> NativeColumn<T> instance(String tableName, String name, Class<T> type) {
+        return new NativeColumn<>(tableName, name, type);
     }
 
     @Override
@@ -50,6 +51,13 @@ public class NativeColumn<T> extends AbstractColumn<T> {
         }
     }
 
+    /**
+     * TODO: ELIMINAR.
+     *
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public String getSimpleName() {
         return name;
     }

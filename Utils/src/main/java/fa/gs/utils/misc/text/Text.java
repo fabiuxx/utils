@@ -34,13 +34,88 @@ public class Text {
     }
 
     /**
+     * Determina si una cadena de texto esta acomillada.
+     *
+     * @param txt Cadena de texto.
+     * @return {@code true} si la cadena esta acomillada, caso contrario
+     * {@code false}.
+     */
+    public static boolean isSingleQuoted(String txt) {
+        return isQuoted(txt, '\'');
+    }
+
+    /**
+     * Determina si una cadena de texto esta acomillada.
+     *
+     * @param txt Cadena de texto.
+     * @return {@code true} si la cadena esta acomillada, caso contrario
+     * {@code false}.
+     */
+    public static boolean isDoubleQuoted(String txt) {
+        return isQuoted(txt, '\"');
+    }
+
+    /**
+     * Determina si la representacion en cadena de un objeto esta acomillada.
+     *
+     * @param obj Objeto.
+     * @param quotation0 Caracter de acomillado.
+     * @return Si la representacion en cadena de texto esta acomillada.
+     */
+    public static boolean isQuoted(Object obj, Character quotation0) {
+        String quotataion = String.valueOf(quotation0);
+        String txt = String.valueOf(obj);
+        return txt.startsWith(quotataion) && txt.endsWith(quotataion);
+    }
+
+    /**
      * Retorna una cadena "acomillada" con un caracter por defecto.
      *
      * @param obj Objeto a representar como texto.
      * @return Cadena acomillada.
      */
-    public static String quote(Object obj) {
+    public static String quoteSingle(Object obj) {
         return quote(obj, '\'');
+    }
+
+    /**
+     * Retorna una cadena "acomillada" con un caracter por defecto.
+     *
+     * @param obj Objeto a representar como texto.
+     * @return Cadena acomillada.
+     */
+    public static String quoteDouble(Object obj) {
+        return quote(obj, '\"');
+    }
+
+    /**
+     * Retorna una cadena "acomillada", verificando que la misma no este
+     * previamente acomillada.
+     *
+     * @param txt Cadena de texto.
+     * @return Cadena acomillada.
+     */
+    public static String safeQuoteSingle(String txt) {
+        if (isSingleQuoted(txt)) {
+            return txt;
+        } else {
+            return quoteSingle(txt);
+        }
+    }
+
+    /**
+     * Retorna una cadena "acomillada", verificando que la misma no este
+     * previamente acomillada.
+     *
+     * @param txt Cadena de texto.
+     * @return Cadena acomillada.
+     */
+    public static String safeQuoteDouble(String txt) {
+        if (isDoubleQuoted(txt)) {
+            return txt;
+        } else {
+            return quoteDouble(txt);
+        }
     }
 
     /**

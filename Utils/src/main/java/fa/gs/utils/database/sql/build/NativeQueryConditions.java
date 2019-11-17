@@ -34,7 +34,7 @@ public final class NativeQueryConditions {
         } else if (elements.length == 1) {
             value = String.valueOf(elements[0]);
             if (quoted) {
-                value = Text.quote(value);
+                value = Text.quoteSingle(value);
             }
             condition = new Condition(lexpression, Operator.EQUALS, value);
         } else {

@@ -41,16 +41,16 @@ public class SqlLiterals {
 
     private static String formatFecha(Date fecha, String format) {
         String txt = Fechas.toString(fecha, format);
-        return Text.quote(txt);
+        return Text.quoteSingle(txt);
     }
 
     public static String string(String text) {
-        return Text.quote(text);
+        return Text.quoteSingle(text);
     }
 
     public static String like(String text) {
         String like = String.format("%%%s%%", text);
-        return Text.quote(like);
+        return Text.quoteSingle(like);
     }
 
 }

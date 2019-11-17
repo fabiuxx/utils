@@ -17,13 +17,21 @@ import java.util.Map;
  */
 public class IntegerMapper extends AttributeMapper<Integer> {
 
-    public IntegerMapper(String attributeName, Mapping<Integer> mapping) {
+    protected IntegerMapper(String attributeName, Mapping<Integer> mapping) {
         super(attributeName, mapping);
+    }
+
+    public static IntegerMapper instance(Mapping<Integer> mapping) {
+        return instance(mapping.symbol().getName(), mapping);
+    }
+
+    public static IntegerMapper instance(String attributeName, Mapping<Integer> mapping) {
+        return new IntegerMapper(attributeName, mapping);
     }
 
     @Override
     public void map(Object instance, String targetAttributeName, Map<String, Object> resultSetElement, Mapping<Integer> mapping) {
-        Object value0 = Maps.get(resultSetElement, mapping.symbol().getName(), mapping.fallback(), mapping.type());
+        Object value0 = Maps.get(resultSetElement, mapping.symbol().getName(), mapping.fallback(), Object.class);
         Integer value = Numeric.adaptAsInteger(value0);
         Reflect.set(instance, targetAttributeName, value);
     }

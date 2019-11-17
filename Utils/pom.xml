@@ -18,7 +18,7 @@
         <repository>
             <id>librerias-java</id>
             <name>librerias-java</name>
-            <url>http://192.168.0.192:8081/artifactory/librerias-java</url>
+            <url>http://181.40.81.34:9420/artifactory/librerias-java</url>
         </repository>
     </repositories>
   
@@ -26,7 +26,7 @@
         <repository>
             <id>librerias-java</id>
             <name>librerias-java</name>
-            <url>http://192.168.0.192:8081/artifactory/librerias-java</url>
+            <url>http://181.40.81.34:9420/artifactory/librerias-java</url>
         </repository>
     </distributionManagement>
     

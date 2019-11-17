@@ -18,13 +18,21 @@ import java.util.Map;
  */
 public class BigDecimalMapper extends AttributeMapper<BigDecimal> {
 
-    public BigDecimalMapper(String attributeName, Mapping<BigDecimal> mapping) {
+    protected BigDecimalMapper(String attributeName, Mapping<BigDecimal> mapping) {
         super(attributeName, mapping);
+    }
+
+    public static BigDecimalMapper instance(Mapping<BigDecimal> mapping) {
+        return instance(mapping.symbol().getName(), mapping);
+    }
+
+    public static BigDecimalMapper instance(String attributeName, Mapping<BigDecimal> mapping) {
+        return new BigDecimalMapper(attributeName, mapping);
     }
 
     @Override
     public void map(Object instance, String targetAttributeName, Map<String, Object> resultSetElement, Mapping<BigDecimal> mapping) {
-        Object value0 = Maps.get(resultSetElement, mapping.symbol().getName(), mapping.fallback(), mapping.type());
+        Object value0 = Maps.get(resultSetElement, mapping.symbol().getName(), mapping.fallback(), Object.class);
         BigDecimal value = Numeric.adaptAsBigDecimal(value0);
         Reflect.set(instance, targetAttributeName, value);
     }

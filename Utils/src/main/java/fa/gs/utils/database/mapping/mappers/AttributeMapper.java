@@ -14,6 +14,7 @@ import java.util.Map;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T>
  */
 public class AttributeMapper<T> implements Mapper<T> {
 
@@ -21,7 +22,7 @@ public class AttributeMapper<T> implements Mapper<T> {
 
     private final Mapping<T> mapping;
 
-    public AttributeMapper(String attributeName, Mapping<T> mapping) {
+    protected AttributeMapper(String attributeName, Mapping<T> mapping) {
         this.attributeName = attributeName;
         this.mapping = mapping;
     }

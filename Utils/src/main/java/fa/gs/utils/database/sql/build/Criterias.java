@@ -19,6 +19,7 @@ import fa.gs.utils.database.criteria.column.Column;
 import fa.gs.utils.database.mapping.Mapping;
 import fa.gs.utils.database.sql.format.SelectCriteriaFormatter;
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.text.Text;
 import java.util.Collection;
 
 /**
@@ -51,9 +52,11 @@ public class Criterias {
     }
 
     public static <T extends QueryCriteria> T where(T criteria, Condition... conditions) {
-        for (Condition condition : conditions) {
-            if (condition != null) {
-                criteria.where(condition);
+        if (!Assertions.isNullOrEmpty(conditions)) {
+            for (Condition condition : conditions) {
+                if (condition != null) {
+                    criteria.where(condition);
+                }
             }
         }
         return criteria;
@@ -89,9 +92,11 @@ public class Criterias {
     }
 
     public static <T extends QueryCriteria> T order(T criteria, Sorting... sortings) {
-        for (Sorting sorting : sortings) {
-            if (sorting != null) {
-                criteria.order(sorting);
+        if (!Assertions.isNullOrEmpty(sortings)) {
+            for (Sorting sorting : sortings) {
+                if (sorting != null) {
+                    criteria.order(sorting);
+                }
             }
         }
         return criteria;
@@ -125,11 +130,23 @@ public class Criterias {
     }
 
     public static <T extends QueryCriteria> T group(T criteria, Grouping... groupings) {
-        for (Grouping grouping : groupings) {
-            if (grouping != null) {
-                criteria.group(grouping);
+        if (!Assertions.isNullOrEmpty(groupings)) {
+            for (Grouping grouping : groupings) {
+                if (grouping != null) {
+                    criteria.group(grouping);
+                }
             }
         }
+        return criteria;
+    }
+
+    public static <T extends QueryCriteria> T group(T criteria, Column<?> column) {
+        return group(criteria, column.getName());
+    }
+
+    public static <T extends QueryCriteria> T group(T criteria, String expression) {
+        Grouping grouping = new Grouping(expression);
+        criteria.group(grouping);
         return criteria;
     }
 
@@ -137,16 +154,24 @@ public class Criterias {
         return select(criteria, name, "");
     }
 
+    /**
+     * TODO: ELIMINAR.
+     *
+     * @param <T>
+     * @param criteria
+     * @param name
+     * @param as
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public static <T extends QueryCriteria> T select(T criteria, String name, Column<?> as) {
         return select(criteria, name, as.getName());
     }
 
-    public static <T extends QueryCriteria> T select(T criteria, Column<?> name, Column<?> as) {
-        return select(criteria, name.getName(), as.getName());
-    }
-
-    public static <T extends QueryCriteria> T select(T criteria, Column<?> name, Mapping<?> as) {
-        return select(criteria, name.getName(), as.symbol().getName());
+    public static <T extends QueryCriteria> T select(T criteria, Column<?> column, Mapping<?> as) {
+        String as0 = Text.safeQuoteDouble(as.symbol().getName());
+        return select(criteria, column.getName(), as0);
     }
 
     public static <T extends QueryCriteria> T select(T criteria, String name, String as) {
@@ -167,6 +192,10 @@ public class Criterias {
 
     public static <T extends QueryCriteria> T join(T criteria, String projection, String as, String lexp, Operator operator, Object rexp) {
         return join(criteria, JoinKind.JOIN, projection, as, lexp, operator, rexp);
+    }
+
+    public static <T extends QueryCriteria> T join(T criteria, JoinKind joinKind, String projection, String as, Column<?> lexp, Operator operator, Column<?> rexp) {
+        return join(criteria, joinKind, projection, as, lexp.getName(), operator, rexp.getName());
     }
 
     public static <T extends QueryCriteria> T join(T criteria, JoinKind joinKind, String projection, String as, String lexp, Operator operator, Object rexp) {
@@ -199,16 +228,6 @@ public class Criterias {
     public static <T extends QueryCriteria> T limit(T criteria, Integer limit, Integer offset) {
         criteria.limit(limit);
         criteria.offset(offset);
-        return criteria;
-    }
-
-    public static <T extends QueryCriteria> T group(T criteria, Column<?> column) {
-        return group(criteria, column.getName());
-    }
-
-    public static <T extends QueryCriteria> T group(T criteria, String expression) {
-        Grouping grouping = new Grouping(expression);
-        criteria.group(grouping);
         return criteria;
     }
 

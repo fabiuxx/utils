@@ -5,11 +5,13 @@
  */
 package fa.gs.utils.database.mapping;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Fabio A. González Sosa
  */
-public interface MappingSymbol {
+public interface MappingSymbol extends Serializable {
 
     public String getName();
 

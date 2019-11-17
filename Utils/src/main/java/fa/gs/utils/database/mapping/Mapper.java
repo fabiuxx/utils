@@ -5,13 +5,14 @@
  */
 package fa.gs.utils.database.mapping;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  *
  * @author Fabio A. González Sosa
  */
-public interface Mapper<T> {
+public interface Mapper<T> extends Serializable {
 
     void map(Object instance, String targetAttributeName, Map<String, Object> resultSetElement, Mapping<T> mapping);
 

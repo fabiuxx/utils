@@ -14,14 +14,24 @@ import java.util.Map;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T>
+ * @param <U>
  */
-public class EnumAttributeMapper<T, U extends Enum<U>> extends AttributeMapper<T> {
+public class EnumMapper<T, U extends Enum<U>> extends AttributeMapper<T> {
 
     private final EnumerableAdapter<U> adapter;
 
-    public EnumAttributeMapper(String attributeName, Mapping<T> mapping, EnumerableAdapter<U> adapter) {
+    protected EnumMapper(String attributeName, Mapping<T> mapping, EnumerableAdapter<U> adapter) {
         super(attributeName, mapping);
         this.adapter = adapter;
+    }
+
+    public static <T, U extends Enum<U>> EnumMapper instance(Mapping<T> mapping, EnumerableAdapter<U> adapter) {
+        return instance(mapping.symbol().getName(), mapping, adapter);
+    }
+
+    public static <T, U extends Enum<U>> EnumMapper instance(String attributeName, Mapping<T> mapping, EnumerableAdapter<U> adapter) {
+        return new EnumMapper(attributeName, mapping, adapter);
     }
 
     @Override

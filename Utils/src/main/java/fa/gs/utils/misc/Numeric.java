@@ -96,6 +96,10 @@ public class Numeric {
      * @return Valor numerico adaptado.
      */
     public static Integer adaptAsInteger(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
         if (obj instanceof Short) {
             return (Integer) obj;
         }
@@ -116,10 +120,6 @@ public class Numeric {
             return ((BigDecimal) obj).intValue();
         }
 
-        if (obj == null) {
-            throw new IllegalArgumentException("Parámetro es nulo");
-        }
-
         throw new IllegalArgumentException(String.format("No se puede convertir '%s' a Integer.", obj.getClass().getCanonicalName()));
     }
 
@@ -131,6 +131,10 @@ public class Numeric {
      * @return Valor numerico adaptado.
      */
     public static Long adaptAsLong(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
         if (obj instanceof Short) {
             return (Long) obj;
         }
@@ -151,10 +155,6 @@ public class Numeric {
             return ((BigDecimal) obj).longValue();
         }
 
-        if (obj == null) {
-            throw new IllegalArgumentException("Parámetro es nulo");
-        }
-
         throw new IllegalArgumentException(String.format("No se puede convertir '%s' a Long.", obj.getClass().getCanonicalName()));
     }
 
@@ -166,6 +166,10 @@ public class Numeric {
      * @return Valor numerico adaptado.
      */
     public static BigInteger adaptAsBigInteger(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
         if (obj instanceof Short) {
             String val = String.valueOf(obj);
             return new BigInteger(val, 10);
@@ -188,10 +192,6 @@ public class Numeric {
             return ((BigDecimal) obj).toBigInteger();
         }
 
-        if (obj == null) {
-            throw new IllegalArgumentException("Parámetro es nulo");
-        }
-
         throw new IllegalArgumentException(String.format("No se puede convertir '%s' a BigInteger.", obj.getClass().getCanonicalName()));
     }
 
@@ -203,6 +203,10 @@ public class Numeric {
      * @return Valor numerico adaptado.
      */
     public static BigDecimal adaptAsBigDecimal(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
         if (obj instanceof Short) {
             return new BigDecimal((Short) obj);
         }
@@ -229,10 +233,6 @@ public class Numeric {
 
         if (obj instanceof BigDecimal) {
             return (BigDecimal) obj;
-        }
-
-        if (obj == null) {
-            throw new IllegalArgumentException("Parámetro es nulo");
         }
 
         throw new IllegalArgumentException(String.format("No se puede convertir '%s' a BigDecimal.", obj.getClass().getCanonicalName()));

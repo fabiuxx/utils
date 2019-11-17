@@ -15,10 +15,18 @@ import java.util.Objects;
  *
  * @author Fabio A. González Sosa
  */
-public class BooleanCharacterttributeMapper extends AttributeMapper<Character> {
+public class BooleanCharacterMapper extends AttributeMapper<Character> {
 
-    public BooleanCharacterttributeMapper(String attributeName, Mapping<Character> mapping) {
+    protected BooleanCharacterMapper(String attributeName, Mapping<Character> mapping) {
         super(attributeName, mapping);
+    }
+
+    public static BooleanCharacterMapper instance(Mapping<Character> mapping) {
+        return instance(mapping.symbol().getName(), mapping);
+    }
+
+    public static BooleanCharacterMapper instance(String attributeName, Mapping<Character> mapping) {
+        return new BooleanCharacterMapper(attributeName, mapping);
     }
 
     @Override

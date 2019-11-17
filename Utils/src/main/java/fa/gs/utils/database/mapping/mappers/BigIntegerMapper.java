@@ -18,13 +18,21 @@ import java.util.Map;
  */
 public class BigIntegerMapper extends AttributeMapper<BigInteger> {
 
-    public BigIntegerMapper(String attributeName, Mapping<BigInteger> mapping) {
+    protected BigIntegerMapper(String attributeName, Mapping<BigInteger> mapping) {
         super(attributeName, mapping);
+    }
+
+    public static BigIntegerMapper instance(Mapping<BigInteger> mapping) {
+        return instance(mapping.symbol().getName(), mapping);
+    }
+
+    public static BigIntegerMapper instance(String attributeName, Mapping<BigInteger> mapping) {
+        return new BigIntegerMapper(attributeName, mapping);
     }
 
     @Override
     public void map(Object instance, String targetAttributeName, Map<String, Object> resultSetElement, Mapping<BigInteger> mapping) {
-        Object value0 = Maps.get(resultSetElement, mapping.symbol().getName(), mapping.fallback(), mapping.type());
+        Object value0 = Maps.get(resultSetElement, mapping.symbol().getName(), mapping.fallback(), Object.class);
         BigInteger value = Numeric.adaptAsBigInteger(value0);
         Reflect.set(instance, targetAttributeName, value);
     }

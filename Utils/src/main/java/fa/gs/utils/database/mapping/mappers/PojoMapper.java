@@ -7,7 +7,6 @@ package fa.gs.utils.database.mapping.mappers;
 
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.collections.maps.ResultSetMap;
-import fa.gs.utils.database.mapping.Mapping;
 import fa.gs.utils.database.utils.ResultSetMapper;
 import fa.gs.utils.mixins.Self;
 import java.util.Collection;
@@ -15,8 +14,10 @@ import java.util.Collection;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T>
+ * @param <U>
  */
-public abstract class PojoMapper<T extends PojoMapper<T>> extends ResultSetMapper<T> implements Self<T> {
+public abstract class PojoMapper<T extends PojoMapper<T, U>, U> extends ResultSetMapper<U> implements Self<T> {
 
     private final Collection<AttributeMapper> mappers;
 
@@ -32,13 +33,8 @@ public abstract class PojoMapper<T extends PojoMapper<T>> extends ResultSetMappe
         return self();
     }
 
-    public T with(String attributeName, Mapping mapping) {
-        AttributeMapper mapper = new AttributeMapper(attributeName, mapping);
-        return with(mapper);
-    }
-
     @Override
-    protected T adapt(T adaptee, ResultSetMap resultSet) {
+    protected U adapt(U adaptee, ResultSetMap resultSet) {
         for (AttributeMapper mapper : mappers) {
             mapper.map(adaptee, resultSet.getMap());
         }

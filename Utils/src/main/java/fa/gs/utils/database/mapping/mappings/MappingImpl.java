@@ -11,16 +11,20 @@ import fa.gs.utils.database.mapping.MappingSymbol;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T>
  */
-public abstract class AbstractMapping<T> implements Mapping<T> {
+public class MappingImpl<T> implements Mapping<T> {
 
     private final MappingSymbol symbol;
 
     private final T fallback;
 
-    AbstractMapping(String symbolName, T fallback) {
+    private final Class<T> type;
+
+    MappingImpl(String symbolName, Class<T> type, T fallback) {
         this.symbol = new MappingSymbolImpl(symbolName);
         this.fallback = fallback;
+        this.type = type;
     }
 
     @Override
@@ -31,6 +35,11 @@ public abstract class AbstractMapping<T> implements Mapping<T> {
     @Override
     public T fallback() {
         return fallback;
+    }
+
+    @Override
+    public Class<T> type() {
+        return type;
     }
 
     private static class MappingSymbolImpl implements MappingSymbol {
