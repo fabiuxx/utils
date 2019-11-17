@@ -15,16 +15,16 @@ import org.junit.Test;
  * @author Fabio A. González Sosa
  */
 public class Test_Passwords {
-    
+
     public static final String BCRYPT_HASH = "$2a$10$sRrYju0KxxiVPXpjv.jIr.Kb2kGBxkIbwPKLp08WcxFKcZce3CaD6";
-    
+
     public static final String PLAIN_TEXT = "123";
-    
+
     @Test
     public void test0() throws Throwable {
         PasswordVerifier verifier = new PasswordVerifier_BCRYPT();
         boolean ok = verifier.verifies(PLAIN_TEXT, BCRYPT_HASH);
         Assert.assertTrue(ok);
     }
-    
+
 }
