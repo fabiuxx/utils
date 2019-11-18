@@ -81,7 +81,7 @@ public abstract class ApplicationWorkerExecutor implements Serializable {
     /**
      * Detiene el servicio concreto de ejecucion de tareas en segundo plano. El
      * servicio a destruir debe ser idealmente uno creado mediante
-     * {@link fa.gs.workers.ApplicationWorkerExecutor#createExecutorService() createExecutorService}.
+     * {@link #createExecutorService() createExecutorService}.
      *
      * @param executor Servicio de ejecucion de tareas.
      * @return {@code true} si el servicio de ejecucion fue detenido
@@ -93,12 +93,6 @@ public abstract class ApplicationWorkerExecutor implements Serializable {
      * Escanea en busca de clases que implementen el contrato de un trabajador
      * compatible.
      *
-     * @param loader Cargador de clases a utilizar de manera opcional para el
-     * escaneo de paquetes.
-     * @param verbose Indica si se deben emitir mensajes durante el escaneo de
-     * paquetes.
-     * @param packages Paquetes de codigo a escanear en busca de
-     * implementaciones de trabajadores.
      * @return Cantidad de clases encontradas.
      */
     protected abstract Collection<Class<? extends ApplicationWorker>> populateWorkers();

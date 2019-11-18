@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
+ * @param <T> Parametro de tipo.
  */
 public class AttributeMapper<T> implements Mapper<T> {
 

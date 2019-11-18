@@ -29,11 +29,10 @@ public interface ApplicationWorker extends Runnable, ManagedTask, ApplicationWor
     public void onWork() throws Throwable;
 
     /**
-     * Llamado cuando ocurre algun error en
-     * {@link ApplicationWorker#onWork() onWork}.
+     * Llamado cuando ocurre algun error en {@link #onWork() onWork}.
      *
      * @param thr Error capturado durante la ejecucion de
-     * {@link ApplicationWorker#onWork() onWork}.
+     * {@link #onWork() onWork}.
      */
     public void onError(Throwable thr);
 

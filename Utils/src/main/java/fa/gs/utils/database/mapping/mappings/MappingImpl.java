@@ -11,7 +11,7 @@ import fa.gs.utils.database.mapping.MappingSymbol;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
+ * @param <T> Parametro de tipo.
  */
 public class MappingImpl<T> implements Mapping<T> {
 

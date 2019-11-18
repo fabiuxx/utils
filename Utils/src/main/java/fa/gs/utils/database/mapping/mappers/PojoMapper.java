@@ -14,8 +14,8 @@ import java.util.Collection;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
- * @param <U>
+ * @param <T> Parametro de tipo.
+ * @param <U> Parametro de tipo.
  */
 public abstract class PojoMapper<T extends PojoMapper<T, U>, U> extends ResultSetMapper<U> implements Self<T> {
 

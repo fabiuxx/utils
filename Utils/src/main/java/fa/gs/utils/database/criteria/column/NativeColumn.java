@@ -54,7 +54,7 @@ public class NativeColumn<T> extends AbstractColumn<T> {
     /**
      * TODO: ELIMINAR.
      *
-     * @return
+     * @return Nombre simple.
      * @deprecated
      */
     @Deprecated

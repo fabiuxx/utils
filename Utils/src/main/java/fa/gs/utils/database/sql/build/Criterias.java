@@ -157,12 +157,12 @@ public class Criterias {
     /**
      * TODO: ELIMINAR.
      *
-     * @param <T>
-     * @param criteria
-     * @param name
-     * @param as
-     * @return
-     * @deprecated
+     * @param <T> Parametro de tipo.
+     * @param criteria asd
+     * @param name asd
+     * @param as asd
+     * @return asd
+     * @deprecated asd
      */
     @Deprecated
     public static <T extends QueryCriteria> T select(T criteria, String name, Column<?> as) {

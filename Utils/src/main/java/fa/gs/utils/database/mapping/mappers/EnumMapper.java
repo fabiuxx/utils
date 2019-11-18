@@ -14,8 +14,8 @@ import java.util.Map;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <T>
- * @param <U>
+ * @param <T> Parametro de tipo.
+ * @param <U> Parametro de tipo.
  */
 public class EnumMapper<T, U extends Enum<U>> extends AttributeMapper<T> {
 
