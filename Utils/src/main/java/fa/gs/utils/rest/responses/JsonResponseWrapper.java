@@ -101,7 +101,7 @@ public class JsonResponseWrapper {
     public static JsonObject failure(JsonElement raw, String cause, Errno errno) {
         // Control de seguridad.
         if (errno == null) {
-            errno = Errors.errno("API", "000000");
+            errno = Errors.errno("API", 0);
         }
 
         JsonObject status = new JsonObject();

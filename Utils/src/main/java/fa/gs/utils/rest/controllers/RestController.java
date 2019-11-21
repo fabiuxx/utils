@@ -47,22 +47,6 @@ public abstract class RestController implements Serializable {
             }
 
             /**
-             * Validar parametros de entrada.
-             *
-             * Se encapsula esta operacion de manera a que se capture cualquier
-             * clase de excepcion que pudiera ocurrir, no necesariamente
-             * aquellas relacionadas a validaciones propias. Es posible que
-             * ocurran otras excepciones indpendientes a los metodos de
-             * validacion utilizados, por ejemplo, excepciones en las entidades
-             * cuando uno o varios campos no existen en estados validos.
-             */
-            try {
-                action.validateParam(this, param);
-            } catch (Throwable thr) {
-                throw new ApiBadRequestException(thr);
-            }
-
-            /**
              * Ejecutar la accion.
              *
              * Se espera como resultado una respuesta valida procesable por el

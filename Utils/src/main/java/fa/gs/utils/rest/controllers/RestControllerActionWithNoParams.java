@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
  * @author Fabio A. González Sosa
  * @param <C> Tipo concreto de la accion de controlador.
  */
-public abstract class RestControllerActionWithNoParams<C extends RestController> extends RestControllerAction<C, Void> {
+public abstract class RestControllerActionWithNoParams<C extends RestController> implements RestControllerAction<C, Void> {
 
     @Override
     public Response doAction(C ctx, Void param) throws Throwable {

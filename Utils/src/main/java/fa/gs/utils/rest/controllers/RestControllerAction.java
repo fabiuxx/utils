@@ -14,19 +14,7 @@ import javax.ws.rs.core.Response;
  * @param <C> Tipo concreto de la accion de controlador.
  * @param <P> Tipo concreto de parametro recibido, si hubiere.
  */
-public abstract class RestControllerAction<C extends RestController, P> implements Serializable {
-
-    /**
-     * Permite realizar operaciones de validacion antes de realizar la accion
-     * implementada.
-     *
-     * @param ctx Contexto de ejecucion.
-     * @param param Parametros de entrada.
-     * @throws IllegalArgumentException Si el parametro es invalido.
-     */
-    public void validateParam(C ctx, P param) {
-        ;
-    }
+public interface RestControllerAction<C extends RestController, P> extends Serializable {
 
     /**
      * Realiza una accion especifica.
@@ -37,6 +25,6 @@ public abstract class RestControllerAction<C extends RestController, P> implemen
      * @throws Exception Si ocurre algun error durante la ejecucion de la
      * accion.
      */
-    public abstract Response doAction(C ctx, P param) throws Throwable;
+    Response doAction(C ctx, P param) throws Throwable;
 
 }
