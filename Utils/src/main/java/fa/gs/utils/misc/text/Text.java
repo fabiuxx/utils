@@ -34,6 +34,21 @@ public class Text {
     }
 
     /**
+     * Genera una cadena de identacion por espacios en blanco.
+     *
+     * @param ident Cantidad de identacion.
+     * @return Cadena de identacion.
+     */
+    public static String ident(int ident) {
+        StringBuilder builder = new StringBuilder();
+        while (ident > 0) {
+            builder.append(" ");
+            ident--;
+        }
+        return builder.toString();
+    }
+
+    /**
      * Determina si una cadena de texto esta acomillada.
      *
      * @param txt Cadena de texto.

@@ -5,7 +5,9 @@
  */
 package fa.gs.utils.misc.errors;
 
+import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.text.Strings;
+import fa.gs.utils.misc.text.Text;
 import fa.gs.utils.result.utils.Failure;
 import java.io.PrintStream;
 
@@ -15,8 +17,15 @@ import java.io.PrintStream;
  */
 public class Errors {
 
-    public static Errno errno(String codigo, String descripcion) {
-        return new ErrnoImpl(codigo, descripcion);
+    public static Errno errno(String descripcion, int codigo) {
+        codigo = Math.abs(codigo);
+        codigo = Math.min(codigo, 999999);
+        String codigo0 = String.format("%06d", codigo);
+        return errno(descripcion, codigo0);
+    }
+
+    public static Errno errno(String descripcion, String codigo) {
+        return new ErrnoImpl(descripcion, codigo);
     }
 
     public static AppErrorException.Builder builder() {
@@ -53,7 +62,7 @@ public class Errors {
 
         synchronized (stream) {
             try {
-                String spaces = ident(ident);
+                String spaces = Text.ident(ident);
 
                 String msg = Strings.format("%sERROR: %s / %s (%s)", spaces, thr.getMessage(), thr.getLocalizedMessage(), thr.getClass().getCanonicalName());
                 stream.println(msg);
@@ -79,21 +88,20 @@ public class Errors {
         }
     }
 
-    private static String ident(int ident) {
-        StringBuilder builder = new StringBuilder();
-        while (ident > 0) {
-            builder.append(" ");
-            ident--;
-        }
-        return builder.toString();
-    }
-
     private static class ErrnoImpl implements Errno {
 
         private final String codigo;
         private final String descriptor;
 
-        ErrnoImpl(String codigo, String descriptor) {
+        ErrnoImpl(String descriptor, String codigo) {
+            if (Assertions.stringNullOrEmpty(codigo) || codigo.length() != 6) {
+                throw new IllegalArgumentException("El valor del 'código' debe ser una cadena de 6 caracteres");
+            }
+
+            if (Assertions.stringNullOrEmpty(descriptor) || descriptor.length() != 3) {
+                throw new IllegalArgumentException("El valor del 'descriptor' debe ser una cadena de 6 caracteres");
+            }
+
             this.codigo = codigo;
             this.descriptor = descriptor;
         }
