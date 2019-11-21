@@ -174,6 +174,11 @@ public class Criterias {
         return select(criteria, column.getName(), as0);
     }
 
+    public static <T extends QueryCriteria> T select(T criteria, String projection, Mapping<?> as) {
+        String as0 = Text.safeQuoteDouble(as.symbol().getName());
+        return select(criteria, projection, as0);
+    }
+
     public static <T extends QueryCriteria> T select(T criteria, String name, String as) {
         Projection p = new Projection(name, as);
         criteria.projection(p);

@@ -12,13 +12,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <artifactory.url.base>http://192.168.0.192:8081/artifactory</artifactory.url.base>
     </properties>
     
     <repositories>
         <repository>
             <id>librerias-java</id>
             <name>librerias-java</name>
-            <url>http://181.40.81.34:9420/artifactory/librerias-java</url>
+            <url>${artifactory.url.base}/librerias-java</url>
         </repository>
     </repositories>
   
@@ -26,7 +27,7 @@
         <repository>
             <id>librerias-java</id>
             <name>librerias-java</name>
-            <url>http://181.40.81.34:9420/artifactory/librerias-java</url>
+            <url>${artifactory.url.base}/librerias-java</url>
         </repository>
     </distributionManagement>
     
