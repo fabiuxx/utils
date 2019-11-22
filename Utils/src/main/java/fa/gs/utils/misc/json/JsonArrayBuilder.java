@@ -7,7 +7,9 @@ package fa.gs.utils.misc.json;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import fa.gs.utils.misc.fechas.Fechas;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  *
@@ -48,6 +50,11 @@ public class JsonArrayBuilder {
 
     public JsonArrayBuilder add(Character value) {
         array.add(value);
+        return this;
+    }
+
+    public JsonArrayBuilder add(Date value) {
+        array.add(Fechas.toEpoch(value));
         return this;
     }
 
