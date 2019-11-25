@@ -8,8 +8,12 @@ package fa.gs.utils.misc.json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import fa.gs.utils.adapters.Adapter;
+import fa.gs.utils.adapters.Adapters;
+import fa.gs.utils.adapters.impl.json.JsonArrayAdapter;
 import fa.gs.utils.misc.Type;
 import java.lang.reflect.Array;
+import java.util.Collection;
 
 /**
  *
@@ -54,6 +58,13 @@ public class Json {
         }
 
         return primitives;
+    }
+
+    public static <T> JsonElement toArrayData(Class<? extends Adapter<T, JsonElement>> adapterClass, Collection<T> objs) {
+        Collection<JsonElement> obj0 = Adapters.adapt(adapterClass, objs);
+        JsonArrayBuilder array = JsonArrayBuilder.instance();
+        array.add(obj0);
+        return Adapters.adapt(JsonArrayAdapter.class, array.build());
     }
 
 }

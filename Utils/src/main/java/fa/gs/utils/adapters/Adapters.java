@@ -8,7 +8,10 @@ package fa.gs.utils.adapters;
 import fa.gs.utils.adapters.construction.Constructor;
 import fa.gs.utils.adapters.construction.NormalConstructionStrategy;
 import fa.gs.utils.adapters.construction.UnsafeConstructionStrategy;
+import fa.gs.utils.collections.Lists;
+import fa.gs.utils.misc.Assertions;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
 
 /**
  *
@@ -71,6 +74,27 @@ public class Adapters {
         Adapter adapter = instantiate(adapterClass);
         Object adapted = adapter.adapt(obj, args);
         return (adapted != null) ? (TTo) adapted : null;
+    }
+
+    /**
+     * Permite adaptar una coleccion de objetos a
+     *
+     * @param <TFrom>
+     * @param <TTo>
+     * @param adapterClass
+     * @param objs
+     * @param args
+     * @return
+     */
+    public static <TFrom, TTo> Collection<TTo> adapt(Class<? extends Adapter<TFrom, TTo>> adapterClass, Collection<TFrom> objs, Object... args) {
+        Collection<TTo> list = Lists.empty();
+        if (!Assertions.isNullOrEmpty(objs)) {
+            for (TFrom obj : objs) {
+                TTo obj0 = adapt(adapterClass, obj, args);
+                list.add(obj0);
+            }
+        }
+        return list;
     }
 
     /**

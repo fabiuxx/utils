@@ -162,7 +162,7 @@
                                 <version>${project.version}</version>
                             </deployProperties>
                             <publisher>
-                                <contextUrl>http://192.168.0.192:8081/artifactory</contextUrl>
+                                <contextUrl>${artifactory.url.base}</contextUrl>
                                 <username>fgonzalez</username>
                                 <password>f_gonzalez</password>
                                 <repoKey>librerias-java</repoKey>
