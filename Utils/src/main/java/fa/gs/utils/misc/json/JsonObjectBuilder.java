@@ -6,6 +6,7 @@
 package fa.gs.utils.misc.json;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import fa.gs.utils.misc.fechas.Fechas;
 import java.util.Date;
@@ -33,32 +34,57 @@ public class JsonObjectBuilder {
     }
 
     public JsonObjectBuilder add(String property, String value) {
-        json.addProperty(property, value);
+        if (value != null) {
+            json.addProperty(property, value);
+        } else {
+            json.add(property, JsonNull.INSTANCE);
+        }
         return this;
     }
 
     public JsonObjectBuilder add(String property, Number value) {
-        json.addProperty(property, value);
+        if (value != null) {
+            json.addProperty(property, value);
+        } else {
+            json.add(property, JsonNull.INSTANCE);
+        }
         return this;
     }
 
     public JsonObjectBuilder add(String property, Boolean value) {
-        json.addProperty(property, value);
+        if (value != null) {
+            json.addProperty(property, value);
+        } else {
+            json.add(property, JsonNull.INSTANCE);
+        }
         return this;
     }
 
     public JsonObjectBuilder add(String property, Character value) {
-        json.addProperty(property, value);
+        if (value != null) {
+            json.addProperty(property, value);
+        } else {
+            json.add(property, JsonNull.INSTANCE);
+        }
         return this;
     }
 
     public JsonObjectBuilder add(String property, Date value) {
-        json.addProperty(property, Fechas.toEpoch(value));
+        if (value != null) {
+            json.addProperty(property, Fechas.toEpoch(value));
+        } else {
+            json.add(property, JsonNull.INSTANCE);
+        }
+
         return this;
     }
 
     public JsonObjectBuilder add(String property, JsonElement value) {
-        json.add(property, value);
+        if (value != null) {
+            json.add(property, value);
+        } else {
+            json.add(property, JsonNull.INSTANCE);
+        }
         return this;
     }
 

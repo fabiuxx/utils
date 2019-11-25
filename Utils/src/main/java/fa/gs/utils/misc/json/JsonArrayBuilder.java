@@ -34,40 +34,51 @@ public class JsonArrayBuilder {
     }
 
     public JsonArrayBuilder add(String value) {
-        array.add(value);
+        if (value != null) {
+            array.add(value);
+        }
         return this;
     }
 
     public JsonArrayBuilder add(Number value) {
-        array.add(value);
+        if (value != null) {
+            array.add(value);
+        }
         return this;
     }
 
     public JsonArrayBuilder add(Boolean value) {
-        array.add(value);
+        if (value != null) {
+            array.add(value);
+        }
         return this;
     }
 
     public JsonArrayBuilder add(Character value) {
-        array.add(value);
+        if (value != null) {
+            array.add(value);
+        }
         return this;
     }
 
     public JsonArrayBuilder add(Date value) {
-        array.add(Fechas.toEpoch(value));
+        if (value != null) {
+            array.add(Fechas.toEpoch(value));
+        }
+
         return this;
     }
 
     public JsonArrayBuilder add(JsonElement value) {
-        array.add(value);
+        if (value != null) {
+            array.add(value);
+        }
         return this;
     }
 
     public JsonArrayBuilder add(Collection<JsonElement> values) {
         for (JsonElement value : values) {
-            if (value != null) {
-                array.add(value);
-            }
+            add(value);
         }
         return this;
     }

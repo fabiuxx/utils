@@ -6,18 +6,17 @@
 package fa.gs.utils.adapters.impl.json;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import fa.gs.utils.adapters.impl.Adapter0;
+import com.google.gson.JsonElement;
 import fa.gs.utils.misc.json.JsonObjectBuilder;
 
 /**
  *
  * @author Fabio A. González Sosa
  */
-public class JsonArrayAdapter extends Adapter0<JsonArray, JsonObject> {
+public class JsonArrayAdapter extends ToJsonAdapter<JsonArray> {
 
     @Override
-    public JsonObject adapt(JsonArray obj) {
+    protected JsonElement adapt0(JsonArray obj) {
         JsonObjectBuilder builder = JsonObjectBuilder.instance();
         builder.add("total", obj.size());
         builder.add("data", obj);

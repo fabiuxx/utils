@@ -8,7 +8,6 @@ package fa.gs.utils.adapters.impl.json;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fa.gs.utils.adapters.Adapters;
-import fa.gs.utils.adapters.impl.Adapter0;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.json.JsonArrayBuilder;
 import fa.gs.utils.misc.json.JsonObjectBuilder;
@@ -17,10 +16,10 @@ import fa.gs.utils.misc.json.JsonObjectBuilder;
  *
  * @author Fabio A. González Sosa
  */
-public class ThrowableAdapter extends Adapter0<Throwable, JsonElement> {
+public class ThrowableAdapter extends ToJsonAdapter<Throwable> {
 
     @Override
-    public JsonElement adapt(Throwable obj) {
+    protected JsonElement adapt0(Throwable obj) {
         JsonObject json = new JsonObject();
 
         try {

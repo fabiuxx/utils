@@ -6,7 +6,6 @@
 package fa.gs.utils.adapters.impl.json;
 
 import com.google.gson.JsonElement;
-import fa.gs.utils.adapters.impl.Adapter0;
 import fa.gs.utils.collections.slices.JsonElementSlice;
 import fa.gs.utils.misc.json.JsonArrayBuilder;
 import fa.gs.utils.misc.json.JsonObjectBuilder;
@@ -15,10 +14,10 @@ import fa.gs.utils.misc.json.JsonObjectBuilder;
  *
  * @author Fabio A. González Sosa
  */
-public class JsonElementSliceAdapter extends Adapter0<JsonElementSlice, JsonElement> {
+public class JsonElementSliceAdapter extends ToJsonAdapter<JsonElementSlice> {
 
     @Override
-    public JsonElement adapt(JsonElementSlice obj) {
+    protected JsonElement adapt0(JsonElementSlice obj) {
         JsonArrayBuilder data = JsonArrayBuilder.instance();
         data.add(obj.getElements());
 
