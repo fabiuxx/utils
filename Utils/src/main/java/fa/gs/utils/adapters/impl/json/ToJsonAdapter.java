@@ -17,13 +17,13 @@ public abstract class ToJsonAdapter<TFrom> extends Adapter0<TFrom, JsonElement> 
 
     @Override
     public JsonElement adapt(TFrom obj) {
-        if(obj == null) {
+        if (obj == null) {
             return JsonNull.INSTANCE;
         } else {
             return adapt0(obj);
         }
     }
-    
+
     protected abstract JsonElement adapt0(TFrom obj);
-    
+
 }
