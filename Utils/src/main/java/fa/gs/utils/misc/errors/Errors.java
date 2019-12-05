@@ -17,6 +17,16 @@ import java.io.PrintStream;
  */
 public class Errors {
 
+    public static Errno errno(String errno) {
+        if (Assertions.stringNullOrEmpty(errno) || errno.length() < 3) {
+            throw new IllegalArgumentException("Valor no válido.");
+        }
+
+        String descriptor = errno.substring(0, 3);
+        String codigo = errno.substring(3);
+        return errno(descriptor, codigo);
+    }
+
     public static Errno errno(String descripcion, int codigo) {
         codigo = Math.abs(codigo);
         codigo = Math.min(codigo, 999999);
@@ -99,7 +109,7 @@ public class Errors {
             }
 
             if (Assertions.stringNullOrEmpty(descriptor) || descriptor.length() != 3) {
-                throw new IllegalArgumentException("El valor del 'descriptor' debe ser una cadena de 6 caracteres");
+                throw new IllegalArgumentException("El valor del 'descriptor' debe ser una cadena de 3 caracteres");
             }
 
             this.codigo = codigo;

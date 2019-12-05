@@ -82,5 +82,36 @@ public class Test_Errnos {
         Errno errno = Errors.errno("ABC", 999999 + 1);
         Assert.assertEquals("ABC999999", errno.getErrnoString());
     }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void test12() {
+        Errors.errno("");
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void test13() {
+        Errors.errno("A");
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void test14() {
+        Errors.errno("AA");
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void test15() {
+        Errno errno = Errors.errno("AAAB");        
+        boolean a = "AAA".equals(errno.getCode());
+        boolean b = "B".equals(errno.getDescriptor());
+        Assert.assertTrue(a && b);
+    }
+    
+    @Test
+    public void test16() {
+        Errno errno = Errors.errno("AAABBBBBB");
+        boolean a = "AAA".equals(errno.getDescriptor());
+        boolean b = "BBBBBB".equals(errno.getCode());
+        Assert.assertTrue(a && b);
+    }
 
 }

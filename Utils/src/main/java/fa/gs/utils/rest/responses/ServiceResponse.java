@@ -8,6 +8,7 @@ package fa.gs.utils.rest.responses;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fa.gs.utils.misc.errors.Errno;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.rest.exceptions.ApiRollbackException;
 import fa.gs.utils.result.simple.Result;
 import javax.ws.rs.core.MediaType;
@@ -20,6 +21,8 @@ import javax.ws.rs.core.Response;
 public class ServiceResponse {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
+    public static Errno BASE_RESPONSE_ERRNO = Errors.errno("API", 0);
+
     /**
      * La peticion fue procesada correctamente.
      */

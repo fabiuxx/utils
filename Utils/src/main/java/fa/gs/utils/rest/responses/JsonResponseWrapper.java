@@ -8,7 +8,6 @@ package fa.gs.utils.rest.responses;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fa.gs.utils.misc.errors.Errno;
-import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.fechas.Fechas;
 
 /**
@@ -101,7 +100,7 @@ public class JsonResponseWrapper {
     public static JsonObject failure(JsonElement raw, String cause, Errno errno) {
         // Control de seguridad.
         if (errno == null) {
-            errno = Errors.errno("API", 0);
+            errno = ServiceResponse.BASE_RESPONSE_ERRNO;
         }
 
         JsonObject status = new JsonObject();
