@@ -9,6 +9,7 @@ import fa.gs.utils.crypto.SHA256;
 import fa.gs.utils.misc.text.Strings;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
@@ -26,6 +27,22 @@ public class Files {
     public static File createTemporary(String name, String extension) throws IOException {
         File file = File.createTempFile(name, extension, null);
         return file;
+    }
+
+    public static File dump(InputStream input) throws IOException {
+        File target = createTemporary();
+        dump(input, target);
+        return target;
+    }
+
+    public static void dump(InputStream input, File target) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(target)) {
+            byte[] buffer = new byte[4098];
+            int read;
+            while ((read = input.read(buffer)) > 0) {
+                fos.write(buffer, 0, read);
+            }
+        }
     }
 
     public static void delete(File file) {
