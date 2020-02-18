@@ -5,9 +5,8 @@
  */
 package fa.gs.utils.database.facades;
 
-import fa.gs.utils.database.criteria.QueryCriteria;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  *
@@ -17,6 +16,14 @@ import java.util.List;
 public interface Facade<T> extends Serializable {
 
     /**
+     * Agrega una entidad dada al contexto de persistencia, a manera que las
+     * modificaciones sobre el mismo tendran impacto en la base de datos.
+     *
+     * @param entity Entidad.
+     */
+    public void attach(T entity);
+
+    /**
      * Elimina una entidad dada del contexto de persistencia, indicando que
      * cualquier modificacion sobre la misma no tendra impacto final dentro de
      * la base de datos.
@@ -24,24 +31,6 @@ public interface Facade<T> extends Serializable {
      * @param entity Entidad.
      */
     public void detach(T entity);
-
-    /**
-     * Obtiene un entero que representa la cantidad total de registros en una
-     * tabla.
-     *
-     * @return Cantidad de registros en una tabla.
-     */
-    public Integer count();
-
-    /**
-     * Obtiene un entero que representa la cantidad total de registros en una
-     * tabla utilizando criterios avanzadas de busqueda.
-     *
-     * @param criteria Criterios avanzados de busqueda que permite la inclusion
-     * de filtros y predicados de ordenacion de atributos.
-     * @return Cantidad de registros en una tabla.
-     */
-    public Integer count(QueryCriteria criteria);
 
     /**
      * Crea un nuevo registro para la entidad.
@@ -67,22 +56,6 @@ public interface Facade<T> extends Serializable {
     public void remove(T entity);
 
     /**
-     * Refresca el estado interno de la entidad.
-     *
-     * @param entity Objeto a ser refrescado.
-     * @return Entidad actualizada.
-     */
-    public T refresh(T entity);
-
-    /**
-     * Agrega una entidad no administrada al contexto de persistencia.
-     *
-     * @param entity Objeto a ser agregado.
-     * @return Entidad incluida en contexto de persistencia.
-     */
-    public T merge(T entity);
-
-    /**
      * Obtiene la información de una entidad respecto a un Identificador.
      *
      * @param id Identificador de la entidad solicitada.
@@ -95,26 +68,6 @@ public interface Facade<T> extends Serializable {
      *
      * @return Lista de registros.
      */
-    public List<T> findAll();
-
-    /**
-     * Obtiene la informacion de una entidad utilizando criterios avanzadas de
-     * busqueda.
-     *
-     * @param criteria Criterios avanzados de busqueda que permite la inclusion
-     * de filtros y predicados de ordenacion de atributos.
-     * @return Lista de objetos que coinciden con los criterios de busqueda.
-     */
-    public List<T> find(QueryCriteria criteria);
-
-    /**
-     * Obtiene la informacion de una entidad que coincida con criterios
-     * avanzados de busqueda.
-     *
-     * @param criteria Criterios avanzados de busqueda que permite la inclusion
-     * de filtros y predicados de ordenacion de atributos.
-     * @return Objeto que coincide con los criterios de busqueda.
-     */
-    public T findFirst(QueryCriteria criteria);
+    public Collection<T> findAll();
 
 }

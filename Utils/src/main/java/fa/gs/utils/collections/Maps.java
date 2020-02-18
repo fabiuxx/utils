@@ -6,7 +6,6 @@
 package fa.gs.utils.collections;
 
 import fa.gs.utils.collections.maps.CollectionGroupMap;
-import fa.gs.utils.database.criteria.column.Column;
 import fa.gs.utils.misc.Numeric;
 import fa.gs.utils.misc.Reflect;
 import java.math.BigDecimal;
@@ -24,10 +23,6 @@ public class Maps {
 
     public static <K, V> Map<K, V> empty() {
         return new LinkedHashMap<>();
-    }
-
-    public static <K, V> Map<K, V> map(Collection<V> values, Column<K> column) {
-        return map(values, column.getName(), column.getType());
     }
 
     public static <K, V> Map<K, V> map(Collection<V> values, String attribute, Class<K> type) {

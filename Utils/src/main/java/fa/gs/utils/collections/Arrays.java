@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.collections;
 
-import fa.gs.utils.database.criteria.column.Column;
 import fa.gs.utils.misc.Reflect;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -32,10 +31,6 @@ public class Arrays {
         ArrayList<T> list = Collections.list(enumeration);
         T[] array = (T[]) Array.newInstance(type, list.size());
         return list.toArray(array);
-    }
-
-    public static <T, S> S[] array(Collection<T> collection, Column<S> column) {
-        return array(collection, column.getName(), column.getType());
     }
 
     public static <T, S> S[] array(Collection<T> collection, String attribute, Class<S> type) {
