@@ -6,7 +6,7 @@
 package fa.gs.utils.database.crud;
 
 import fa.gs.utils.collections.Lists;
-import fa.gs.utils.database.facades.Facade;
+import fa.gs.utils.database.jpa.Facade;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.simple.Results;

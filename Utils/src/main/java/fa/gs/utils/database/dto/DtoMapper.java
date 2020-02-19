@@ -153,6 +153,10 @@ public class DtoMapper<T> implements Serializable {
         return query;
     }
 
+    public Collection<T> select(EntityManager em) throws Throwable {
+        return select(getSelectQuery(), em);
+    }
+
     public Collection<T> select(Query query, EntityManager em) throws Throwable {
         // Convertir query a una cadena de texto.
         String sql = query.stringify(null);
