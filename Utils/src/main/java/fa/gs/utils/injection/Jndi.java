@@ -13,9 +13,6 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.CDI;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  *
@@ -118,26 +115,6 @@ public class Jndi {
             CreationalContext<T> ctx = bm.createCreationalContext(mbean);
             return (T) (bm.getReference(mbean, managedBeanClass, ctx));
         } catch (Throwable thr) {
-            return null;
-        }
-    }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="JPA">
-    /**
-     * Realiza una busqueda manual para la inyeccion de un administrador de
-     * entidades.
-     *
-     * @param persistenceUnitName Nombre de la unidad de persistencia.
-     * @return Administrador de entidadres. Caso contrario, {@code null}.
-     */
-    public static EntityManager lookupEntityManager(String persistenceUnitName) {
-        try {
-            EntityManagerFactory factory = Persistence.createEntityManagerFactory(persistenceUnitName);
-            Object instance = EntityManagerProxy.newProxyInstance(Jndi.class.getClassLoader(), factory);
-            return (EntityManager) instance;
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
             return null;
         }
     }
