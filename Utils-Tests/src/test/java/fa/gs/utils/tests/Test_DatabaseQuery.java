@@ -25,21 +25,17 @@ import org.junit.jupiter.api.Assertions;
  */
 public class Test_DatabaseQuery {
 
-    private static Persistence p = null;
+    private static Persistence persistence = null;
 
     @BeforeClass
     public static void setUpClass() throws Throwable {
-        try {
-        p = new Persistence();
-        } catch(Throwable thr) {
-            thr.printStackTrace(System.err);
-        }
+        persistence = new Persistence();
     }
 
     @AfterClass
     public static void tearDownClass() {
-        if(p != null) {
-            p.finish();
+        if (persistence != null) {
+            persistence.finish();
         }
     }
 
@@ -53,7 +49,7 @@ public class Test_DatabaseQuery {
 
     @Test
     public void test1() {
-        EntityManager em = p.getEntityManager();
+        EntityManager em = persistence.getEntityManager();
         javax.persistence.Query q = em.createNativeQuery("select 1");
         Object obj = q.getSingleResult();
         System.err.printf("RESULT >>> %s\n", Numeric.adaptAsBigDecimal(obj));
@@ -63,9 +59,18 @@ public class Test_DatabaseQuery {
     @Test
     public void test2() throws Throwable {
         DtoMapper<PersonaEmail> mapper = DtoMapper.prepare(PersonaEmail.class);
+        Collection<PersonaEmail> instances = mapper.select(persistence.getEntityManager());
+        for (PersonaEmail em : instances) {
+            System.out.printf("%s; %s\n", em.idEmail, em.idPersona);
+        }
+    }
+
+    @Test
+    public void test3() throws Throwable {
+        DtoMapper<PersonaEmail> mapper = DtoMapper.prepare(PersonaEmail.class);
         SelectQuery q = mapper.getSelectQuery();
         q.limit(10L);
-        Collection<PersonaEmail> instances = mapper.select(q, p.getEntityManager());
+        Collection<PersonaEmail> instances = mapper.select(q, persistence.getEntityManager());
         for (PersonaEmail em : instances) {
             System.out.printf("%s; %s\n", em.idEmail, em.idPersona);
         }

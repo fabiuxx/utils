@@ -9,6 +9,7 @@ import fa.gs.utils.database.dto.FgDto;
 import fa.gs.utils.database.dto.FgJoin;
 import fa.gs.utils.database.dto.FgProjection;
 import fa.gs.utils.database.query.expressions.JoinExpression;
+import java.io.Serializable;
 
 /**
  *
@@ -17,11 +18,18 @@ import fa.gs.utils.database.query.expressions.JoinExpression;
 @FgDto(table = "info.persona_email", as = "pe")
 @FgJoin(type = JoinExpression.Type.LEFT, table = "info.persona", as = "p", on = "pe.id_persona = p.id")
 @FgJoin(type = JoinExpression.Type.LEFT, table = "info.email", as = "e", on = "pe.id_email = e.id")
-public class PersonaEmail {
+public class PersonaEmail implements Serializable {
 
-    @FgProjection(name = "pe.id_email")
+    @FgProjection(name = FILTERS.ID_EMAIL)
     public Integer idEmail;
 
-    @FgProjection(name = "pe.id_persona")
+    @FgProjection(name = FILTERS.ID_PERSONA)
     public Integer idPersona;
+
+    public static final class FILTERS {
+
+        public static final String ID_EMAIL = "pe.id_email";
+        public static final String ID_PERSONA = "pe.id_persona";
+    }
+
 }
