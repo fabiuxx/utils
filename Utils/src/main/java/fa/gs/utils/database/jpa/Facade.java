@@ -60,6 +60,8 @@ public interface Facade<T> extends Serializable {
      *
      * @param id Identificador de la entidad solicitada.
      * @return Objeto asociado al Identificador.
+     *
+     * @deprecated Utilizar funcionalidades de DTOs.
      */
     public T find(Object id);
 
@@ -67,6 +69,7 @@ public interface Facade<T> extends Serializable {
      * Obtiene la lista completa de registros en una tabla.
      *
      * @return Lista de registros.
+     * @deprecated Utilizar funcionalidades de DTOs.
      */
     public Collection<T> findAll();
 

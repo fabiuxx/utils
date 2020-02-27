@@ -5,12 +5,12 @@
  */
 package fa.gs.utils.database.dto;
 
-import fa.gs.utils.adapters.Adapter;
-
 /**
  *
  * @author Fabio A. González Sosa
  */
-public interface FgProjectionResultConverter<T> extends Adapter<Object, T> {
+public interface FgProjectionResultConverter<T> {
+
+    T convert(Object instance);
 
 }

@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.persistence.EntityManager;
 import org.hibernate.transform.Transformers;
 
@@ -178,15 +179,53 @@ public class DtoMapper<T> implements Serializable {
     }
 
     private Object mapInstance(Class klass, Map<String, Field> mappings, Map<String, Object> values) throws Throwable {
+        Map<Class<? extends FgProjectionResultConverter>, FgProjectionResultConverter> converters = Maps.empty();
+
         Object instance = Reflect.createInstanceUnsafe(klass);
 
         for (Map.Entry<String, Field> entry : mappings.entrySet()) {
+            // Crear instancia de convertidor, si hubiere.
+            FgProjectionResultConverter converter = null;
+            FgProjection projectionInfo = Reflect.getAnnotation(entry.getValue(), FgProjection.class);
+            if (projectionInfo != null && projectionInfo.converter() != null) {
+                Class<? extends FgProjectionResultConverter> converterClass = projectionInfo.converter();
+                // Omitir el valor por defecto de la anotacion (una interface no instanciable).
+                if (!Objects.equals(converterClass, FgProjectionResultConverter.class)) {
+                    if (!converters.containsKey(converterClass)) {
+                        converter = createConverterInstance(converterClass);
+                        converters.put(converterClass, converter);
+                    } else {
+                        converter = converters.get(converterClass);
+                    }
+                }
+            }
+
+            // Obtener nombre de mapeo y valor correspondiente.
             String mappingName = entry.getKey();
             Object value = Maps.get(values, mappingName);
+
+            // Utilizar convertidor de valores, si hubiere.
+            if (converter != null) {
+                value = converter.convert(value);
+            }
+
+            // Asignar valor.
             Reflect.set(instance, mappings.get(mappingName), value);
         }
 
         return instance;
+    }
+
+    private FgProjectionResultConverter createConverterInstance(Class<? extends FgProjectionResultConverter> klass) throws Throwable {
+        Object instance;
+
+        try {
+            instance = Reflect.createInstance(klass);
+            return klass.cast(instance);
+        } catch (Throwable thr) {
+            instance = Reflect.createInstanceUnsafe(klass);
+            return klass.cast(instance);
+        }
     }
 
     private static void assertIsDtoAnnotated(FgDto annotation, Class klass) {
