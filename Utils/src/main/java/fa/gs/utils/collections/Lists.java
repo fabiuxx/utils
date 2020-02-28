@@ -4,16 +4,32 @@ import fa.gs.utils.misc.Assertions;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by Fabio A. González Sosa on 20-nov-2018.
  */
 public class Lists {
 
+    /**
+     * Retorna una lista vacia.
+     *
+     * @param <T> Parametro de tipo.
+     * @return Lista vacia.
+     */
     public static <T> List<T> empty() {
         return new LinkedList<>();
     }
 
+    /**
+     * Obtiene el primer elemento de una coleccion.
+     *
+     * @param <T> Parametro de tipo.
+     * @param items Coleccion de objetos.
+     * @return Primer objeto de la coleccion, si hubiere. Caso contrario
+     * {@code null}.
+     */
     public static <T> T first(Collection<T> items) {
         try {
             if (Assertions.isNullOrEmpty(items)) {
@@ -26,6 +42,13 @@ public class Lists {
         }
     }
 
+    /**
+     * Encapsula una iteracion de objetos en una coleccion.
+     *
+     * @param <T> Parametro de tipo.
+     * @param iterable Iteracion de objetos.
+     * @return Coleccion.
+     */
     public static <T> Collection<T> wrap(Iterable<T> iterable) {
         Collection<T> items = Lists.empty();
         if (iterable != null) {
@@ -36,14 +59,36 @@ public class Lists {
         return items;
     }
 
-    public static <T> Collection<T> wrap(T[] items0) {
+    /**
+     * Encapsula un array de objetos en una coleccion.
+     *
+     * @param <T> Parametro de tipo.
+     * @param array Array de objetos.
+     * @return Coleccion.
+     */
+    public static <T> Collection<T> wrap(T[] array) {
         Collection<T> items = Lists.empty();
-        if (!Assertions.isNullOrEmpty(items0)) {
-            for (T item0 : items0) {
+        if (!Assertions.isNullOrEmpty(array)) {
+            for (T item0 : array) {
                 items.add(item0);
             }
         }
         return items;
+    }
+
+    /**
+     * Mapea cada objeto dentro de una coleccion a objetos de otro tipo.
+     *
+     * @param <TFrom> Parametro de tipo para objetos a convertir.
+     * @param <TTo> Parametro de tipo para objetos convertidos.
+     * @param objects Coleccion de objetos a convertir.
+     * @param mapper Convertidor de objetos.
+     * @return Coleccion de objetos convertidos.
+     */
+    public static <TFrom, TTo> Collection<TTo> map(Collection<TFrom> objects, Function<TFrom, TTo> mapper) {
+        return objects.stream()
+                .map(mapper)
+                .collect(Collectors.toList());
     }
 
 }

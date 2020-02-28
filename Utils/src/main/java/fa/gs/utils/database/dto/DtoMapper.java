@@ -209,6 +209,9 @@ public class DtoMapper<T> implements Serializable {
                 value = converter.convert(value);
             }
 
+            // Verificar que valor sea asignable a campo.
+            assertValueIsAssignable(entry.getValue(), value);
+
             // Asignar valor.
             Reflect.set(instance, mappings.get(mappingName), value);
         }
@@ -235,8 +238,22 @@ public class DtoMapper<T> implements Serializable {
     }
 
     private static void assertDtoAnnotationHasTable(FgDto annotation, Class klass) {
-        if (Assertions.stringNullOrEmpty(annotation.as())) {
+        if (Assertions.stringNullOrEmpty(annotation.table())) {
             throw new IllegalArgumentException(String.format("Clase '%s' no posee un nombre de tabla.", klass.getCanonicalName()));
+        }
+    }
+
+    private static void assertValueIsAssignable(Field field, Object value) {
+        if (value != null) {
+            Class<?> fieldType = field.getType();
+            Class<?> valueType = value.getClass();
+            boolean isAssignable = fieldType.isAssignableFrom(valueType);
+            if (!isAssignable) {
+                String n0 = fieldType.getCanonicalName();
+                String c0 = field.getName();
+                String n1 = valueType.getCanonicalName();
+                throw new IllegalArgumentException(String.format("No se puede asignar un valor de tipo '%s' al campo '%s' de tipo '%s'.", n1, c0, n0));
+            }
         }
     }
 

@@ -5,37 +5,38 @@
  */
 package fa.gs.utils.injection.names;
 
-import fa.gs.utils.injection.JndiNameGenerator;
+import fa.gs.utils.misc.text.Text;
 
 /**
  *
  * @author Fabio A. González Sosa
  */
-public class JndiPortableGlobalNameGenerator implements JndiNameGenerator {
+public class JndiPortableGlobalNameGenerator extends AbstractJndiEnterpriseModuleNameGenerator {
 
-    private final String earModuleName;
-
-    private final String ejbModuleName;
+    private final boolean useQualifiedName;
 
     public JndiPortableGlobalNameGenerator(String earModuleName, String ejbModuleName) {
-        this.earModuleName = earModuleName;
-        this.ejbModuleName = ejbModuleName;
+        this(earModuleName, ejbModuleName, false);
+    }
+
+    public JndiPortableGlobalNameGenerator(String earModuleName, String ejbModuleName, boolean useQualifiedName) {
+        super(earModuleName, ejbModuleName);
+        this.useQualifiedName = useQualifiedName;
+    }
+
+    @Override
+    public String getNamespace() {
+        return "java:global";
     }
 
     @Override
     public String getJndiName(Class<?> klass) {
         String simpleName = klass.getSimpleName();
-        return String.format("java:global/%s/%s/%s", getEarModuleName(), getEjbModuleName(), simpleName);
+        String globalName = String.format("%s/%s/%s/%s", getNamespace(), getEarModuleName(), getEjbModuleName(), simpleName);
+        if (useQualifiedName) {
+            globalName = globalName + "!" + klass.getCanonicalName();
+        }
+        return Text.normalizeSlashes(globalName);
     }
-
-    //<editor-fold defaultstate="collapsed" desc="Getters y Setters">
-    public String getEarModuleName() {
-        return earModuleName;
-    }
-
-    public String getEjbModuleName() {
-        return ejbModuleName;
-    }
-    //</editor-fold>    
 
 }

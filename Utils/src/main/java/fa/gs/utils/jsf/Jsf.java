@@ -23,6 +23,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.FaceletContext;
 import org.omnifaces.util.Ajax;
+import org.omnifaces.util.Faces;
 
 /**
  *
@@ -232,5 +233,39 @@ public class Jsf {
         String code = Strings.format(fmt, args);
         Ajax.oncomplete(code);
     }
+
+    //<editor-fold defaultstate="collapsed" desc="Gestión de Cookies">
+    /**
+     * Wrapper para
+     * {@link Faces#addResponseCookie(java.lang.String, java.lang.String, int) Faces.addResponseCookie}
+     */
+    public static void addCookie(String name, String value, int maxAge) {
+        Faces.addResponseCookie(name, value, maxAge);
+    }
+
+    /**
+     * Wrapper para
+     * {@link Faces#addResponseCookie(java.lang.String, java.lang.String, java.lang.String, int) Faces.addResponseCookie}
+     */
+    public static void addCookie(String name, String value, String path, int maxAge) {
+        Faces.addResponseCookie(name, value, path, maxAge);
+    }
+
+    /**
+     * Wrapper para
+     * {@link Faces#addResponseCookie(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int) Faces.addResponseCookie}
+     */
+    public static void addCookie(String name, String value, String domain, String path, int maxAge) {
+        Faces.addResponseCookie(name, value, domain, path, maxAge);
+    }
+
+    /**
+     * Wrapper para
+     * {@link Faces#removeResponseCookie(java.lang.String, java.lang.String) Faces.removeResponseCookie}
+     */
+    public static void removeCookie(String name, String path) {
+        Faces.removeResponseCookie(name, path);
+    }
+    //</editor-fold>
 
 }
