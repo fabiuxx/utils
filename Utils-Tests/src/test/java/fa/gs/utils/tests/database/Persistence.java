@@ -27,7 +27,7 @@ public class Persistence {
         initEntityManagerFactory();
     }
 
-    private final void initDatasource() throws Throwable {
+    private void initDatasource() throws Throwable {
         ComboPooledDataSource cpds = new ComboPooledDataSource();
         cpds.setDriverClass("org.postgresql.Driver");
         cpds.setJdbcUrl("jdbc:postgresql://localhost:5432/sepsa");
@@ -36,7 +36,7 @@ public class Persistence {
         this.datasource = cpds;
     }
 
-    private final void initEntityManagerFactory() throws Throwable {
+    private void initEntityManagerFactory() throws Throwable {
         PersistenceUnitInfo persistenceUnitInfo = PersistenceUnit.instance(datasource);
         HibernatePersistenceProvider persistenceProvider = new HibernatePersistenceProvider();
         this.entityManagerFactory = persistenceProvider.createContainerEntityManagerFactory(persistenceUnitInfo, Collections.EMPTY_MAP);

@@ -26,6 +26,9 @@ public class PersonaEmail implements Serializable {
     @FgProjection(name = FILTERS.ID_PERSONA)
     public Integer idPersona;
 
+    @FgProjection(name = FILTERS.ID_EMAIL, as = "x", converter = EnumTestConverter.class)
+    public EnumTest enumTest;
+
     public static final class FILTERS {
 
         public static final String ID_EMAIL = "pe.id_email";

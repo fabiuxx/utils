@@ -33,6 +33,14 @@
     
     <dependencies>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        
+        <dependency>
             <groupId>fa.gs.utils</groupId>
             <artifactId>utils</artifactId>
             <version>0.0.2</version>
@@ -113,7 +121,7 @@
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
-            </plugin>            
+            </plugin>
         </plugins>
     </build>
 </project>

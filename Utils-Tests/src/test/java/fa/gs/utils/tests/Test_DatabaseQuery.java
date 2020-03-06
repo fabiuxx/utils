@@ -72,7 +72,7 @@ public class Test_DatabaseQuery {
         q.limit(10L);
         Collection<PersonaEmail> instances = mapper.select(q, persistence.getEntityManager());
         for (PersonaEmail em : instances) {
-            System.out.printf("%s; %s\n", em.idEmail, em.idPersona);
+            System.out.printf("%s; %s; %s\n", em.idEmail, em.idPersona, em.enumTest);
         }
     }
 

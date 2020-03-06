@@ -1,6 +1,7 @@
 package fa.gs.utils.collections;
 
 import fa.gs.utils.misc.Assertions;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,8 +67,8 @@ public class Lists {
      * @param array Array de objetos.
      * @return Coleccion.
      */
-    public static <T> Collection<T> wrap(T[] array) {
-        Collection<T> items = Lists.empty();
+    public static <T> List<T> wrap(T[] array) {
+        ArrayList<T> items = new ArrayList<>();
         if (!Assertions.isNullOrEmpty(array)) {
             for (T item0 : array) {
                 items.add(item0);
