@@ -15,10 +15,11 @@ import fa.gs.utils.database.query.expressions.build.JoinExpressionBuilder;
 import fa.gs.utils.database.query.expressions.build.ProjectionExpressionBuilder;
 import fa.gs.utils.database.query.expressions.build.TableExpressionBuilder;
 import fa.gs.utils.misc.Assertions;
-import fa.gs.utils.misc.Reflect;
+import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.text.Strings;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class DtoMapper<T> implements Serializable {
 
     private static void validate(Class klass) {
         // Verificar que clase contenga anotacion DTO.
-        FgDto dtoAnnotation = Reflect.getAnnotation(klass, AnnotationTypes.FGDTO);
+        FgDto dtoAnnotation = Reflection.getAnnotation(klass, AnnotationTypes.FGDTO);
         assertIsDtoAnnotated(dtoAnnotation, klass);
 
         // Verificar que DTO tenga un nombre de tabla.
@@ -70,7 +71,7 @@ public class DtoMapper<T> implements Serializable {
          * Si existen clausulas JOIN, verificar que DTO principal posea un
          * alias.
          */
-        FgJoins joinAnnotations = Reflect.getAnnotation(klass, AnnotationTypes.FGJOINS);
+        FgJoins joinAnnotations = Reflection.getAnnotation(klass, AnnotationTypes.FGJOINS);
         if (joinAnnotations != null) {
             assertDtoAnnotationHasAlias(dtoAnnotation, klass);
         }
@@ -79,7 +80,7 @@ public class DtoMapper<T> implements Serializable {
     private static Collection<Expression> prepareProjectionExpressions(PreparationContext ctx, Class klass, Map<String, Field> mappings) {
         Collection<Expression> projections = Lists.empty();
         for (Field field : klass.getDeclaredFields()) {
-            FgProjection projectionAnnotation = Reflect.getAnnotation(field, AnnotationTypes.FGPROJECTION);
+            FgProjection projectionAnnotation = Reflection.getAnnotation(field, AnnotationTypes.FGPROJECTION);
             if (projectionAnnotation != null) {
                 ProjectionExpressionBuilder builder = new ProjectionExpressionBuilder();
                 // Proyeccion.
@@ -106,7 +107,7 @@ public class DtoMapper<T> implements Serializable {
     }
 
     private static Expression prepareTableExpression(PreparationContext ctx, Class klass) {
-        FgDto annotation = Reflect.getAnnotation(klass, AnnotationTypes.FGDTO);
+        FgDto annotation = Reflection.getAnnotation(klass, AnnotationTypes.FGDTO);
         TableExpressionBuilder builder = new TableExpressionBuilder();
 
         // Nombre de tabla.
@@ -122,7 +123,7 @@ public class DtoMapper<T> implements Serializable {
 
     private static Collection<Expression> prepareTableJoinClauses(PreparationContext ctx, Class klass) {
         Collection<Expression> expressions = Lists.empty();
-        FgJoins joins = Reflect.getAnnotation(klass, AnnotationTypes.FGJOINS);
+        FgJoins joins = Reflection.getAnnotation(klass, AnnotationTypes.FGJOINS);
         if (joins != null && Assertions.isNullOrEmpty(joins.value()) == false) {
             for (FgJoin join : joins.value()) {
                 JoinExpressionBuilder builder = new JoinExpressionBuilder();
@@ -171,7 +172,9 @@ public class DtoMapper<T> implements Serializable {
         Collection<T> instances = Lists.empty();
         Collection<Map<String, Object>> resultsSet = (Collection<Map<String, Object>>) hibernateQuery.list();
         for (Map<String, Object> resultSet : resultsSet) {
+            // Crear instancia y aplicar operacion de postconstruccion.
             Object instance = mapInstance(klass, mappings, resultSet);
+            postConstruct(klass, instance);
             instances.add(klass.cast(instance));
         }
 
@@ -181,12 +184,12 @@ public class DtoMapper<T> implements Serializable {
     private Object mapInstance(Class klass, Map<String, Field> mappings, Map<String, Object> values) throws Throwable {
         Map<Class<? extends FgProjectionResultConverter>, FgProjectionResultConverter> converters = Maps.empty();
 
-        Object instance = Reflect.createInstanceUnsafe(klass);
+        Object instance = Reflection.createInstanceUnsafe(klass);
 
         for (Map.Entry<String, Field> entry : mappings.entrySet()) {
             // Crear instancia de convertidor, si hubiere.
             FgProjectionResultConverter converter = null;
-            FgProjection projectionInfo = Reflect.getAnnotation(entry.getValue(), FgProjection.class);
+            FgProjection projectionInfo = Reflection.getAnnotation(entry.getValue(), FgProjection.class);
             if (projectionInfo != null && projectionInfo.converter() != null) {
                 Class<? extends FgProjectionResultConverter> converterClass = projectionInfo.converter();
                 // Omitir el valor por defecto de la anotacion (una interface no instanciable).
@@ -213,20 +216,32 @@ public class DtoMapper<T> implements Serializable {
             assertValueIsAssignable(entry.getValue(), value);
 
             // Asignar valor.
-            Reflect.set(instance, mappings.get(mappingName), value);
+            Reflection.set(instance, mappings.get(mappingName), value);
         }
 
         return instance;
+    }
+
+    private void postConstruct(Class<?> klass, Object instance) {
+        Method postConstruct = Reflection.getAnnotatedMethod(klass, FgPostConstruct.class);
+        if (Reflection.isCallable(postConstruct)) {
+            try {
+                postConstruct.setAccessible(true);
+                postConstruct.invoke(instance);
+            } catch (Throwable thr) {
+                throw new IllegalArgumentException(String.format("Método '%s' de clase '%s' no se puede ejecutar.", postConstruct.getName(), klass.getCanonicalName()));
+            }
+        }
     }
 
     private FgProjectionResultConverter createConverterInstance(Class<? extends FgProjectionResultConverter> klass) throws Throwable {
         Object instance;
 
         try {
-            instance = Reflect.createInstance(klass);
+            instance = Reflection.createInstance(klass);
             return klass.cast(instance);
         } catch (Throwable thr) {
-            instance = Reflect.createInstanceUnsafe(klass);
+            instance = Reflection.createInstanceUnsafe(klass);
             return klass.cast(instance);
         }
     }

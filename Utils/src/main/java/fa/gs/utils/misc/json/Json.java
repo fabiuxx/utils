@@ -5,15 +5,9 @@
  */
 package fa.gs.utils.misc.json;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import fa.gs.utils.adapters.Adapter;
-import fa.gs.utils.adapters.Adapters;
-import fa.gs.utils.adapters.impl.json.JsonArrayAdapter;
-import fa.gs.utils.misc.Type;
-import java.lang.reflect.Array;
-import java.util.Collection;
 
 /**
  *
@@ -27,7 +21,7 @@ public class Json {
      * @param text Cadena de texto.
      * @return Elemento JSON.
      */
-    public static JsonElement parse(String text) {
+    public static JsonElement fromString(String text) {
         JsonParser parser = new JsonParser();
         return parser.parse(text);
     }
@@ -42,29 +36,50 @@ public class Json {
         return (json != null) ? json.toString() : "";
     }
 
-    public static <T> T[] unwrapPrimitives(JsonArray array, Type type, Class<T> primitiveType) {
-        if (array == null || array.size() == 0) {
-            return null;
-        }
-
-        T[] primitives = (T[]) Array.newInstance(primitiveType, array.size());
-        for (int i = 0; i < array.size(); i++) {
-            try {
-                T primitive = (T) JsonResolver.reduceValue(array.get(i), type);
-                primitives[i] = primitive;
-            } catch (Throwable thr) {
-                primitives[i] = null;
+    /**
+     * Obtiene una propiedad dentro de un objeto json.
+     *
+     * @param json Objeto json.
+     * @param path Camino hasta la propiedad deseada.
+     * @return Un elemento json que contiene el valor de la propiedad buscada,
+     * caso contrario {@code null}.
+     */
+    public static JsonElement resolvePath(JsonObject json, String path) {
+        String[] seg = path.split("\\.");
+        JsonElement ele = json;
+        for (int i = 0; i < seg.length; i++) {
+            String element = seg[i];
+            if (json.has(element)) {
+                ele = json.get(element);
+                if (ele == null) {
+                    return null;
+                } else if (ele.isJsonObject()) {
+                    json = ele.getAsJsonObject();
+                } else if (ele.isJsonObject() == false && i < (seg.length - 1)) {
+                    return null;
+                } else if (ele.isJsonObject() == false && i == (seg.length - 1)) {
+                    return ele;
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
             }
         }
-
-        return primitives;
+        return ele;
     }
 
-    public static <T> JsonElement toArrayData(Class<? extends Adapter<T, JsonElement>> adapterClass, Collection<T> objs) {
-        Collection<JsonElement> obj0 = Adapters.adapt(adapterClass, objs);
-        JsonArrayBuilder array = JsonArrayBuilder.instance();
-        array.add(obj0);
-        return Adapters.adapt(JsonArrayAdapter.class, array.build());
+    /**
+     * Determina si una propiedad es accesible dentro de un objeto json.
+     *
+     * @param json Objeto json.
+     * @param path Camino hasta la propiedad deseada.
+     * @return {@code true} si el camino es accesible, caso contrario
+     * {@code false}.
+     */
+    public static boolean hasPath(JsonObject json, String path) {
+        JsonElement element = resolvePath(json, path);
+        return (element != null);
     }
 
 }

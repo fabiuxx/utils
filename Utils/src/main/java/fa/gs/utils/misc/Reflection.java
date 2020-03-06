@@ -9,13 +9,17 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import javassist.Modifier;
 import sun.reflect.ReflectionFactory;
 
 /**
  *
  * @author Fabio A. González Sosa
  */
-public class Reflect {
+public class Reflection {
 
     /**
      * Obtiene el valor de un atributo dentro de un objeto.
@@ -115,7 +119,70 @@ public class Reflect {
         return null;
     }
 
+    public static Method getAnnotatedMethod(Class<?> klass, Class<?> annotationKlass) {
+        for (Method method : klass.getDeclaredMethods()) {
+            for (Annotation annotation : method.getAnnotations()) {
+                if (annotation.annotationType().equals(annotationKlass)) {
+                    return method;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Verifica si la clase indicada por {@code source} es una subclase de la
+     * clase indicada por {@code target}.
+     *
+     * @param source Clase de origen.
+     * @param target Clase de destino.
+     * @return {@code true} si {@code source} es subclase de {@code target},
+     * caso contrario {@code false}.
+     */
+    public static boolean isInstanceOf(Class<?> source, Class<?> target) {
+        return target.isAssignableFrom(source);
+    }
+
+    public static boolean isCallable(Method method) {
+        if (method != null) {
+            if (!Modifier.isAbstract(method.getModifiers())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isCollection(Class<?> type0) {
+        return Reflection.isInstanceOf(type0, Collection.class);
+    }
+
+    public static Class<?> getFirstActualGenericType(Type type) {
+        try {
+            if (type instanceof ParameterizedType) {
+                ParameterizedType pt = (ParameterizedType) type;
+                Type at = pt.getActualTypeArguments()[0];
+                return Class.forName(at.getTypeName());
+            } else {
+                return null;
+            }
+        } catch (Throwable thr) {
+            return null;
+        }
+    }
+
     public static Object createInstance(Class klass) throws Throwable {
+        try {
+            // 1. Probar instanciacion tradicional.
+            Object instance = createInstanceSafe(klass);
+            return instance;
+        } catch (Throwable thr) {
+            // 2. Probar instanciacion insegura.
+            Object instance = createInstanceUnsafe(klass);
+            return instance;
+        }
+    }
+
+    public static Object createInstanceSafe(Class klass) throws Throwable {
         try {
             // Metodo 1.
             Constructor defaultConstructor = klass.getConstructor();

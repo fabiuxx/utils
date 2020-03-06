@@ -152,7 +152,7 @@ public class JwtTokenManager implements TokenEncoder<JsonObject>, TokenDecoder<J
     private static JsonObject decryptPayload(JsonObject payload) throws Throwable {
         String data = payload.get(TokenClaim.DATA.descripcion()).getAsString();
         String json = Cipher.decrypt(getCipher(), data);
-        return Json.parse(json).getAsJsonObject();
+        return Json.fromString(json).getAsJsonObject();
     }
 
     /**

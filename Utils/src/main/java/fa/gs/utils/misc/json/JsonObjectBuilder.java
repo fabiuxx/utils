@@ -25,6 +25,10 @@ public class JsonObjectBuilder {
 
     public static JsonObjectBuilder instance() {
         JsonObject json = new JsonObject();
+        return instance(json);
+    }
+
+    public static JsonObjectBuilder instance(JsonObject json) {
         return new JsonObjectBuilder(json);
     }
 

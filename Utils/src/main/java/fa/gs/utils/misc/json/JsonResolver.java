@@ -11,56 +11,12 @@ import fa.gs.utils.misc.Type;
 import fa.gs.utils.misc.fechas.Fechas;
 
 /**
- *
+ * @deprecated Utilizar funcionalidades de paquete
+ * {@link fa.gs.utils.misc.json.serialization}.
  * @author Fabio A. González Sosa
  */
+@Deprecated
 public class JsonResolver {
-
-    /**
-     * Obtiene una propiedad dentro de un objeto json.
-     *
-     * @param json Objeto json.
-     * @param path Camino hasta la propiedad deseada.
-     * @return Un elemento json que contiene el valor de la propiedad buscada,
-     * caso contrario {@code null}.
-     */
-    public static JsonElement resolvePath(JsonObject json, String path) {
-        String[] seg = path.split("\\.");
-        JsonElement ele = json;
-        for (int i = 0; i < seg.length; i++) {
-            String element = seg[i];
-            if (json.has(element)) {
-                ele = json.get(element);
-                if (ele == null) {
-                    return null;
-                } else if (ele.isJsonObject()) {
-                    json = ele.getAsJsonObject();
-                } else if (ele.isJsonObject() == false && i < (seg.length - 1)) {
-                    return null;
-                } else if (ele.isJsonObject() == false && i == (seg.length - 1)) {
-                    return ele;
-                } else {
-                    return null;
-                }
-            } else {
-                return null;
-            }
-        }
-        return ele;
-    }
-
-    /**
-     * Determina si una propiedad es accesible dentro de un objeto json.
-     *
-     * @param json Objeto json.
-     * @param path Camino hasta la propiedad deseada.
-     * @return {@code true} si el camino es accesible, caso contrario
-     * {@code false}.
-     */
-    public static boolean hasPath(JsonObject json, String path) {
-        JsonElement element = resolvePath(json, path);
-        return (element != null);
-    }
 
     /**
      * Obtiene el valor de una propiedad especifica, si hubiere, y lo convierte
@@ -77,7 +33,7 @@ public class JsonResolver {
      * tipo especificado por <code>type</code>.
      */
     public static <T> T get(JsonObject json, String path, Type type) {
-        JsonElement resolved = resolvePath(json, path);
+        JsonElement resolved = Json.resolvePath(json, path);
         if (resolved == null) {
             throw new IllegalArgumentException(String.format("No se puede resolver el camino '%s'", path));
         }

@@ -64,18 +64,6 @@ public class Ids {
     }
 
     /**
-     * Genera una cadena única que puede ser utilizado en registros que al ser
-     * eliminados puedan permitir a nuevos registros re-utilizar sus valores
-     * para campos con restriccion UNIQUE.
-     *
-     * @return Cadena unica.
-     */
-    public static String generarCadenaEliminacion() {
-        String cadena = String.format("$eliminado-%s", Ids.randomUuid());
-        return cadena;
-    }
-
-    /**
      * Genera un identificador uniforme en base a una coleccion de
      * identificadores.
      *

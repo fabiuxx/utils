@@ -29,10 +29,10 @@ public class StringTyper {
                     case NUMBER:
                         throw new UnsupportedOperationException();
                     case JELEMENT:
-                        obj = Json.parse(string);
+                        obj = Json.fromString(string);
                         break;
                     case JOBJECT:
-                        obj = Json.parse(string).getAsJsonObject();
+                        obj = Json.fromString(string).getAsJsonObject();
                         break;
                     case BOOLEAN:
                         obj = Boolean.parseBoolean(string);

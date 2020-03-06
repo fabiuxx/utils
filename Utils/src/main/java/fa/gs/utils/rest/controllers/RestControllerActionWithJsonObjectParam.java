@@ -28,7 +28,7 @@ public abstract class RestControllerActionWithJsonObjectParam<C extends RestCont
         // Parsear texto.
         JsonElement param;
         try {
-            param = Json.parse(text);
+            param = Json.fromString(text);
         } catch (Throwable thr) {
             param = null;
         }

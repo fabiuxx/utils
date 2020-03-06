@@ -25,6 +25,10 @@ public class JsonArrayBuilder {
 
     public static JsonArrayBuilder instance() {
         JsonArray array = new JsonArray();
+        return instance(array);
+    }
+
+    public static JsonArrayBuilder instance(JsonArray array) {
         return new JsonArrayBuilder(array);
     }
 

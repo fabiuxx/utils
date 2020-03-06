@@ -43,6 +43,10 @@ public class Fechas {
      * Locale espanhol.
      */
     private static final Locale es_Es = new Locale("es", "ES");
+
+    public static final Tiempos TIEMPOS = new Tiempos();
+
+    public static final Formats FORMATS = new Formats();
     //</editor-fold>
 
     /**

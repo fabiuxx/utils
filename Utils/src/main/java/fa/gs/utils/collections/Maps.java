@@ -6,8 +6,7 @@
 package fa.gs.utils.collections;
 
 import fa.gs.utils.collections.maps.CollectionGroupMap;
-import fa.gs.utils.misc.Numeric;
-import fa.gs.utils.misc.Reflect;
+import fa.gs.utils.misc.Reflection;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -28,7 +27,7 @@ public class Maps {
     public static <K, V> Map<K, V> map(Collection<V> values, String attribute, Class<K> type) {
         Map<K, V> map = empty();
         for (V value : values) {
-            K key = Reflect.get(value, attribute, type);
+            K key = Reflection.get(value, attribute, type);
             if (key != null) {
                 map.put(key, value);
             }
@@ -39,7 +38,7 @@ public class Maps {
     public static <K, V> CollectionGroupMap<K, V> groupBy(Collection<V> values, String attribute, Class<K> type) {
         CollectionGroupMap<K, V> groups = new CollectionGroupMap<>();
         for (V value : values) {
-            K key = Reflect.get(value, attribute, type);
+            K key = Reflection.get(value, attribute, type);
             groups.put(key, value);
         }
         return groups;
@@ -105,22 +104,7 @@ public class Maps {
     }
 
     public static <K, V> Long long0(Map<K, V> map, K key, Long fallback) {
-        /**
-         * Se utiliza este artificio a manera de adaptar valores obtenidos de
-         * otras fuentes. Por ejemplo, desde registros de base de datos donde la
-         * representacion nativa de una columna esperada como Long podria ser
-         * tanto Long como BigInteger o BigDecimal.
-         */
-        try {
-            V value = map.getOrDefault(key, null);
-            if (value != null) {
-                return Numeric.adaptAsLong(value);
-            } else {
-                return fallback;
-            }
-        } catch (Throwable thr) {
-            return fallback;
-        }
+        return get(map, key, fallback, Long.class);
     }
 
     public static <K, V> BigInteger biginteger(Map<K, V> map, K key) {

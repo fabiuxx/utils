@@ -38,16 +38,47 @@ public class Errors {
         return new ErrnoImpl(descripcion, codigo);
     }
 
+    public static UnsupportedOperationException unsupported() {
+        return unsupported("TODO");
+    }
+
+    public static UnsupportedOperationException unsupported(String fmt, Object... args) {
+        String msg = Strings.format(fmt, args);
+        return new UnsupportedOperationException(msg);
+    }
+
+    public static IllegalArgumentException illegalArgument() {
+        return illegalArgument("ILLEGAL ARGUMENT");
+    }
+
+    public static IllegalArgumentException illegalArgument(String fmt, Object... args) {
+        return illegalArgument(null, fmt, args);
+    }
+
+    public static IllegalArgumentException illegalArgument(Throwable cause, String fmt, Object... args) {
+        String msg = Strings.format(fmt, args);
+        return new IllegalArgumentException(msg, cause);
+    }
+
+    public static IllegalStateException illegalState() {
+        return illegalState("ILLEGAL STATE");
+    }
+
+    public static IllegalStateException illegalState(String fmt, Object... args) {
+        return illegalState(null, fmt, args);
+    }
+
+    public static IllegalStateException illegalState(Throwable cause, String fmt, Object... args) {
+        String msg = Strings.format(fmt, args);
+        return new IllegalStateException(msg, cause);
+    }
+
     public static AppErrorException.Builder builder() {
         return new AppErrorExceptionBuilder();
     }
 
     public static AppErrorException failure(Failure failure) {
         return new AppErrorException(failure);
-    }
-
-    public static UnsupportedOperationException unsupported() {
-        return new UnsupportedOperationException("TODO");
     }
 
     public static void popStackTrace(Throwable throwable) {
