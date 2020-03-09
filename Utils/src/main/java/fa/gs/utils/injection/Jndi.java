@@ -56,12 +56,13 @@ public class Jndi {
     public static <T> Result<T> lookup(Context context, String jndi) {
         Result<T> result;
 
+        if (context == null) {
+            return Results.ko()
+                    .message("Contexto de inyección inválido")
+                    .build();
+        }
+
         try {
-            if (context == null) {
-                return Results.ko()
-                        .message("Contexto de inyección inválido")
-                        .build();
-            }
 
             Object obj = context.lookup(jndi);
             T injected = (T) obj;

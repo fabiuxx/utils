@@ -92,7 +92,13 @@ public class Errors {
         throwable.setStackTrace(cleanedUpStackTrace);
     }
 
-    public static void dump(PrintStream stream, Throwable thr) {
+    public synchronized static void dump(PrintStream stream, Throwable thr) {
+        dumpThrowable(stream, thr, 0);
+    }
+
+    public synchronized static void dump(PrintStream stream, Throwable thr, String fmt, Object... args) {
+        String msg = Strings.format(fmt, args);
+        stream.println(msg);
         dumpThrowable(stream, thr, 0);
     }
 
