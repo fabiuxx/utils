@@ -16,12 +16,9 @@ import fa.gs.utils.misc.json.adapter.JsonAdapterFromJson;
 import fa.gs.utils.misc.text.Text;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  *
@@ -29,30 +26,14 @@ import java.util.Objects;
  */
 public class JsonDeserializer {
 
-    /**
-     * Array de tipos que son directamente convertibles por GSON.
-     */
-    private static final Class<?>[] GSON_PRIMITIVE_TYPES = {
-        Byte.class,
-        Boolean.class,
-        Character.class,
-        String.class,
-        Short.class,
-        Integer.class,
-        Long.class,
-        Float.class,
-        Double.class,
-        BigInteger.class,
-        BigDecimal.class,
-        Void.class
-    };
-
     public static <T> T deserialize(String json0, Class<T> targetClass) throws Throwable {
+        //Utils.checkIsJsonProcessable(targetClass);
         JsonElement json = Json.fromString(json0);
         return deserialize(json, targetClass);
     }
 
     public static <T> T deserialize(JsonElement json, Class<T> targetClass) throws Throwable {
+        //Utils.checkIsJsonProcessable(targetClass);
         final DeserializationContext ctx = new DeserializationContext();
         Object instance0 = resolveElement(ctx, json, targetClass, null);
         return targetClass.cast(instance0);
@@ -65,8 +46,13 @@ public class JsonDeserializer {
         }
 
         // Procesamiento de valores primitivos.
-        if (isGsonPrimitive(targetClass)) {
+        if (Utils.isGsonPrimitive(targetClass)) {
             return resolvePrimitive(ctx, element, targetClass);
+        }
+
+        // Procesamiento de coleccion de objetos.
+        if (element.isJsonArray()) {
+            return resolveCollection(ctx, element, targetClass, field);
         }
 
         // Procesamiento de objeto.
@@ -74,22 +60,8 @@ public class JsonDeserializer {
             return resolveObject(ctx, element, targetClass);
         }
 
-        // Procesamiento de coleccion de objetos.
-        if (element.isJsonArray()) {
-            return resolveArray(ctx, element, targetClass, field);
-        }
-
         // Error.
         throw Errors.illegalState("Tipo de elemento no procesable.");
-    }
-
-    private static boolean isGsonPrimitive(Class<?> type0) {
-        for (Class<?> TYPE : GSON_PRIMITIVE_TYPES) {
-            if (Objects.equals(type0, TYPE)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -109,6 +81,37 @@ public class JsonDeserializer {
         }
 
         return ctx.gson.fromJson(element, targetClass);
+    }
+
+    /**
+     * Reduce un elemento JSON a una coleccion de objetos.
+     *
+     * @param ctx Contexto de deserializacion.
+     * @param element Elemento JSON a reducir.
+     * @param targetClass Clase objetivo,
+     * @param field
+     * @return Coleccion de objetos encapsulados dentro de un
+     * {@link java.util.ArrayList ArrayList}.
+     * @throws Throwable
+     */
+    private static Object resolveCollection(final DeserializationContext ctx, JsonElement element, Class<?> targetClass, Field field) throws Throwable {
+        if (!Reflection.isCollection(targetClass)) {
+            throw Errors.illegalArgument("La clase '%s' debe ser una colección.", targetClass.getCanonicalName());
+        }
+
+        if (field == null) {
+            throw Errors.illegalArgument("Se esperaba una definición de atributo para resolver el array de objetos json.");
+        }
+
+        final JsonArray array = element.getAsJsonArray();
+        final Collection collection = new ArrayList<>(array.size());
+        Class<?> genericType = Reflection.getFirstActualGenericType(field.getGenericType());
+        for (JsonElement arrayElement : array) {
+            Object instance = resolveElement(ctx, arrayElement, genericType, field);
+            collection.add(instance);
+        }
+
+        return collection;
     }
 
     /**
@@ -197,46 +200,15 @@ public class JsonDeserializer {
 
         try {
             // Utilizar adaptador, si hubiere. Los adaptadores tienen preferencia.
-            JsonAdapterFromJson converter = ctx.getAdapter(annotation.fromJsonAdapter());
-            if (converter != null) {
-                return converter.adapt(property);
+            JsonAdapterFromJson<Object> adapter = ctx.getAdapter(annotation.fromJsonAdapter());
+            if (adapter != null) {
+                return adapter.adapt(property);
             } else {
                 return resolveElement(ctx, property, field.getType(), field);
             }
         } catch (Throwable thr) {
-            throw Errors.illegalArgument(thr, "No es posible resolver la propiedad '%s' para la clase '%s'", propertyName, field.getDeclaringClass().getCanonicalName());
+            throw Errors.illegalArgument(thr, "No es posible resolver la propiedad '%s' para la clase '%s'.", propertyName, field.getDeclaringClass().getCanonicalName());
         }
-    }
-
-    /**
-     * Reduce un elemento JSON a una coleccion de objetos.
-     *
-     * @param ctx Contexto de deserializacion.
-     * @param element Elemento JSON a reducir.
-     * @param targetClass Clase objetivo,
-     * @param field
-     * @return Coleccion de objetos encapsulados dentro de un
-     * {@link java.util.ArrayList ArrayList}.
-     * @throws Throwable
-     */
-    private static Object resolveArray(final DeserializationContext ctx, JsonElement element, Class<?> targetClass, Field field) throws Throwable {
-        if (!Reflection.isCollection(targetClass)) {
-            throw Errors.illegalArgument("La clase '%s' debe ser una colección.", targetClass.getCanonicalName());
-        }
-
-        if (field == null) {
-            throw Errors.illegalArgument("Se esperaba una definición de atributo para resolver el array de objetos json.");
-        }
-
-        final JsonArray array = element.getAsJsonArray();
-        final Collection collection = new ArrayList<>(array.size());
-        Class<?> genericType = Reflection.getFirstActualGenericType(field.getGenericType());
-        for (JsonElement arrayElement : array) {
-            Object instance = resolveElement(ctx, arrayElement, genericType, field);
-            collection.add(instance);
-        }
-
-        return collection;
     }
 
     private static class DeserializationContext {
