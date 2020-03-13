@@ -16,12 +16,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.faces.application.ConfigurableNavigationHandler;
+import javax.faces.application.FacesMessage;
 import javax.faces.application.NavigationCase;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -252,6 +254,26 @@ public class Jsf {
     public static void eval(String fmt, Object... args) {
         String code = Strings.format(fmt, args);
         Ajax.oncomplete(code);
+    }
+
+    public static void clearMessages() {
+        clearMessages(null);
+    }
+
+    public static void clearMessages(String clientId) {
+        try {
+            Iterator<FacesMessage> it = (Assertions.stringNullOrEmpty(clientId)) ? getFacesContext().getMessages() : getFacesContext().getMessages(clientId);
+            while (it.hasNext()) {
+                it.next();
+                it.remove();
+            }
+        } catch (Throwable thr) {
+            Errors.dump(System.err, thr, "No se pudieron limpiar los mensajes.");
+        }
+    }
+
+    public static JsfMessageBuilder msg() {
+        return new JsfMessageBuilder();
     }
 
     //<editor-fold defaultstate="collapsed" desc="Gestión de Cookies">

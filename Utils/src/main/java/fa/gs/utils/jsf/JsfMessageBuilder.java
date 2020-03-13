@@ -96,4 +96,9 @@ public class JsfMessageBuilder implements Builder<JsfMessageBuilder, FacesMessag
         return msg;
     }
 
+    public void push() {
+        FacesMessage msg = build();
+        Jsf.getFacesContext().addMessage(null, msg);
+    }
+
 }
