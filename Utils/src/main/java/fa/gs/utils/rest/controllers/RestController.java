@@ -6,6 +6,7 @@
 package fa.gs.utils.rest.controllers;
 
 import fa.gs.utils.logging.app.AppLogger;
+import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.AppErrorException;
 import fa.gs.utils.rest.exceptions.ApiBadRequestException;
 import fa.gs.utils.rest.exceptions.ApiRollbackException;
@@ -22,11 +23,20 @@ public abstract class RestController implements Serializable {
     /**
      * Ejecuta un bloque logico de "accion" que no recibe parametros.
      *
-     * @param action Accion a ejecutar.
+     * @param actionClass Clase que define la accion a ejecutar.
      * @return Respuesta de la operacion.
      */
-    public Response executeControllerAction(RestControllerAction action) {
-        return executeControllerAction(action, null);
+    public Response executeControllerAction(Class<? extends RestControllerAction> actionClass) {
+        try {
+            Object action0 = Reflection.createInstance(actionClass);
+            RestControllerAction action = actionClass.cast(action0);
+            return executeControllerAction(action, null);
+        } catch (Throwable thr) {
+            logError(thr, null, "Error ejecutando acción");
+            return ServiceResponse.error()
+                    .cause("No se pudo realizar la operación")
+                    .build();
+        }
     }
 
     /**
@@ -52,7 +62,7 @@ public abstract class RestController implements Serializable {
              * Se espera como resultado una respuesta valida procesable por el
              * contenedor de aplicaciones.
              */
-            response = action.doAction(this, param);
+            response = action.doAction(param);
         } catch (IllegalArgumentException | ApiBadRequestException thr1) {
             // Peticion incorrecta.
             logError(thr1, action, "Error de formato para cuerpo de petición");
@@ -84,7 +94,11 @@ public abstract class RestController implements Serializable {
      * @return Nombre unico de la accion rest.
      */
     public String getActionName(RestControllerAction action) {
-        return action.getClass().getCanonicalName();
+        if (action != null) {
+            return action.getClass().getCanonicalName();
+        } else {
+            return "<N/D>";
+        }
     }
 
     /**

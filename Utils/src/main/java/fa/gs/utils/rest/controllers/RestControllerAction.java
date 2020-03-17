@@ -11,20 +11,18 @@ import javax.ws.rs.core.Response;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <C> Tipo concreto de la accion de controlador.
  * @param <P> Tipo concreto de parametro recibido, si hubiere.
  */
-public interface RestControllerAction<C extends RestController, P> extends Serializable {
+public interface RestControllerAction<P> extends Serializable {
 
     /**
      * Realiza una accion especifica.
      *
-     * @param ctx Contexto de ejecucion.
      * @param param Parametros de entrada.
      * @return Respuesta HTTP que comprende el resultado de la accion.
      * @throws Exception Si ocurre algun error durante la ejecucion de la
      * accion.
      */
-    Response doAction(C ctx, P param) throws Throwable;
+    Response doAction(P param) throws Throwable;
 
 }

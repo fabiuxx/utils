@@ -6,6 +6,7 @@
 package fa.gs.utils.rest.controllers;
 
 import com.google.gson.JsonElement;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.json.Json;
 import fa.gs.utils.rest.exceptions.ApiBadRequestException;
 import javax.ws.rs.core.Response;
@@ -13,12 +14,11 @@ import javax.ws.rs.core.Response;
 /**
  *
  * @author Fabio A. González Sosa
- * @param <C> Tipo concreto de la accion de controlador.
  */
-public abstract class RestControllerActionWithJsonParam<C extends RestController> implements RestControllerAction<C, String> {
+public abstract class RestControllerActionWithJsonElementParam implements RestControllerAction<String> {
 
     @Override
-    public Response doAction(C ctx, String text) throws Throwable {
+    public Response doAction(String text) throws Throwable {
         // Control de seguridad.
         if (text == null || text.isEmpty()) {
             throw new ApiBadRequestException();
@@ -29,6 +29,7 @@ public abstract class RestControllerActionWithJsonParam<C extends RestController
         try {
             param = Json.fromString(text);
         } catch (Throwable thr) {
+            Errors.dump(System.err, thr);
             param = null;
         }
 
@@ -37,9 +38,9 @@ public abstract class RestControllerActionWithJsonParam<C extends RestController
         }
 
         // Ejecutar accion.
-        return doAction(ctx, param);
+        return doAction(param);
     }
 
-    public abstract Response doAction(C ctx, JsonElement element) throws Throwable;
+    public abstract Response doAction(JsonElement element) throws Throwable;
 
 }

@@ -130,7 +130,7 @@ public class ServiceResponse {
     private static Response response(JsonElement payload, int status) {
         Response.ResponseBuilder builder = Response
                 .status(status)
-                .entity(payload.toString())
+                .entity(payload)
                 .type(MediaType.APPLICATION_JSON);
         return builder.build();
     }

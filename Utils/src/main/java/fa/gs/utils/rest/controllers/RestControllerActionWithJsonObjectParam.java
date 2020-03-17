@@ -7,45 +7,25 @@ package fa.gs.utils.rest.controllers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import fa.gs.utils.misc.json.Json;
-import fa.gs.utils.rest.exceptions.ApiBadRequestException;
+import fa.gs.utils.misc.errors.Errors;
 import javax.ws.rs.core.Response;
 
 /**
  *
  * @author Fabio A. González Sosa
- * @param <C> Tipo concreto de la accion de controlador.
  */
-public abstract class RestControllerActionWithJsonObjectParam<C extends RestController> implements RestControllerAction<C, String> {
+public abstract class RestControllerActionWithJsonObjectParam extends RestControllerActionWithJsonElementParam {
 
     @Override
-    public Response doAction(C ctx, String text) throws Throwable {
-        // Control de seguridad.
-        if (text == null || text.isEmpty()) {
-            throw new ApiBadRequestException();
+    public Response doAction(JsonElement element) throws Throwable {
+        if (!element.isJsonObject()) {
+            throw Errors.illegalArgument("Se esperaba un objeto JSON.");
         }
 
-        // Parsear texto.
-        JsonElement param;
-        try {
-            param = Json.fromString(text);
-        } catch (Throwable thr) {
-            param = null;
-        }
-
-        if (param == null) {
-            throw new ApiBadRequestException();
-        }
-
-        // Ejecutar accion.
-        return doAction(ctx, param);
-    }
-
-    private Response doAction(C ctx, JsonElement element) throws Throwable {
         JsonObject json = element.getAsJsonObject();
-        return doAction(ctx, json);
+        return doAction(json);
     }
 
-    public abstract Response doAction(C ctx, JsonObject element) throws Throwable;
+    public abstract Response doAction(JsonObject element) throws Throwable;
 
 }
