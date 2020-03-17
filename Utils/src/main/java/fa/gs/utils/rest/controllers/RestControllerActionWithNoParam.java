@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
  *
  * @author Fabio A. González Sosa
  */
-public abstract class RestControllerActionWithNoParams implements RestControllerAction<Void> {
+public abstract class RestControllerActionWithNoParam implements RestControllerAction<Void> {
 
     @Override
     public Response doAction(Void param) throws Throwable {

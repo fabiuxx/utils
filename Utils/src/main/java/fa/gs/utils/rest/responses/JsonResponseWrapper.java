@@ -8,7 +8,6 @@ package fa.gs.utils.rest.responses;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fa.gs.utils.misc.errors.Errno;
-import fa.gs.utils.misc.fechas.Fechas;
 
 /**
  *
@@ -25,7 +24,6 @@ public class JsonResponseWrapper {
     public static JsonObject success(JsonElement raw) {
         JsonObject status = new JsonObject();
         status.addProperty("success", true);
-        status.addProperty("timestamp", Fechas.epoch());
         JsonObject json = new JsonObject();
         json.add("status", status);
         if (raw != null) {
@@ -104,7 +102,6 @@ public class JsonResponseWrapper {
         }
 
         JsonObject status = new JsonObject();
-        status.addProperty("timestamp", Fechas.epoch());
         status.addProperty("success", false);
         status.addProperty("cause", cause);
         status.addProperty("errno", errno.getErrnoString());

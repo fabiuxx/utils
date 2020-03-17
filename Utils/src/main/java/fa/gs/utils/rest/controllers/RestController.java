@@ -9,9 +9,11 @@ import fa.gs.utils.logging.app.AppLogger;
 import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.AppErrorException;
 import fa.gs.utils.rest.exceptions.ApiBadRequestException;
+import fa.gs.utils.rest.exceptions.ApiInternalErrorException;
 import fa.gs.utils.rest.exceptions.ApiRollbackException;
 import fa.gs.utils.rest.responses.ServiceResponse;
 import java.io.Serializable;
+import java.util.function.Supplier;
 import javax.ws.rs.core.Response;
 
 /**
@@ -21,83 +23,87 @@ import javax.ws.rs.core.Response;
 public abstract class RestController implements Serializable {
 
     /**
-     * Ejecuta un bloque logico de "accion" que no recibe parametros.
+     * Permite encapsular un bloque de codigo ejecutable y generar una respuesta
+     * HTTP valida.
      *
-     * @param actionClass Clase que define la accion a ejecutar.
-     * @return Respuesta de la operacion.
+     * @param supplier Funcion lambda o instancia capaz de producir una
+     * instancia de {@link javax.ws.rs.core.Response Response}.
+     * @return Respuesta HTTP.
      */
-    public Response executeControllerAction(Class<? extends RestControllerAction> actionClass) {
-        try {
-            Object action0 = Reflection.createInstance(actionClass);
-            RestControllerAction action = actionClass.cast(action0);
-            return executeControllerAction(action, null);
-        } catch (Throwable thr) {
-            logError(thr, null, "Error ejecutando acción");
-            return ServiceResponse.error()
-                    .cause("No se pudo realizar la operación")
-                    .build();
-        }
-    }
-
-    /**
-     * Ejecuta un bloque logico de "accion" que recibe un objeto como parametro.
-     *
-     * @param action Accion a ejecutar.
-     * @param param Objeto de parametro.
-     * @return Respuesta de la operacion.
-     */
-    public Response executeControllerAction(RestControllerAction action, Object param) {
+    protected Response wrap(Supplier<Response> supplier) {
         Response response;
-        try {
-            // Control de seguridad.
-            if (action == null) {
-                return ServiceResponse.error()
-                        .cause("No se puede resolver la petición en este momento")
-                        .build();
-            }
 
-            /**
-             * Ejecutar la accion.
-             *
-             * Se espera como resultado una respuesta valida procesable por el
-             * contenedor de aplicaciones.
-             */
-            response = action.doAction(param);
-        } catch (IllegalArgumentException | ApiBadRequestException thr1) {
-            // Peticion incorrecta.
-            logError(thr1, action, "Error de formato para cuerpo de petición");
-            response = ServiceResponse.badRequest().build();
-        } catch (ApiRollbackException thr2) {
-            // Operacion marcada para rollback.
-            logError(thr2, action, "Rollback");
-            response = thr2.getResponse();
-            if (response == null) {
-                response = ServiceResponse.ko().cause("Ocurrió un error que forzó a la operación desechar sus resultados (rollback)").build();
-            }
-        } catch (AppErrorException thr3) {
-            // Error de aplicacion.
-            logError(thr3, action, "Error de aplicación");
-            response = ServiceResponse.ko().cause(thr3.message()).build();
-        } catch (Throwable thr4) {
-            // Error no esperado.
-            logError(thr4, action, "Error interno fatal");
-            response = ServiceResponse.error().cause(thr4).build();
+        try {
+            response = supplier.get();
+        } catch (Throwable thr) {
+            response = deriveResponseFromError(thr);
         }
 
         return response;
     }
 
     /**
-     * Unifica la obtencion del nombre de una accion rest.
+     * Permite generar una respuesta HTTP en base a una excepcion producida.
      *
-     * @param action Accion rest.
-     * @return Nombre unico de la accion rest.
+     * @param cause Excepcion producida.
+     * @return Respuesta HTTP.
      */
-    public String getActionName(RestControllerAction action) {
-        if (action != null) {
-            return action.getClass().getCanonicalName();
+    protected Response deriveResponseFromError(Throwable cause) {
+        Response response;
+
+        if (cause instanceof IllegalArgumentException || cause instanceof IllegalStateException || cause instanceof ApiBadRequestException) {
+            // Peticion incorrecta.
+            logError(cause, "Error de formato para cuerpo de petición.");
+            response = ServiceResponse.badRequest().build();
+        } else if (cause instanceof ApiRollbackException) {
+            // Operacion marcada para rollback.
+            logError(cause, "Rollback.");
+            response = ((ApiRollbackException) cause).getResponse();
+            if (response == null) {
+                response = ServiceResponse.ko()
+                        .cause("Ocurrió un error que forzó a la operación desechar sus resultados (rollback)")
+                        .build();
+            }
+        } else if (cause instanceof AppErrorException) {
+            // Error de aplicacion.
+            logError(cause, "Error de aplicación.");
+            response = ServiceResponse.ko()
+                    .cause(((AppErrorException) cause).message())
+                    .errno(((AppErrorException) cause).errno())
+                    .build();
         } else {
-            return "<N/D>";
+            // Error no esperado.
+            logError(cause, "Error interno fatal.");
+            response = ServiceResponse.error().cause(cause).build();
+        }
+
+        return response;
+    }
+
+    /**
+     * Ejecuta un bloque logico de "accion" que no recibe parametros.
+     *
+     * @param actionClass Clase que define la accion a ejecutar.
+     * @return Respuesta de la operacion.
+     */
+    public Response executeControllerAction(Class<? extends RestControllerAction> actionClass) {
+        return executeControllerAction(actionClass, null);
+    }
+
+    /**
+     * Ejecuta un bloque logico de "accion" que recibe un objeto como parametro.
+     *
+     * @param actionClass Clase que define la accion a ejecutar.
+     * @param param Objeto de parametro.
+     * @return Respuesta de la operacion.
+     */
+    public Response executeControllerAction(Class<? extends RestControllerAction> actionClass, Object param) {
+        try {
+            Object action0 = Reflection.createInstance(actionClass);
+            RestControllerAction action = actionClass.cast(action0);
+            return action.doAction(param);
+        } catch (Throwable thr) {
+            throw new ApiInternalErrorException(thr);
         }
     }
 
@@ -112,14 +118,12 @@ public abstract class RestController implements Serializable {
      * Emite un mensaje especifico de error.
      *
      * @param thr Excepcion capturada, si hubiere.
-     * @param action Accion rest que fallo.
      * @param msg Mensaje de ayuda que indica la causa del error.
      */
-    private void logError(Throwable thr, RestControllerAction action, String msg) {
+    private void logError(Throwable thr, String msg) {
         getLog().error()
                 .cause(thr)
                 .message(msg)
-                .tag("action.name", getActionName(action))
                 .log();
     }
 
