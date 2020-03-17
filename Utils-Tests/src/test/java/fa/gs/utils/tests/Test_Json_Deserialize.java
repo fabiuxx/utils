@@ -5,17 +5,18 @@
  */
 package fa.gs.utils.tests;
 
-import com.google.gson.JsonElement;
 import fa.gs.utils.collections.Lists;
-import fa.gs.utils.misc.json.adapter.JsonAdapterFromJson;
 import fa.gs.utils.misc.json.serialization.JsonDeserializer;
-import fa.gs.utils.misc.json.serialization.JsonPostConstruct;
-import fa.gs.utils.misc.json.serialization.JsonProperty;
-import fa.gs.utils.misc.json.serialization.JsonResolution;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Collection;
-import lombok.ToString;
+import fa.gs.utils.tests.json.Payload0;
+import fa.gs.utils.tests.json.Payload1;
+import fa.gs.utils.tests.json.Payload2;
+import fa.gs.utils.tests.json.Payload3;
+import fa.gs.utils.tests.json.Payload4;
+import fa.gs.utils.tests.json.Payload5;
+import fa.gs.utils.tests.json.Payload6;
+import fa.gs.utils.tests.json.Payload7;
+import fa.gs.utils.tests.json.Perfil;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
@@ -25,95 +26,214 @@ import org.junit.jupiter.api.Assertions;
  */
 public class Test_Json_Deserialize {
 
-    @Test
+    @Test(expected = Throwable.class)
     public void test0() throws Throwable {
-        String json0 = "{\"enum1\": 1, \"enum2\": \"ABC123\", \"a\": 1, \"b\": 654.5, \"sub\": {\"x\": \"A\", \"y\": \"B\", \"bd\": 123123.123, \"bi\": 123123}, \"strings\": [1, 2, 3, 4]}";
-        AB instance = JsonDeserializer.deserialize(json0, AB.class);
-        System.out.println(instance);
-        Assertions.assertNotNull(instance);
-        Assertions.assertNotNull(instance.sub0);
-        Assertions.assertEquals("A", instance.sub0.X);
-        Assertions.assertEquals("B", instance.sub0.Y);
-        Assertions.assertEquals(new BigDecimal("123123.123"), instance.sub0.bd);
-        Assertions.assertEquals(new BigInteger("123123"), instance.sub0.bi);
-        Assertions.assertNotNull(instance.enumOk);
-        Assertions.assertEquals(EnumX.ABC123, instance.enumOk);
-        Assertions.assertNotNull(instance.enumKo);
-        Assertions.assertEquals(EnumX.DEF456, instance.enumKo);
-
-        Assertions.assertNotNull(instance.strings);
-        Assertions.assertTrue(instance.strings.size() > 0);
-        for (Object obj : instance.strings) {
-            System.out.println("ELEMENTO: " + String.valueOf(obj));
-        }
+        /**
+         * Debe lanzar una excepcion ya que Payload0 define dos propiedades
+         * obligatorias.
+         */
+        String json = "{}";
+        JsonDeserializer.deserialize(json, Payload0.class);
     }
 
-    @ToString
-    private static class AB {
-
-        @JsonProperty(name = "a")
-        public Integer A = null;
-
-        @JsonProperty
-        public Integer b = null;
-
-        @JsonProperty(name = "sub")
-        public SUB sub0 = null;
-
-        @JsonProperty(name = "enum1", fromJsonAdapter = EnumXConverter.class)
-        public EnumX enumKo = null;
-
-        @JsonProperty(name = "enum2", fromJsonAdapter = EnumXConverter.class)
-        public EnumX enumOk = null;
-
-        @JsonProperty(name = "strings")
-        public Collection<Integer> strings = Lists.empty();
-
-        @JsonPostConstruct
-        void init() {
-            System.out.println("POST CONSTRUCT!");
-        }
-
+    @Test(expected = Throwable.class)
+    public void test1() throws Throwable {
+        /**
+         * Debe lanzar una excepcion ya que Payload0 define dos propiedades
+         * obligatorias.
+         */
+        String json = "{A: \"1\"}";
+        JsonDeserializer.deserialize(json, Payload0.class);
     }
 
-    @ToString
-    private static class SUB {
-
-        @JsonProperty(name = "x")
-        public String X = null;
-
-        @JsonProperty(name = "y")
-        public String Y = null;
-
-        @JsonProperty(name = "bd", resolution = JsonResolution.OPTIONAL)
-        public BigDecimal bd;
-
-        @JsonProperty(name = "bi")
-        public BigInteger bi;
-
+    @Test(expected = Throwable.class)
+    public void test2() throws Throwable {
+        /**
+         * Debe lanzar una excepcion ya que Payload0 define dos propiedades
+         * obligatorias, pero de tipo String e Integer.
+         */
+        String json = "{A: \"1\", X: false}";
+        JsonDeserializer.deserialize(json, Payload0.class);
     }
 
-    private static enum EnumX {
-        ABC123,
-        DEF456
+    @Test
+    public void test3() throws Throwable {
+        /**
+         * Ok. Ambas propiedades se definen con valores de tipo esperado.
+         */
+        String json = "{A: \"1\", X: 2}";
+        Payload0 payload = JsonDeserializer.deserialize(json, Payload0.class);
+        Assert.assertEquals("1", payload.A);
+        Assert.assertEquals((Integer) 2, payload.X);
     }
 
-    private static class EnumXConverter extends JsonAdapterFromJson<EnumX> {
-
-        @Override
-        public Class<EnumX> getOutputConversionType() {
-            return EnumX.class;
-        }
-
-        @Override
-        public EnumX adapt(JsonElement input, Object... args) {
-            String s = input.getAsString();
-            if (s.equals("ABC123")) {
-                return EnumX.ABC123;
-            } else {
-                return EnumX.DEF456;
-            }
-        }
-
+    @Test(expected = Throwable.class)
+    public void test4() throws Throwable {
+        /**
+         * Debe lanzar una excepcion ya que si no se define un nombre para la
+         * propiedad, se toma el nombre del atributo de clase. En este caso x
+         * !== X.
+         */
+        String json = "{A: \"1\", x: 2}";
+        JsonDeserializer.deserialize(json, Payload0.class);
     }
+
+    @Test
+    public void test5() throws Throwable {
+        /**
+         * Ok. A diferencia de Payload0, Payload1 define la propiedad X como
+         * opcional.
+         */
+        String json = "{A: \"1\"}";
+        Payload1 payload = JsonDeserializer.deserialize(json, Payload1.class);
+        Assert.assertEquals("1", payload.A);
+        Assert.assertEquals(null, payload.X);
+    }
+
+    @Test(expected = Throwable.class)
+    public void test6() throws Throwable {
+        /**
+         * Ok. Por mas que X sea una propiedad opcional, se sigue validando su
+         * tipo.
+         */
+        String json = "{A: \"1\", X: false}";
+        JsonDeserializer.deserialize(json, Payload1.class);
+    }
+
+    @Test
+    public void test7() throws Throwable {
+        /**
+         * Ok. Se pueden modificar el nombre esperado en JSON y el atributo
+         * concreto a inicializar en Java.
+         */
+        String json = "{x: 100}";
+        Payload2 payload = JsonDeserializer.deserialize(json, Payload2.class);
+        Assertions.assertEquals((Integer) 100, payload.nombreNadaQueVer);
+    }
+
+    @Test
+    public void test9() throws Throwable {
+        /**
+         * Ok. Se pueden anidar objetos complejos.
+         */
+        String json = "{usuario: {id: 1, username: \"admin\"}}";
+        Payload3 payload = JsonDeserializer.deserialize(json, Payload3.class);
+
+        Assert.assertTrue(payload.usuario != null);
+        Assert.assertEquals((Integer) 1, payload.usuario.id);
+        Assert.assertEquals("admin", payload.usuario.username);
+
+        // Se siguen las mismas reglas de resolucion para propiedades mandatorias y opcionales.
+        Assert.assertTrue(payload.perfil == null);
+    }
+
+    @Test
+    public void test10() throws Throwable {
+        /**
+         * Ok. Se pueden anidar objetos complejos.
+         */
+        String json = "{usuario: {id: 1, username: \"admin\"}, perfil: {id: 1, descripcion:\"p1\"}}";
+        Payload3 payload = JsonDeserializer.deserialize(json, Payload3.class);
+
+        Assert.assertTrue(payload.usuario != null);
+        Assert.assertEquals((Integer) 1, payload.usuario.id);
+        Assert.assertEquals("admin", payload.usuario.username);
+
+        Assert.assertTrue(payload.perfil != null);
+        Assert.assertEquals((Integer) 1, payload.perfil.id);
+        Assert.assertEquals("p1", payload.perfil.descripcion);
+    }
+
+    @Test
+    public void test11() throws Throwable {
+        /**
+         * Ok. Se pueden utilizar arrays.
+         */
+        String json = "{array: []}";
+        Payload4 payload = JsonDeserializer.deserialize(json, Payload4.class);
+        Assert.assertTrue(payload.array != null);
+        Assert.assertTrue(payload.array.isEmpty());
+    }
+
+    @Test
+    public void test12() throws Throwable {
+        /**
+         * Ok. Se pueden utilizar arrays.
+         */
+        String json = "{array: [1,2,3]}";
+        Payload4 payload = JsonDeserializer.deserialize(json, Payload4.class);
+        Assert.assertTrue(payload.array != null);
+        Assert.assertEquals((int) 3, payload.array.size());
+    }
+
+    @Test(expected = Throwable.class)
+    public void test13() throws Throwable {
+        /**
+         * Debe lanzar una excepcion ya que solo se permiten arrays con tipos
+         * homogeneos.
+         */
+        String json = "{array: [1,false,3]}";
+        JsonDeserializer.deserialize(json, Payload4.class);
+    }
+
+    @Test
+    public void test14() throws Throwable {
+        /**
+         * Ok.
+         */
+        String json = "{usuario: {id: 1, username: \"admin\"}, perfiles: [{id: 1, descripcion:\"p1\"}]}";
+        Payload5 payload = JsonDeserializer.deserialize(json, Payload5.class);
+
+        Assert.assertTrue(payload.usuario != null);
+        Assert.assertEquals((Integer) 1, payload.usuario.id);
+        Assert.assertEquals("admin", payload.usuario.username);
+
+        Assert.assertTrue(payload.perfiles != null);
+        Assert.assertEquals((int) 1, payload.perfiles.size());
+
+        Perfil perfil = Lists.first(payload.perfiles);
+        Assert.assertTrue(perfil != null);
+        Assert.assertEquals((Integer) 1, perfil.id);
+        Assert.assertEquals("p1", perfil.descripcion);
+    }
+
+    @Test
+    public void test15() throws Throwable {
+        /**
+         * Ok. Por defecto, las propiedades opcionales de tipo array tienen
+         * valor nulo al igual que las propiedades escalares.
+         */
+        String json = "{usuario: {id: 1, username: \"admin\"}}";
+        Payload6 payload = JsonDeserializer.deserialize(json, Payload6.class);
+
+        Assert.assertTrue(payload.usuario != null);
+        Assert.assertEquals((Integer) 1, payload.usuario.id);
+        Assert.assertEquals("admin", payload.usuario.username);
+
+        Assert.assertTrue(payload.perfiles == null);
+    }
+
+    @Test
+    public void test16() throws Throwable {
+        /**
+         * Ok. Se puede especificar un valor alternativo para propiedades
+         * opcionales mediante un metodo anotado con JsonPostConstruct. Este
+         * metodo es llamado posterior a la deserializacion de los objetos.
+         */
+        String json = "{usuario: {id: 1, username: \"admin\"}}";
+        Payload7 payload = JsonDeserializer.deserialize(json, Payload7.class);
+
+        Assert.assertTrue(payload.usuario != null);
+        Assert.assertEquals((Integer) 1, payload.usuario.id);
+        Assert.assertEquals("admin", payload.usuario.username);
+
+        Assert.assertTrue(payload.perfiles != null);
+        Assert.assertEquals((int) 0, payload.perfiles.size());
+        Assert.assertEquals(true, payload.postConstruct);
+
+        // La instanciacion normal no llama al metodo de post-construccion.
+        payload = new Payload7();
+        Assert.assertEquals(false, payload.postConstruct);
+    }
+
 }
