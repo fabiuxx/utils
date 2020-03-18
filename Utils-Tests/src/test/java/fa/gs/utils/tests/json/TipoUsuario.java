@@ -13,8 +13,8 @@ import java.util.Objects;
  * @author Fabio A. González Sosa
  */
 public enum TipoUsuario {
-    TIPO1("0001"),
-    TIPO2("0002");
+    TIPO1("U1"),
+    TIPO2("U2");
     private final String codigo;
 
     private TipoUsuario(String value) {

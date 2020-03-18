@@ -15,7 +15,9 @@ import fa.gs.utils.tests.json.Payload4;
 import fa.gs.utils.tests.json.Payload5;
 import fa.gs.utils.tests.json.Payload6;
 import fa.gs.utils.tests.json.Payload7;
+import fa.gs.utils.tests.json.Payload8;
 import fa.gs.utils.tests.json.Perfil;
+import fa.gs.utils.tests.json.TipoUsuario;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -234,6 +236,33 @@ public class Test_Json_Deserialize {
         // La instanciacion normal no llama al metodo de post-construccion.
         payload = new Payload7();
         Assert.assertEquals(false, payload.postConstruct);
+    }
+
+    @Test
+    public void test17() throws Throwable {
+        /**
+         * Ok. Se pueden especificar adaptadores que convierten un valor de
+         * entrada a otro valor concreto mediante 'fromJsonAdapter'.
+         */
+        String json = "{usuario: {id: 1, username: \"admin\"}, tipo: \"U1\"}";
+        Payload8 payload = JsonDeserializer.deserialize(json, Payload8.class);
+
+        Assert.assertTrue(payload.usuario != null);
+        Assert.assertEquals((Integer) 1, payload.usuario.id);
+        Assert.assertEquals("admin", payload.usuario.username);
+
+        Assert.assertTrue(payload.tipo != null);
+        Assert.assertEquals(TipoUsuario.TIPO1, payload.tipo);
+    }
+
+    @Test(expected = Throwable.class)
+    public void test18() throws Throwable {
+        /**
+         * Debe lanzar una excepcion, ya que el convertidor espera un elemento
+         * de tipo cadena para la propiedad tipo.
+         */
+        String json = "{usuario: {id: 1, username: \"admin\"}, tipo: false}";
+        JsonDeserializer.deserialize(json, Payload8.class);
     }
 
 }
