@@ -146,7 +146,7 @@ public class JsonDeserializer {
         }
 
         // Procesar atributos anotados como propiedades.
-        for (Field field : targetClass.getDeclaredFields()) {
+        for (Field field : targetClass.getFields()) {
             JsonProperty annotation = Reflection.getAnnotation(field, JsonProperty.class);
             if (annotation != null) {
                 // Resolver propiedad de objeto json.

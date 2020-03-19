@@ -16,6 +16,7 @@ import fa.gs.utils.tests.json.Payload5;
 import fa.gs.utils.tests.json.Payload6;
 import fa.gs.utils.tests.json.Payload7;
 import fa.gs.utils.tests.json.Payload8;
+import fa.gs.utils.tests.json.Payload9;
 import fa.gs.utils.tests.json.Perfil;
 import fa.gs.utils.tests.json.TipoUsuario;
 import org.junit.Assert;
@@ -263,6 +264,30 @@ public class Test_Json_Deserialize {
          */
         String json = "{usuario: {id: 1, username: \"admin\"}, tipo: false}";
         JsonDeserializer.deserialize(json, Payload8.class);
+    }
+
+    @Test(expected = Throwable.class)
+    public void test19() throws Throwable {
+        /**
+         * Debe lanzar una excepcion, ya que se respetan las propiedades
+         * heredadas.
+         */
+        String json = "{password: \"123\"}";
+        JsonDeserializer.deserialize(json, Payload9.class);
+    }
+
+    @Test
+    public void test20() throws Throwable {
+        /**
+         * Debe lanzar una excepcion, ya que las propiedades heredadas se siguen
+         * validando.
+         */
+        String json = "{id: 1, username: \"admin\", password: \"123\"}";
+        Payload9 payload = JsonDeserializer.deserialize(json, Payload9.class);
+        Assert.assertTrue(payload != null);
+        Assert.assertEquals((Integer) 1, payload.id);
+        Assert.assertEquals("admin", payload.username);
+        Assert.assertEquals("123", payload.password);
     }
 
 }
