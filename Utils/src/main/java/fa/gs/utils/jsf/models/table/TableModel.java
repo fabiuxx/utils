@@ -3,18 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.jsf.models.selection;
+package fa.gs.utils.jsf.models.table;
 
-import java.io.Serializable;
+import fa.gs.utils.database.query.expressions.Expression;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
  * @author Fabio A. González Sosa
  * @param <T> Parametro de tipo.
  */
-public interface SelectionModel<T> extends Serializable {
+public interface TableModel<T> {
 
-    Collection<SelectionModelItem<T>> getItems();
+    List<T> getSelectedItems();
+
+    Collection<TableModelItem<T>> loadItems(long limit, long offset, Expression filterBy, Expression sortBy);
 
 }

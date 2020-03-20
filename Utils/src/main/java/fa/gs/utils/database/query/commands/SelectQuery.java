@@ -94,7 +94,7 @@ public class SelectQuery implements Query, Self<SelectQuery> {
     }
 
     public OrderExpressionBuilder order() {
-        OrderExpressionBuilder builder = new OrderExpressionBuilder();
+        OrderExpressionBuilder builder = OrderExpressionBuilder.instance();
         orderClause.add(builder);
         return builder;
     }

@@ -11,4 +11,11 @@ package fa.gs.utils.database.query.expressions.build;
  */
 public class ConditionsExpressionBuilder extends AbstractExpressionBuilder<ConditionsExpressionBuilder> {
 
+    public ConditionsExpressionBuilder() {
+    }
+
+    public static ConditionsExpressionBuilder instance() {
+        return new ConditionsExpressionBuilder();
+    }
+
 }

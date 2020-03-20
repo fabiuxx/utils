@@ -8,6 +8,7 @@ package fa.gs.utils.misc.errors;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
+import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.utils.Failure;
 import java.io.PrintStream;
 
@@ -90,6 +91,13 @@ public class Errors {
         StackTraceElement[] cleanedUpStackTrace = new StackTraceElement[originalStackTrace.length - n];
         System.arraycopy(originalStackTrace, n, cleanedUpStackTrace, 0, cleanedUpStackTrace.length);
         throwable.setStackTrace(cleanedUpStackTrace);
+    }
+
+    public synchronized static void dump(PrintStream stream, Result result) {
+        if (result.isFailure()) {
+            Failure failure = result.failure();
+            dump(stream, failure.cause(), Text.select(failure.message(), "ERROR"));
+        }
     }
 
     public synchronized static void dump(PrintStream stream, Throwable thr) {

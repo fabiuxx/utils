@@ -20,8 +20,12 @@ public class OrderExpressionBuilder extends StackBasedExpressionBuilder implemen
 
     private OrderExpression.Type type;
 
-    public OrderExpressionBuilder() {
+    OrderExpressionBuilder() {
         this.type = OrderExpression.Type.ASC;
+    }
+
+    public static OrderExpressionBuilder instance() {
+        return new OrderExpressionBuilder();
     }
 
     public OrderExpressionBuilder name(String... parts) {
