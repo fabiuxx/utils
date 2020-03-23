@@ -21,8 +21,8 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
 import lombok.ToString;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  *

@@ -8,9 +8,9 @@ package fa.gs.utils.tests;
 import fa.gs.utils.crypto.Cipher;
 import fa.gs.utils.crypto.Cipher_AES;
 import java.nio.charset.StandardCharsets;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -26,7 +26,7 @@ public class Test_Crypto {
 
     private static String TEXT;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         TEST_KEY = "0934oiuwadasdhjk23yqwydaksj9qls7".getBytes(StandardCharsets.UTF_8);
         TEST_IV0 = "0000000000000000".getBytes(StandardCharsets.UTF_8);
@@ -40,7 +40,7 @@ public class Test_Crypto {
         String c0 = Cipher.encrypt(aes, TEXT);
         String text = Cipher.decrypt(aes, c0);
         boolean equals = text.equals(TEXT);
-        Assert.assertTrue(equals);
+        Assertions.assertTrue(equals);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class Test_Crypto {
         String c0 = Cipher.encrypt(aes, TEXT);
         String text = Cipher.decrypt(aes, c0);
         boolean equals = text.equals(TEXT);
-        Assert.assertTrue(equals);
+        Assertions.assertTrue(equals);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class Test_Crypto {
         String c0 = Cipher.encrypt(aes, TEXT);
         String text = Cipher.decrypt(aes, c0);
         boolean equals = text.equals(TEXT);
-        Assert.assertTrue(equals);
+        Assertions.assertTrue(equals);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class Test_Crypto {
         String c2 = Cipher.encrypt(aes2, TEXT);
 
         boolean equals = c1.equals(c2);
-        Assert.assertFalse(equals);
+        Assertions.assertFalse(equals);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class Test_Crypto {
         String p2 = Cipher.decrypt(aes2, c2);
 
         boolean equals = p1.equals(p2);
-        Assert.assertTrue(equals);
+        Assertions.assertTrue(equals);
     }
 
 }

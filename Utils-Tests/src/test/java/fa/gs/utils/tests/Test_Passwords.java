@@ -7,8 +7,8 @@ package fa.gs.utils.tests;
 
 import fa.gs.utils.authentication.passwords.PasswordVerifier;
 import fa.gs.utils.authentication.passwords.PasswordVerifier_BCRYPT;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -24,7 +24,7 @@ public class Test_Passwords {
     public void test0() throws Throwable {
         PasswordVerifier verifier = new PasswordVerifier_BCRYPT();
         boolean ok = verifier.verifies(PLAIN_TEXT, BCRYPT_HASH);
-        Assert.assertTrue(ok);
+        Assertions.assertTrue(ok);
     }
 
 }

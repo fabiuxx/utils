@@ -10,14 +10,11 @@ import fa.gs.utils.database.query.commands.SelectQuery;
 import fa.gs.utils.misc.Numeric;
 import fa.gs.utils.tests.database.Persistence;
 import fa.gs.utils.tests.database.PersonaEmail;
-import java.util.Collection;
 import javax.persistence.EntityManager;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -27,24 +24,16 @@ public class Test_DatabaseQuery {
 
     private static Persistence persistence = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() throws Throwable {
         persistence = new Persistence();
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownClass() {
         if (persistence != null) {
             persistence.finish();
         }
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
     }
 
     @Test

@@ -9,8 +9,8 @@ import com.google.gson.JsonObject;
 import fa.gs.utils.authentication.tokens.TokenDecoder;
 import fa.gs.utils.authentication.tokens.jwt.JwtTokenManager;
 import fa.gs.utils.misc.json.JsonObjectBuilder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -29,7 +29,7 @@ public class Test_TokenManager {
 
         TokenDecoder<JsonObject> decoder = new JwtTokenManager();
         JsonObject json0 = decoder.decodeToken(TEST_TOKEN);
-        Assert.assertTrue(json.equals(json0));
+        Assertions.assertTrue(json.equals(json0));
     }
 
 }

@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
 package fa.gs.utils.tests;
 
@@ -19,9 +19,8 @@ import fa.gs.utils.tests.json.Payload8;
 import fa.gs.utils.tests.json.Payload9;
 import fa.gs.utils.tests.json.Perfil;
 import fa.gs.utils.tests.json.TipoUsuario;
-import org.junit.Assert;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -29,34 +28,40 @@ import org.junit.jupiter.api.Assertions;
  */
 public class Test_Json_Deserialize {
 
-    @Test(expected = Throwable.class)
+    @Test
     public void test0() throws Throwable {
         /**
          * Debe lanzar una excepcion ya que Payload0 define dos propiedades
          * obligatorias.
          */
         String json = "{}";
-        JsonDeserializer.deserialize(json, Payload0.class);
+        Assertions.assertThrows(Throwable.class, () -> {
+            JsonDeserializer.deserialize(json, Payload0.class);
+        });
     }
 
-    @Test(expected = Throwable.class)
+    @Test
     public void test1() throws Throwable {
         /**
          * Debe lanzar una excepcion ya que Payload0 define dos propiedades
          * obligatorias.
          */
         String json = "{A: \"1\"}";
-        JsonDeserializer.deserialize(json, Payload0.class);
+        Assertions.assertThrows(Throwable.class, () -> {
+            JsonDeserializer.deserialize(json, Payload0.class);
+        });
     }
 
-    @Test(expected = Throwable.class)
+    @Test
     public void test2() throws Throwable {
         /**
          * Debe lanzar una excepcion ya que Payload0 define dos propiedades
          * obligatorias, pero de tipo String e Integer.
          */
         String json = "{A: \"1\", X: false}";
-        JsonDeserializer.deserialize(json, Payload0.class);
+        Assertions.assertThrows(Throwable.class, () -> {
+            JsonDeserializer.deserialize(json, Payload0.class);
+        });
     }
 
     @Test
@@ -66,11 +71,11 @@ public class Test_Json_Deserialize {
          */
         String json = "{A: \"1\", X: 2}";
         Payload0 payload = JsonDeserializer.deserialize(json, Payload0.class);
-        Assert.assertEquals("1", payload.A);
-        Assert.assertEquals((Integer) 2, payload.X);
+        Assertions.assertEquals("1", payload.A);
+        Assertions.assertEquals((Integer) 2, payload.X);
     }
 
-    @Test(expected = Throwable.class)
+    @Test
     public void test4() throws Throwable {
         /**
          * Debe lanzar una excepcion ya que si no se define un nombre para la
@@ -78,7 +83,9 @@ public class Test_Json_Deserialize {
          * !== X.
          */
         String json = "{A: \"1\", x: 2}";
-        JsonDeserializer.deserialize(json, Payload0.class);
+        Assertions.assertThrows(Throwable.class, () -> {
+            JsonDeserializer.deserialize(json, Payload0.class);
+        });
     }
 
     @Test
@@ -89,18 +96,20 @@ public class Test_Json_Deserialize {
          */
         String json = "{A: \"1\"}";
         Payload1 payload = JsonDeserializer.deserialize(json, Payload1.class);
-        Assert.assertEquals("1", payload.A);
-        Assert.assertEquals(null, payload.X);
+        Assertions.assertEquals("1", payload.A);
+        Assertions.assertEquals(null, payload.X);
     }
 
-    @Test(expected = Throwable.class)
+    @Test
     public void test6() throws Throwable {
         /**
          * Ok. Por mas que X sea una propiedad opcional, se sigue validando su
          * tipo.
          */
         String json = "{A: \"1\", X: false}";
-        JsonDeserializer.deserialize(json, Payload1.class);
+        Assertions.assertThrows(Throwable.class, () -> {
+            JsonDeserializer.deserialize(json, Payload1.class);
+        });
     }
 
     @Test
@@ -122,12 +131,12 @@ public class Test_Json_Deserialize {
         String json = "{usuario: {id: 1, username: \"admin\"}}";
         Payload3 payload = JsonDeserializer.deserialize(json, Payload3.class);
 
-        Assert.assertTrue(payload.usuario != null);
-        Assert.assertEquals((Integer) 1, payload.usuario.id);
-        Assert.assertEquals("admin", payload.usuario.username);
+        Assertions.assertTrue(payload.usuario != null);
+        Assertions.assertEquals((Integer) 1, payload.usuario.id);
+        Assertions.assertEquals("admin", payload.usuario.username);
 
         // Se siguen las mismas reglas de resolucion para propiedades mandatorias y opcionales.
-        Assert.assertTrue(payload.perfil == null);
+        Assertions.assertTrue(payload.perfil == null);
     }
 
     @Test
@@ -138,13 +147,13 @@ public class Test_Json_Deserialize {
         String json = "{usuario: {id: 1, username: \"admin\"}, perfil: {id: 1, descripcion:\"p1\"}}";
         Payload3 payload = JsonDeserializer.deserialize(json, Payload3.class);
 
-        Assert.assertTrue(payload.usuario != null);
-        Assert.assertEquals((Integer) 1, payload.usuario.id);
-        Assert.assertEquals("admin", payload.usuario.username);
+        Assertions.assertTrue(payload.usuario != null);
+        Assertions.assertEquals((Integer) 1, payload.usuario.id);
+        Assertions.assertEquals("admin", payload.usuario.username);
 
-        Assert.assertTrue(payload.perfil != null);
-        Assert.assertEquals((Integer) 1, payload.perfil.id);
-        Assert.assertEquals("p1", payload.perfil.descripcion);
+        Assertions.assertTrue(payload.perfil != null);
+        Assertions.assertEquals((Integer) 1, payload.perfil.id);
+        Assertions.assertEquals("p1", payload.perfil.descripcion);
     }
 
     @Test
@@ -154,8 +163,8 @@ public class Test_Json_Deserialize {
          */
         String json = "{array: []}";
         Payload4 payload = JsonDeserializer.deserialize(json, Payload4.class);
-        Assert.assertTrue(payload.array != null);
-        Assert.assertTrue(payload.array.isEmpty());
+        Assertions.assertTrue(payload.array != null);
+        Assertions.assertTrue(payload.array.isEmpty());
     }
 
     @Test
@@ -165,18 +174,20 @@ public class Test_Json_Deserialize {
          */
         String json = "{array: [1,2,3]}";
         Payload4 payload = JsonDeserializer.deserialize(json, Payload4.class);
-        Assert.assertTrue(payload.array != null);
-        Assert.assertEquals((int) 3, payload.array.size());
+        Assertions.assertTrue(payload.array != null);
+        Assertions.assertEquals((int) 3, payload.array.size());
     }
 
-    @Test(expected = Throwable.class)
+    @Test
     public void test13() throws Throwable {
         /**
          * Debe lanzar una excepcion ya que solo se permiten arrays con tipos
          * homogeneos.
          */
         String json = "{array: [1,false,3]}";
-        JsonDeserializer.deserialize(json, Payload4.class);
+        Assertions.assertThrows(Throwable.class, () -> {
+            JsonDeserializer.deserialize(json, Payload4.class);
+        });
     }
 
     @Test
@@ -187,17 +198,17 @@ public class Test_Json_Deserialize {
         String json = "{usuario: {id: 1, username: \"admin\"}, perfiles: [{id: 1, descripcion:\"p1\"}]}";
         Payload5 payload = JsonDeserializer.deserialize(json, Payload5.class);
 
-        Assert.assertTrue(payload.usuario != null);
-        Assert.assertEquals((Integer) 1, payload.usuario.id);
-        Assert.assertEquals("admin", payload.usuario.username);
+        Assertions.assertTrue(payload.usuario != null);
+        Assertions.assertEquals((Integer) 1, payload.usuario.id);
+        Assertions.assertEquals("admin", payload.usuario.username);
 
-        Assert.assertTrue(payload.perfiles != null);
-        Assert.assertEquals((int) 1, payload.perfiles.size());
+        Assertions.assertTrue(payload.perfiles != null);
+        Assertions.assertEquals((int) 1, payload.perfiles.size());
 
         Perfil perfil = Lists.first(payload.perfiles);
-        Assert.assertTrue(perfil != null);
-        Assert.assertEquals((Integer) 1, perfil.id);
-        Assert.assertEquals("p1", perfil.descripcion);
+        Assertions.assertTrue(perfil != null);
+        Assertions.assertEquals((Integer) 1, perfil.id);
+        Assertions.assertEquals("p1", perfil.descripcion);
     }
 
     @Test
@@ -209,11 +220,11 @@ public class Test_Json_Deserialize {
         String json = "{usuario: {id: 1, username: \"admin\"}}";
         Payload6 payload = JsonDeserializer.deserialize(json, Payload6.class);
 
-        Assert.assertTrue(payload.usuario != null);
-        Assert.assertEquals((Integer) 1, payload.usuario.id);
-        Assert.assertEquals("admin", payload.usuario.username);
+        Assertions.assertTrue(payload.usuario != null);
+        Assertions.assertEquals((Integer) 1, payload.usuario.id);
+        Assertions.assertEquals("admin", payload.usuario.username);
 
-        Assert.assertTrue(payload.perfiles == null);
+        Assertions.assertTrue(payload.perfiles == null);
     }
 
     @Test
@@ -226,17 +237,17 @@ public class Test_Json_Deserialize {
         String json = "{usuario: {id: 1, username: \"admin\"}}";
         Payload7 payload = JsonDeserializer.deserialize(json, Payload7.class);
 
-        Assert.assertTrue(payload.usuario != null);
-        Assert.assertEquals((Integer) 1, payload.usuario.id);
-        Assert.assertEquals("admin", payload.usuario.username);
+        Assertions.assertTrue(payload.usuario != null);
+        Assertions.assertEquals((Integer) 1, payload.usuario.id);
+        Assertions.assertEquals("admin", payload.usuario.username);
 
-        Assert.assertTrue(payload.perfiles != null);
-        Assert.assertEquals((int) 0, payload.perfiles.size());
-        Assert.assertEquals(true, payload.postConstruct);
+        Assertions.assertTrue(payload.perfiles != null);
+        Assertions.assertEquals((int) 0, payload.perfiles.size());
+        Assertions.assertEquals(true, payload.postConstruct);
 
         // La instanciacion normal no llama al metodo de post-construccion.
         payload = new Payload7();
-        Assert.assertEquals(false, payload.postConstruct);
+        Assertions.assertEquals(false, payload.postConstruct);
     }
 
     @Test
@@ -248,32 +259,36 @@ public class Test_Json_Deserialize {
         String json = "{usuario: {id: 1, username: \"admin\"}, tipo: \"U1\"}";
         Payload8 payload = JsonDeserializer.deserialize(json, Payload8.class);
 
-        Assert.assertTrue(payload.usuario != null);
-        Assert.assertEquals((Integer) 1, payload.usuario.id);
-        Assert.assertEquals("admin", payload.usuario.username);
+        Assertions.assertTrue(payload.usuario != null);
+        Assertions.assertEquals((Integer) 1, payload.usuario.id);
+        Assertions.assertEquals("admin", payload.usuario.username);
 
-        Assert.assertTrue(payload.tipo != null);
-        Assert.assertEquals(TipoUsuario.TIPO1, payload.tipo);
+        Assertions.assertTrue(payload.tipo != null);
+        Assertions.assertEquals(TipoUsuario.TIPO1, payload.tipo);
     }
 
-    @Test(expected = Throwable.class)
+    @Test
     public void test18() throws Throwable {
         /**
          * Debe lanzar una excepcion, ya que el convertidor espera un elemento
          * de tipo cadena para la propiedad tipo.
          */
         String json = "{usuario: {id: 1, username: \"admin\"}, tipo: false}";
-        JsonDeserializer.deserialize(json, Payload8.class);
+        Assertions.assertThrows(Throwable.class, () -> {
+            JsonDeserializer.deserialize(json, Payload8.class);
+        });
     }
 
-    @Test(expected = Throwable.class)
+    @Test
     public void test19() throws Throwable {
         /**
          * Debe lanzar una excepcion, ya que se respetan las propiedades
          * heredadas.
          */
         String json = "{password: \"123\"}";
-        JsonDeserializer.deserialize(json, Payload9.class);
+        Assertions.assertThrows(Throwable.class, () -> {
+            JsonDeserializer.deserialize(json, Payload9.class);
+        });
     }
 
     @Test
@@ -284,10 +299,10 @@ public class Test_Json_Deserialize {
          */
         String json = "{id: 1, username: \"admin\", password: \"123\"}";
         Payload9 payload = JsonDeserializer.deserialize(json, Payload9.class);
-        Assert.assertTrue(payload != null);
-        Assert.assertEquals((Integer) 1, payload.id);
-        Assert.assertEquals("admin", payload.username);
-        Assert.assertEquals("123", payload.password);
+        Assertions.assertTrue(payload != null);
+        Assertions.assertEquals((Integer) 1, payload.id);
+        Assertions.assertEquals("admin", payload.username);
+        Assertions.assertEquals("123", payload.password);
     }
 
 }
