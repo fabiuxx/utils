@@ -59,7 +59,7 @@ public class Test_DatabaseQuery {
     @Test
     public void test2() throws Throwable {
         DtoMapper<PersonaEmail> mapper = DtoMapper.prepare(PersonaEmail.class);
-        Collection<PersonaEmail> instances = mapper.select(persistence.getEntityManager());
+        PersonaEmail[] instances = mapper.select(persistence.getEntityManager());
         for (PersonaEmail em : instances) {
             System.out.printf("%s; %s\n", em.idEmail, em.idPersona);
         }
@@ -70,7 +70,7 @@ public class Test_DatabaseQuery {
         DtoMapper<PersonaEmail> mapper = DtoMapper.prepare(PersonaEmail.class);
         SelectQuery q = mapper.getSelectQuery();
         q.limit(10L);
-        Collection<PersonaEmail> instances = mapper.select(q, persistence.getEntityManager());
+        PersonaEmail[] instances = mapper.select(q.stringify(null), persistence.getEntityManager());
         for (PersonaEmail em : instances) {
             System.out.printf("%s; %s; %s\n", em.idEmail, em.idPersona, em.enumTest);
         }

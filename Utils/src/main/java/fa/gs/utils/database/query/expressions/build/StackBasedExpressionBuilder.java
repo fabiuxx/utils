@@ -73,29 +73,10 @@ public abstract class StackBasedExpressionBuilder implements ExpressionBuilder {
         return operators.pop();
     }
 
-    /**
-     * Permite agregar un nuevo token de expresion al constructor de
-     * expresiones. Los tokens son procesados mediante un algoritmo de
-     * conversion de notacion infija a postfija.
-     *
-     * @param token Token a incluir en la expresion en construccion.
-     */
-    private void pushToken(Object token) {
-        if (token instanceof Operator) {
-            push0((Operator) token);
-            return;
-        }
-
-        if (token instanceof Expression) {
-            push0((Expression) token);
-            return;
-        }
-
-        throw new UnsupportedOperationException();
-    }
-
     protected void push0(Expression expression) {
-        output.push(expression);
+        if (expression != null) {
+            output.push(expression);
+        }
     }
 
     protected void push0(Operator operator) {

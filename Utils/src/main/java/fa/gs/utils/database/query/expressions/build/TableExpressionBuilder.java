@@ -49,7 +49,8 @@ public class TableExpressionBuilder extends StackBasedExpressionBuilder implemen
     public Expression build() {
         try {
             consumeStack();
-            return output.pop();
+            Expression exp = popExpression();
+            return (exp == null) ? EmptyExpression.instance() : exp;
         } catch (Throwable thr) {
             return EmptyExpression.instance();
         }

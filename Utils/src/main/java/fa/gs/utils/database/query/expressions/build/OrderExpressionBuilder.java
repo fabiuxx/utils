@@ -53,8 +53,8 @@ public class OrderExpressionBuilder extends StackBasedExpressionBuilder implemen
     public Expression build() {
         try {
             consumeStack();
-            Expression criteria = output.pop();
-            return OrderExpression.instance(criteria, type);
+            Expression exp = popExpression();
+            return (exp == null) ? EmptyExpression.instance() : OrderExpression.instance(exp, type);
         } catch (Throwable thr) {
             return EmptyExpression.instance();
         }

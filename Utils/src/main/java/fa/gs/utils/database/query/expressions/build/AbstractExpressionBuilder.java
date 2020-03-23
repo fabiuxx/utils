@@ -27,6 +27,7 @@ import java.util.Date;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T> Parametro de tipo.
  */
 public abstract class AbstractExpressionBuilder<T extends AbstractExpressionBuilder<T>> extends StackBasedExpressionBuilder implements Self<T>, ExpressionStep<T> {
 
@@ -34,7 +35,8 @@ public abstract class AbstractExpressionBuilder<T extends AbstractExpressionBuil
     public Expression build() {
         try {
             consumeStack();
-            return output.pop();
+            Expression exp = popExpression();
+            return (exp == null) ? EmptyExpression.instance() : exp;
         } catch (Throwable thr) {
             return EmptyExpression.instance();
         }

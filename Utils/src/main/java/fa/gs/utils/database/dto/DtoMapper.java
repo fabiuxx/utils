@@ -5,9 +5,11 @@
  */
 package fa.gs.utils.database.dto;
 
+import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.collections.Maps;
 import fa.gs.utils.database.query.commands.Query;
+import fa.gs.utils.database.query.commands.SelectCountQuery;
 import fa.gs.utils.database.query.commands.SelectQuery;
 import fa.gs.utils.database.query.expressions.Expression;
 import fa.gs.utils.database.query.expressions.JoinExpression;
@@ -15,8 +17,10 @@ import fa.gs.utils.database.query.expressions.build.JoinExpressionBuilder;
 import fa.gs.utils.database.query.expressions.build.ProjectionExpressionBuilder;
 import fa.gs.utils.database.query.expressions.build.TableExpressionBuilder;
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.Numeric;
 import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.text.Strings;
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -30,6 +34,7 @@ import org.hibernate.transform.Transformers;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T> Parametro de tipo.
  */
 public class DtoMapper<T> implements Serializable {
 
@@ -40,23 +45,30 @@ public class DtoMapper<T> implements Serializable {
     private Map<String, Field> mappings;
 
     public static DtoMapper prepare(Class klass) {
+        DtoMapper mapper = new DtoMapper();
+        prepareInstance(mapper, klass);
+        return mapper;
+    }
+
+    private static void prepareInstance(final DtoMapper mapper, Class klass) {
         // Validar definicion.
         validate(klass);
 
+        // Inicializar datos.
         PreparationContext ctx = new PreparationContext();
         Map<String, Field> mappings = Maps.empty();
 
+        // Procesar clase.
         Expression tableExpression = prepareTableExpression(ctx, klass);
         Collection<Expression> joinClauses = prepareTableJoinClauses(ctx, klass);
         Collection<Expression> projectionExpressions = prepareProjectionExpressions(ctx, klass, mappings);
 
-        DtoMapper mapper = new DtoMapper();
+        // Completar instancia.
         mapper.klass = klass;
         mapper.joinClauses = joinClauses;
         mapper.tableExpression = tableExpression;
         mapper.projectionExpressions = projectionExpressions;
         mapper.mappings = mappings;
-        return mapper;
     }
 
     private static void validate(Class klass) {
@@ -79,7 +91,8 @@ public class DtoMapper<T> implements Serializable {
 
     private static Collection<Expression> prepareProjectionExpressions(PreparationContext ctx, Class klass, Map<String, Field> mappings) {
         Collection<Expression> projections = Lists.empty();
-        for (Field field : klass.getDeclaredFields()) {
+        Collection<Field> declaredFields = Reflection.getAllFields(klass);
+        for (Field field : declaredFields) {
             FgProjection projectionAnnotation = Reflection.getAnnotation(field, AnnotationTypes.FGPROJECTION);
             if (projectionAnnotation != null) {
                 ProjectionExpressionBuilder builder = new ProjectionExpressionBuilder();
@@ -139,6 +152,10 @@ public class DtoMapper<T> implements Serializable {
         return expressions;
     }
 
+    public Class<T> getDtoClass() {
+        return klass;
+    }
+
     public SelectQuery getSelectQuery() {
         SelectQuery query = new SelectQuery();
 
@@ -155,14 +172,24 @@ public class DtoMapper<T> implements Serializable {
         return query;
     }
 
-    public Collection<T> select(EntityManager em) throws Throwable {
-        return select(getSelectQuery(), em);
+    public SelectCountQuery getSelectCountQuery() {
+        SelectCountQuery query = new SelectCountQuery();
+
+        query.from().wrap(tableExpression);
+
+        for (Expression exp : joinClauses) {
+            query.join().wrap(exp);
+        }
+
+        return query;
     }
 
-    public Collection<T> select(Query query, EntityManager em) throws Throwable {
-        // Convertir query a una cadena de texto.
-        String sql = query.stringify(null);
+    public T[] select(EntityManager em) throws Throwable {
+        Query query = getSelectQuery();
+        return select(query.stringify(null), em);
+    }
 
+    public T[] select(String sql, EntityManager em) throws Throwable {
         // Ejecutar la query e indicar que necesitamos mapear el resultset a un mapa, valga la redundancia.
         org.hibernate.Query hibernateQuery = em.createNativeQuery(sql)
                 .unwrap(org.hibernate.Query.class)
@@ -178,7 +205,25 @@ public class DtoMapper<T> implements Serializable {
             instances.add(klass.cast(instance));
         }
 
-        return instances;
+        return Arrays.array(instances, klass);
+    }
+
+    public Long count(EntityManager em) throws Throwable {
+        Query query = getSelectCountQuery();
+        return count(query.stringify(null), em);
+    }
+
+    public Long count(String sql, EntityManager em) throws Throwable {
+        // Ejecutar la query e indicar que necesitamos mapear el resultset a un mapa, valga la redundancia.
+        org.hibernate.Query hibernateQuery = em.createNativeQuery(sql)
+                .unwrap(org.hibernate.Query.class)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+        // Mapear result set.
+        Collection<Map<String, Object>> resultsSet = (Collection<Map<String, Object>>) hibernateQuery.list();
+        Map<String, Object> resultSet = Lists.first(resultsSet);
+        Object count0 = Maps.get(resultSet, SelectCountQuery.COUNT_FIELD_NAME);
+        return Numeric.adaptAsLong(count0);
     }
 
     private Object mapInstance(Class klass, Map<String, Field> mappings, Map<String, Object> values) throws Throwable {
@@ -277,6 +322,19 @@ public class DtoMapper<T> implements Serializable {
             throw new IllegalArgumentException(String.format("Clase '%s' no posee un alias.", klass.getCanonicalName()));
         }
     }
+
+    //<editor-fold defaultstate="collapsed" desc="Serializacion/Deserializacion">
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        String className = klass.getCanonicalName();
+        out.writeUTF(className);
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        String className = in.readUTF();
+        Class<?> klass0 = Class.forName(className);
+        prepareInstance(this, klass0);
+    }
+    //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Clases Auxiliares">
     static class PreparationContext {

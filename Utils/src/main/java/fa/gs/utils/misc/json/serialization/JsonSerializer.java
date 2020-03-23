@@ -79,7 +79,8 @@ public class JsonSerializer {
         JsonObjectBuilder builder = JsonObjectBuilder.instance();
 
         // Procesar atributos anotados como propiedades.
-        for (Field field : sourceClass.getDeclaredFields()) {
+        Collection<Field> declaredFields = Reflection.getAllFields(sourceClass);
+        for (Field field : declaredFields) {
             JsonProperty annotation = Reflection.getAnnotation(field, JsonProperty.class);
             if (annotation != null) {
                 // Nombre de propiedad JSON.

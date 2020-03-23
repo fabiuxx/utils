@@ -13,22 +13,22 @@ import java.io.Serializable;
  */
 public class Pagination implements Serializable {
 
-    public static final Integer DEFAULT_LIMIT = 25;
+    public static final Long DEFAULT_LIMIT = 25L;
 
-    private final Integer limit;
-    private final Integer offset;
+    private final Long limit;
+    private final Long offset;
 
-    private Pagination(Integer limit, Integer offset) {
+    private Pagination(Long limit, Long offset) {
         this.limit = limit;
         this.offset = offset;
     }
 
-    public static Pagination fromPages(Integer page, Integer pageSize) {
+    public static Pagination fromPages(Long page, Long pageSize) {
         // Limite, puede ser nulo si no se define un offset.
-        Integer limit = pageSize;
+        Long limit = pageSize;
 
         // Offset, varia de acuerdo al valor del limite.
-        Integer offset = null;
+        Long offset = null;
         if (page != null) {
             if (limit == null) {
                 limit = DEFAULT_LIMIT;
@@ -39,16 +39,16 @@ public class Pagination implements Serializable {
         return fromLimits(limit, offset);
     }
 
-    public static Pagination fromLimits(Integer limit, Integer offset) {
+    public static Pagination fromLimits(Long limit, Long offset) {
         return new Pagination(limit, offset);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getters y Setters">
-    public Integer getLimit() {
+    public Long getLimit() {
         return limit;
     }
 
-    public Integer getOffset() {
+    public Long getOffset() {
         return offset;
     }
     //</editor-fold>

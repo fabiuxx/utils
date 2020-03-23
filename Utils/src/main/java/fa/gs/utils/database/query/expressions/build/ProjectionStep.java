@@ -10,6 +10,7 @@ import fa.gs.utils.database.query.expressions.names.Name;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T> Parametro de tipo.
  */
 public interface ProjectionStep<T extends ProjectionStep<T>> extends NameStep<T> {
 

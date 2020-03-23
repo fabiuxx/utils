@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.misc;
 
+import fa.gs.utils.collections.Lists;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -96,6 +97,32 @@ public class Reflection {
         } catch (Throwable thr) {
             return false;
         }
+    }
+
+    /**
+     * Obtiene todos los atributos posibles contenidos en una clase. Se escaneaa
+     * toda la jerarquia de clases, ya que el metodo {@code getDeclaredFields}
+     * obtiene todos los atributos propios de la clase sin incluir los campos
+     * heredados. Sin embargo, el metodo {@code getFields} obtiene todos los
+     * atributos propios y heredados simpre y cuando sean publicos.
+     *
+     * @param klass Clase de la cual se desean recolectar sus atributos.
+     * @return Coleccion de atributos de la clase.
+     */
+    public static Collection<Field> getAllFields(Class klass) {
+        Collection<Field> result = Lists.empty();
+
+        Class<?> klass0 = klass;
+        while (klass0 != null && klass0 != Object.class) {
+            for (Field field : klass0.getDeclaredFields()) {
+                if (!field.isSynthetic()) {
+                    result.add(field);
+                }
+            }
+            klass0 = klass0.getSuperclass();
+        }
+
+        return result;
     }
 
     public static <T> T getAnnotation(Class klass, Class<T> annotationKlass) {

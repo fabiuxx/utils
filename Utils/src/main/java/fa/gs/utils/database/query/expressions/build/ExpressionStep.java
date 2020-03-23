@@ -13,6 +13,7 @@ import java.util.Date;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T> Parametro de tipo.
  */
 public interface ExpressionStep<T extends ExpressionStep<T>> extends NameStep<T> {
 

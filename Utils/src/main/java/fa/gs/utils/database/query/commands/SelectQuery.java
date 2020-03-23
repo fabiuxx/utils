@@ -115,61 +115,93 @@ public class SelectQuery implements Query, Self<SelectQuery> {
 
         // Projections.
         builder.append(" SELECT ");
-        String[] projections = projectionClause.stream()
-                .map(c -> c.build())
-                .map(e -> e.stringify(dialect))
-                .toArray(String[]::new);
-        builder.append(Joiner.of(projections).separator(", ").join());
+        if (!Assertions.isNullOrEmpty(projectionClause)) {
+            String[] projections = projectionClause.stream()
+                    .filter(c -> c != null)
+                    .map(c -> c.build())
+                    .filter(e -> e != null)
+                    .filter(e -> !(e instanceof EmptyExpression))
+                    .map(e -> e.stringify(dialect))
+                    .distinct()
+                    .toArray(String[]::new);
+            if (!Assertions.isNullOrEmpty(projections)) {
+                builder.append(Joiner.of(projections).separator(", ").join());
+            }
+        }
 
         // From.
-        Expression fromExpression = fromClause.build();
-        if (fromExpression != null && (fromExpression instanceof EmptyExpression) == false) {
-            builder.append(" FROM ");
-            builder.append(fromExpression.stringify(dialect));
+        if (!Assertions.isNull(fromClause)) {
+            Expression fromExpression = fromClause.build();
+            if (fromExpression != null && (fromExpression instanceof EmptyExpression) == false) {
+                builder.append(" FROM ");
+                builder.append(fromExpression.stringify(dialect));
+            }
         }
 
         // Joins.
         if (!Assertions.isNullOrEmpty(joinClause)) {
             String[] joins = joinClause.stream()
+                    .filter(c -> c != null)
                     .map(c -> c.build())
+                    .filter(e -> e != null)
+                    .filter(e -> !(e instanceof EmptyExpression))
                     .map(e -> e.stringify(dialect))
+                    .distinct()
                     .toArray(String[]::new);
-            builder.append(" ");
-            builder.append(Joiner.of(joins).separator(" ").join());
+            if (!Assertions.isNullOrEmpty(joins)) {
+                builder.append(" ");
+                builder.append(Joiner.of(joins).separator(" ").join());
+            }
         }
 
         // Where.
-        Expression whereExpression = whereClause.build();
-        if (whereExpression != null && (whereExpression instanceof EmptyExpression) == false) {
-            builder.append(" WHERE ");
-            builder.append(whereExpression.stringify(dialect));
+        if (!Assertions.isNull(whereClause)) {
+            Expression whereExpression = whereClause.build();
+            if (whereExpression != null && (whereExpression instanceof EmptyExpression) == false) {
+                builder.append(" WHERE ");
+                builder.append(whereExpression.stringify(dialect));
+            }
         }
 
         // Group by.
         if (!Assertions.isNullOrEmpty(groupClause)) {
             String[] groupings = groupClause.stream()
+                    .filter(c -> c != null)
                     .map(c -> c.build())
+                    .filter(e -> e != null)
+                    .filter(e -> !(e instanceof EmptyExpression))
                     .map(e -> e.stringify(dialect))
+                    .distinct()
                     .toArray(String[]::new);
-            builder.append(" GROUP BY ");
-            builder.append(Joiner.of(groupings).separator(", ").join());
+            if (!Assertions.isNullOrEmpty(groupings)) {
+                builder.append(" GROUP BY ");
+                builder.append(Joiner.of(groupings).separator(", ").join());
+            }
         }
 
         // Having.
-        Expression havingExpression = havingClause.build();
-        if (havingExpression != null && (havingExpression instanceof EmptyExpression) == false) {
-            builder.append(" HAVING ");
-            builder.append(havingExpression.stringify(dialect));
+        if (!Assertions.isNull(havingClause)) {
+            Expression havingExpression = havingClause.build();
+            if (havingExpression != null && (havingExpression instanceof EmptyExpression) == false) {
+                builder.append(" HAVING ");
+                builder.append(havingExpression.stringify(dialect));
+            }
         }
 
-        // Group by.
+        // Order by.
         if (!Assertions.isNullOrEmpty(orderClause)) {
             String[] groupings = orderClause.stream()
+                    .filter(c -> c != null)
                     .map(c -> c.build())
+                    .filter(e -> e != null)
+                    .filter(e -> !(e instanceof EmptyExpression))
                     .map(e -> e.stringify(dialect))
+                    .distinct()
                     .toArray(String[]::new);
-            builder.append(" ORDER BY ");
-            builder.append(Joiner.of(groupings).separator(", ").join());
+            if (!Assertions.isNullOrEmpty(groupings)) {
+                builder.append(" ORDER BY ");
+                builder.append(Joiner.of(groupings).separator(", ").join());
+            }
         }
 
         // Limit.

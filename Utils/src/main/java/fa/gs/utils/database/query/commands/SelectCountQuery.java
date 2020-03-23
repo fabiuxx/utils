@@ -17,7 +17,7 @@ public class SelectCountQuery extends SelectQuery {
 
     public SelectCountQuery() {
         super();
-        super.projection().raw("count(*) as ");
+        super.projection().raw("count(*) as %s", COUNT_FIELD_NAME);
     }
 
     @Override
