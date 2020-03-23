@@ -100,24 +100,9 @@ public class Numeric {
             return null;
         }
 
-        if (obj instanceof Short) {
-            return (Integer) obj;
-        }
-
-        if (obj instanceof Integer) {
-            return (Integer) obj;
-        }
-
-        if (obj instanceof Long) {
-            return ((Long) obj).intValue();
-        }
-
-        if (obj instanceof BigInteger) {
-            return ((BigInteger) obj).intValue();
-        }
-
-        if (obj instanceof BigDecimal) {
-            return ((BigDecimal) obj).intValue();
+        BigInteger bi = adaptAsBigInteger(obj);
+        if (bi != null) {
+            return bi.intValue();
         }
 
         throw new IllegalArgumentException(String.format("No se puede convertir '%s' a Integer.", obj.getClass().getCanonicalName()));
@@ -135,24 +120,9 @@ public class Numeric {
             return null;
         }
 
-        if (obj instanceof Short) {
-            return (Long) obj;
-        }
-
-        if (obj instanceof Integer) {
-            return (Long) obj;
-        }
-
-        if (obj instanceof Long) {
-            return (Long) obj;
-        }
-
-        if (obj instanceof BigInteger) {
-            return ((BigInteger) obj).longValue();
-        }
-
-        if (obj instanceof BigDecimal) {
-            return ((BigDecimal) obj).longValue();
+        BigDecimal bd = adaptAsBigDecimal(obj);
+        if (bd != null) {
+            return bd.longValue();
         }
 
         throw new IllegalArgumentException(String.format("No se puede convertir '%s' a Long.", obj.getClass().getCanonicalName()));
@@ -190,6 +160,10 @@ public class Numeric {
 
         if (obj instanceof BigDecimal) {
             return ((BigDecimal) obj).toBigInteger();
+        }
+
+        if (obj instanceof String) {
+            return new BigInteger((String) obj);
         }
 
         throw new IllegalArgumentException(String.format("No se puede convertir '%s' a BigInteger.", obj.getClass().getCanonicalName()));
@@ -233,6 +207,10 @@ public class Numeric {
 
         if (obj instanceof BigDecimal) {
             return (BigDecimal) obj;
+        }
+
+        if (obj instanceof String) {
+            return new BigDecimal((String) obj);
         }
 
         throw new IllegalArgumentException(String.format("No se puede convertir '%s' a BigDecimal.", obj.getClass().getCanonicalName()));

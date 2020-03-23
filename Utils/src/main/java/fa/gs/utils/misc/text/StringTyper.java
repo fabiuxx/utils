@@ -25,7 +25,6 @@ public class StringTyper {
             } else {
                 // Obtener objeto en elemento json en base a enumeracion de tipo indicado.
                 switch (type) {
-                    case JARRAY:
                     case NUMBER:
                         throw new UnsupportedOperationException();
                     case JELEMENT:
@@ -33,6 +32,9 @@ public class StringTyper {
                         break;
                     case JOBJECT:
                         obj = Json.parse(string).getAsJsonObject();
+                        break;
+                    case JARRAY:
+                        obj = Json.parse(string).getAsJsonArray();
                         break;
                     case BOOLEAN:
                         obj = Boolean.parseBoolean(string);

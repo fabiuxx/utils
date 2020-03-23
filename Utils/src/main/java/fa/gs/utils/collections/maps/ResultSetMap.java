@@ -17,11 +17,9 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * TODO: ELIMINAR.
  *
  * @author Fabio A. González Sosa
  */
-@Deprecated
 public class ResultSetMap {
 
     private final Map<String, Object> map;

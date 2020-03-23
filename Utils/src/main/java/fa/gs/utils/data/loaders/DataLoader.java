@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.misc;
+package fa.gs.utils.data.loaders;
 
 import fa.gs.utils.database.criteria.Condition;
 import fa.gs.utils.database.criteria.Pagination;
