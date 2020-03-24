@@ -49,9 +49,7 @@ public class Test_DatabaseQuery {
     public void test2() throws Throwable {
         DtoMapper<PersonaEmail> mapper = DtoMapper.prepare(PersonaEmail.class);
         PersonaEmail[] instances = mapper.select(persistence.getEntityManager());
-        for (PersonaEmail em : instances) {
-            System.out.printf("%s; %s\n", em.idEmail, em.idPersona);
-        }
+        Assertions.assertFalse(fa.gs.utils.misc.Assertions.isNullOrEmpty(instances));
     }
 
     @Test
@@ -60,9 +58,18 @@ public class Test_DatabaseQuery {
         SelectQuery q = mapper.getSelectQuery();
         q.limit(10L);
         PersonaEmail[] instances = mapper.select(q.stringify(null), persistence.getEntityManager());
-        for (PersonaEmail em : instances) {
-            System.out.printf("%s; %s; %s\n", em.idEmail, em.idPersona, em.enumTest);
-        }
+        Assertions.assertFalse(fa.gs.utils.misc.Assertions.isNullOrEmpty(instances));
+        Assertions.assertEquals(10, instances.length);
+    }
+
+    @Test
+    public void test4() throws Throwable {
+        DtoMapper<PersonaEmail> mapper = DtoMapper.prepare(PersonaEmail.class);
+        SelectQuery q = mapper.getSelectQuery();
+        String sql = q.stringify(null);
+        System.out.println(sql);
+        Assertions.assertFalse(fa.gs.utils.misc.Assertions.stringNullOrEmpty(sql));
+        Assertions.assertTrue(sql.contains("3 = 3"));
     }
 
 }

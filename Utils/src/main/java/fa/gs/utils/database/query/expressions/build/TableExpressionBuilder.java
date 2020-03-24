@@ -19,6 +19,13 @@ import fa.gs.utils.mixins.Self;
  */
 public class TableExpressionBuilder extends StackBasedExpressionBuilder implements Self<TableExpressionBuilder> {
 
+    TableExpressionBuilder() {
+    }
+
+    public static TableExpressionBuilder instance() {
+        return new TableExpressionBuilder();
+    }
+
     public TableExpressionBuilder name(String... parts) {
         Name name = new QualifiedName(parts);
         pushName(name);

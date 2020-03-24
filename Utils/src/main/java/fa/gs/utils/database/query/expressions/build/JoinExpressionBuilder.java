@@ -23,9 +23,13 @@ public class JoinExpressionBuilder extends StackBasedExpressionBuilder implement
     private JoinExpression.Type type;
     private final ConditionsExpressionBuilder on;
 
-    public JoinExpressionBuilder() {
+    JoinExpressionBuilder() {
         this.type = JoinExpression.Type.NORMAL;
         this.on = new ConditionsExpressionBuilder();
+    }
+
+    public static JoinExpressionBuilder instance() {
+        return new JoinExpressionBuilder();
     }
 
     public JoinExpressionBuilder type(JoinExpression.Type type) {

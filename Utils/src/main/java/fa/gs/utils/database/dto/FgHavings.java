@@ -15,13 +15,8 @@ import java.lang.annotation.Target;
  * @author Fabio A. González Sosa
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface FgProjection {
+@Target(ElementType.TYPE)
+public @interface FgHavings {
 
-    String value();
-
-    String as() default "";
-
-    Class<? extends FgProjectionResultConverter> converter() default FgProjectionResultConverter.class;
-
+    FgHaving[] value();
 }

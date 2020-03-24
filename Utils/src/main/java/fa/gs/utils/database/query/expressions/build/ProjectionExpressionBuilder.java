@@ -18,6 +18,13 @@ import fa.gs.utils.misc.Assertions;
  */
 public class ProjectionExpressionBuilder extends AbstractExpressionBuilder<ProjectionExpressionBuilder> implements ProjectionStep<ProjectionExpressionBuilder> {
 
+    ProjectionExpressionBuilder() {
+    }
+
+    public static ProjectionExpressionBuilder instance() {
+        return new ProjectionExpressionBuilder();
+    }
+
     @Override
     public ProjectionExpressionBuilder all(String... parts0) {
         String[] parts;

@@ -39,18 +39,18 @@ public class SelectQuery implements Query, Self<SelectQuery> {
 
     public SelectQuery() {
         this.projectionClause = Lists.empty();
-        this.fromClause = new TableExpressionBuilder();
+        this.fromClause = TableExpressionBuilder.instance();
         this.joinClause = Lists.empty();
-        this.whereClause = new ConditionsExpressionBuilder();
+        this.whereClause = ConditionsExpressionBuilder.instance();
         this.groupClause = Lists.empty();
-        this.havingClause = new ConditionsExpressionBuilder();
+        this.havingClause = ConditionsExpressionBuilder.instance();
         this.orderClause = Lists.empty();
         this.limit = null;
         this.offset = null;
     }
 
     public ProjectionExpressionBuilder projection() {
-        ProjectionExpressionBuilder builder = new ProjectionExpressionBuilder();
+        ProjectionExpressionBuilder builder = ProjectionExpressionBuilder.instance();
         projectionClause.add(builder);
         return builder;
     }
@@ -60,7 +60,7 @@ public class SelectQuery implements Query, Self<SelectQuery> {
     }
 
     public JoinExpressionBuilder join() {
-        JoinExpressionBuilder builder = new JoinExpressionBuilder();
+        JoinExpressionBuilder builder = JoinExpressionBuilder.instance();
         joinClause.add(builder);
         return builder;
     }
@@ -84,7 +84,7 @@ public class SelectQuery implements Query, Self<SelectQuery> {
     }
 
     public ConditionsExpressionBuilder group() {
-        ConditionsExpressionBuilder builder = new ConditionsExpressionBuilder();
+        ConditionsExpressionBuilder builder = ConditionsExpressionBuilder.instance();
         groupClause.add(builder);
         return builder;
     }

@@ -7,7 +7,9 @@ package fa.gs.utils.tests.database;
 
 import fa.gs.utils.database.dto.FgDto;
 import fa.gs.utils.database.dto.FgJoin;
+import fa.gs.utils.database.dto.FgOrderBy;
 import fa.gs.utils.database.dto.FgProjection;
+import fa.gs.utils.database.dto.FgWhere;
 import fa.gs.utils.database.query.expressions.JoinExpression;
 import java.io.Serializable;
 
@@ -18,15 +20,17 @@ import java.io.Serializable;
 @FgDto(table = "info.persona_email", as = "pe")
 @FgJoin(type = JoinExpression.Type.LEFT, table = "info.persona", as = "p", on = "pe.id_persona = p.id")
 @FgJoin(type = JoinExpression.Type.LEFT, table = "info.email", as = "e", on = "pe.id_email = e.id")
+@FgWhere(value = "3 = 3")
+@FgOrderBy(value = PersonaEmail.FILTERS.ID_PERSONA)
 public class PersonaEmail implements Serializable {
 
-    @FgProjection(name = FILTERS.ID_EMAIL)
+    @FgProjection(value = FILTERS.ID_EMAIL)
     public Integer idEmail;
 
-    @FgProjection(name = FILTERS.ID_PERSONA)
+    @FgProjection(value = FILTERS.ID_PERSONA)
     public Integer idPersona;
 
-    @FgProjection(name = FILTERS.ID_EMAIL, as = "x", converter = EnumTestConverter.class)
+    @FgProjection(value = FILTERS.ID_EMAIL, as = "x", converter = EnumTestConverter.class)
     public EnumTest enumTest;
 
     public static final class FILTERS {

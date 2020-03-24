@@ -6,6 +6,7 @@
 package fa.gs.utils.database.dto;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -15,13 +16,10 @@ import java.lang.annotation.Target;
  * @author Fabio A. González Sosa
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface FgProjection {
+@Target(ElementType.TYPE)
+@Repeatable(FgWheres.class)
+public @interface FgWhere {
 
-    String value();
-
-    String as() default "";
-
-    Class<? extends FgProjectionResultConverter> converter() default FgProjectionResultConverter.class;
+    String value() default "";
 
 }

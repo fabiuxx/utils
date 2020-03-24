@@ -39,14 +39,17 @@ public class OrderExpressionBuilder extends StackBasedExpressionBuilder implemen
         return self();
     }
 
-    public OrderExpressionBuilder asc() {
-        type = OrderExpression.Type.ASC;
+    public OrderExpressionBuilder type(OrderExpression.Type type) {
+        this.type = type;
         return self();
     }
 
+    public OrderExpressionBuilder asc() {
+        return type(OrderExpression.Type.ASC);
+    }
+
     public OrderExpressionBuilder desc() {
-        type = OrderExpression.Type.DESC;
-        return self();
+        return type(OrderExpression.Type.DESC);
     }
 
     @Override
@@ -54,7 +57,7 @@ public class OrderExpressionBuilder extends StackBasedExpressionBuilder implemen
         try {
             consumeStack();
             Expression exp = popExpression();
-            return (exp == null) ? EmptyExpression.instance() : OrderExpression.instance(exp, type);
+            return (exp == null) ? EmptyExpression.instance() : exp;
         } catch (Throwable thr) {
             return EmptyExpression.instance();
         }
