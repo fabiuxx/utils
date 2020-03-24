@@ -24,6 +24,8 @@ public class AnnotationTypes {
     public static Class<FgHavings> FGHAVINGS = FgHavings.class;
     public static Class<FgOrderBy> FGORDERBY = FgOrderBy.class;
     public static Class<FgOrderBys> FGORDERBYS = FgOrderBys.class;
+    public static Class<FgGroupBy> FGGROUPBY = FgGroupBy.class;
+    public static Class<FgGroupBys> FGGROUPBYS = FgGroupBys.class;
 
     public static FgJoin[] getAllJoins(Class klass) {
         FgJoins collector = Reflection.getAnnotation(klass, FGJOINS);
@@ -48,6 +50,20 @@ public class AnnotationTypes {
         FgWhere single = Reflection.getAnnotation(klass, FGWHERE);
         if (single != null) {
             return new FgWhere[]{single};
+        }
+
+        return null;
+    }
+
+    public static FgGroupBy[] getAllGroupBys(Class klass) {
+        FgGroupBys collector = Reflection.getAnnotation(klass, FGGROUPBYS);
+        if (collector != null && Assertions.isNullOrEmpty(collector.value()) == false) {
+            return collector.value();
+        }
+
+        FgGroupBy single = Reflection.getAnnotation(klass, FGGROUPBY);
+        if (single != null) {
+            return new FgGroupBy[]{single};
         }
 
         return null;

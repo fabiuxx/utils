@@ -27,15 +27,15 @@ import java.util.Collection;
  */
 public class SelectQuery implements Query, Self<SelectQuery> {
 
-    private final Collection<ProjectionExpressionBuilder> projectionClause;
-    private final TableExpressionBuilder fromClause;
-    private final Collection<JoinExpressionBuilder> joinClause;
-    private final ConditionsExpressionBuilder whereClause;
-    private final Collection<ConditionsExpressionBuilder> groupClause;
-    private final Collection<OrderExpressionBuilder> orderClause;
-    private final ConditionsExpressionBuilder havingClause;
-    private Long limit;
-    private Long offset;
+    protected Collection<ProjectionExpressionBuilder> projectionClause;
+    protected TableExpressionBuilder fromClause;
+    protected Collection<JoinExpressionBuilder> joinClause;
+    protected ConditionsExpressionBuilder whereClause;
+    protected Collection<ConditionsExpressionBuilder> groupClause;
+    protected Collection<OrderExpressionBuilder> orderClause;
+    protected ConditionsExpressionBuilder havingClause;
+    protected Long limit;
+    protected Long offset;
 
     public SelectQuery() {
         this.projectionClause = Lists.empty();
@@ -47,6 +47,10 @@ public class SelectQuery implements Query, Self<SelectQuery> {
         this.orderClause = Lists.empty();
         this.limit = null;
         this.offset = null;
+    }
+
+    public Query forCount() {
+        return SelectCountQuery.instance(this);
     }
 
     public ProjectionExpressionBuilder projection() {
@@ -215,8 +219,6 @@ public class SelectQuery implements Query, Self<SelectQuery> {
             builder.append(" OFFSET ");
             builder.append(offset);
         }
-
-        builder.append(" ; ");
 
         return builder.toString();
     }

@@ -47,6 +47,7 @@ public class DtoMapper<T> implements Serializable {
     private Collection<Expression> projectionExpressions;
     private Expression whereClause;
     private Expression havingClause;
+    private Collection<Expression> groupClauses;
     private Collection<Expression> orderClauses;
     private Map<String, Field> mappings;
 
@@ -70,6 +71,7 @@ public class DtoMapper<T> implements Serializable {
         Collection<Expression> projectionExpressions = prepareProjectionExpressions(ctx, klass, mappings);
         Expression whereClause = prepareWhereClauses(ctx, klass);
         Expression havingClause = prepareHavingClauses(ctx, klass);
+        Collection<Expression> groupClauses = prepareGroupClauses(ctx, klass);
         Collection<Expression> orderClauses = prepareOrderClauses(ctx, klass);
 
         // Completar instancia.
@@ -79,6 +81,7 @@ public class DtoMapper<T> implements Serializable {
         mapper.projectionExpressions = projectionExpressions;
         mapper.whereClause = whereClause;
         mapper.havingClause = havingClause;
+        mapper.groupClauses = groupClauses;
         mapper.orderClauses = orderClauses;
         mapper.mappings = mappings;
     }
@@ -110,7 +113,11 @@ public class DtoMapper<T> implements Serializable {
             if (projectionAnnotation != null) {
                 ProjectionExpressionBuilder builder = ProjectionExpressionBuilder.instance();
                 // Proyeccion.
-                builder.name(projectionAnnotation.value());
+                if (projectionAnnotation.useRaw()) {
+                    builder.raw(projectionAnnotation.value());
+                } else {
+                    builder.name(projectionAnnotation.value());
+                }
 
                 // Alias.
                 String alias0 = ctx.resolveAlias(projectionAnnotation);
@@ -201,12 +208,29 @@ public class DtoMapper<T> implements Serializable {
         }
     }
 
+    private static Collection<Expression> prepareGroupClauses(PreparationContext ctx, Class klass) {
+        Collection<Expression> expressions = Lists.empty();
+
+        FgGroupBy[] groupBys = AnnotationTypes.getAllGroupBys(klass);
+        if (!Assertions.isNullOrEmpty(groupBys)) {
+            for (FgGroupBy groupBy : groupBys) {
+                ConditionsExpressionBuilder builder = ConditionsExpressionBuilder.instance();
+                builder.raw(groupBy.value());
+
+                Expression expression = builder.build();
+                expressions.add(expression);
+            }
+        }
+
+        return expressions;
+    }
+
     private static Collection<Expression> prepareOrderClauses(PreparationContext ctx, Class klass) {
         Collection<Expression> expressions = Lists.empty();
 
-        FgOrderBy[] orderByS = AnnotationTypes.getAllOrderBys(klass);
-        if (!Assertions.isNullOrEmpty(orderByS)) {
-            for (FgOrderBy orderBy : orderByS) {
+        FgOrderBy[] orderBys = AnnotationTypes.getAllOrderBys(klass);
+        if (!Assertions.isNullOrEmpty(orderBys)) {
+            for (FgOrderBy orderBy : orderBys) {
                 OrderExpressionBuilder builder = OrderExpressionBuilder.instance();
                 builder.type(orderBy.type());
                 builder.name(orderBy.value());
@@ -219,10 +243,6 @@ public class DtoMapper<T> implements Serializable {
         return expressions;
     }
 
-    public Class<T> getDtoClass() {
-        return klass;
-    }
-
     public SelectQuery getSelectQuery() {
         SelectQuery query = new SelectQuery();
 
@@ -232,35 +252,20 @@ public class DtoMapper<T> implements Serializable {
         // Clausulas join.
         joinClauses.forEach(exp -> query.join().wrap(exp));
 
-        // Criterios de filtrad.
+        // Proyecciones.
         projectionExpressions.forEach(exp -> query.projection().wrap(exp));
 
         // Clausula where.
         query.where().wrap(whereClause);
+
+        // Clausulas de agrupacion.
+        groupClauses.forEach((groupBy) -> query.group().wrap(groupBy));
 
         // Clausula having.
         query.having().wrap(havingClause);
 
         // Criterios de ordenacion.
         orderClauses.forEach((orderBy) -> query.order().wrap(orderBy));
-
-        return query;
-    }
-
-    public SelectCountQuery getSelectCountQuery() {
-        SelectCountQuery query = new SelectCountQuery();
-
-        // Expresion de tabla principal.
-        query.from().wrap(tableExpression);
-
-        // Clausulas join.
-        joinClauses.forEach(exp -> query.join().wrap(exp));
-
-        // Clausula where.
-        query.where().wrap(whereClause);
-
-        // Clausula having.
-        query.having().wrap(havingClause);
 
         return query;
     }
@@ -290,7 +295,7 @@ public class DtoMapper<T> implements Serializable {
     }
 
     public Long count(EntityManager em) throws Throwable {
-        Query query = getSelectCountQuery();
+        Query query = getSelectQuery().forCount();
         return count(query.stringify(null), em);
     }
 
@@ -372,6 +377,7 @@ public class DtoMapper<T> implements Serializable {
         }
     }
 
+    //<editor-fold defaultstate="collapsed" desc="Controles de validacion">
     private static void assertIsDtoAnnotated(FgDto annotation, Class klass) {
         if (annotation == null) {
             throw new IllegalArgumentException(String.format("Clase '%s' no es un DTO.", klass.getCanonicalName()));
@@ -403,6 +409,7 @@ public class DtoMapper<T> implements Serializable {
             throw new IllegalArgumentException(String.format("Clase '%s' no posee un alias.", klass.getCanonicalName()));
         }
     }
+    //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Serializacion/Deserializacion">
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {

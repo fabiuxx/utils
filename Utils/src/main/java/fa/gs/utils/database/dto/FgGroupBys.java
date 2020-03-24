@@ -15,15 +15,8 @@ import java.lang.annotation.Target;
  * @author Fabio A. González Sosa
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface FgProjection {
+@Target(ElementType.TYPE)
+public @interface FgGroupBys {
 
-    String value();
-
-    String as() default "";
-
-    boolean useRaw() default false;
-
-    Class<? extends FgProjectionResultConverter> converter() default FgProjectionResultConverter.class;
-
+    FgGroupBy[] value();
 }
