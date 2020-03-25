@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.tests.database;
 
-import fa.gs.utils.database.dto.FgProjectionResultConverter;
+import fa.gs.utils.database.dto.annotations.FgProjectionResultConverter;
 
 /**
  *

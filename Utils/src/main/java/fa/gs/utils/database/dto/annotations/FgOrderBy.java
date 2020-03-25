@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.dto;
+package fa.gs.utils.database.dto.annotations;
 
-import fa.gs.utils.database.query.expressions.JoinExpression;
+import fa.gs.utils.database.query.expressions.OrderExpression;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
@@ -18,15 +18,11 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Repeatable(FgJoins.class)
-public @interface FgJoin {
+@Repeatable(FgOrderBys.class)
+public @interface FgOrderBy {
 
-    JoinExpression.Type type() default JoinExpression.Type.NORMAL;
+    OrderExpression.Type type() default OrderExpression.Type.ASC;
 
-    String table();
-
-    String as();
-
-    String on();
+    String value();
 
 }

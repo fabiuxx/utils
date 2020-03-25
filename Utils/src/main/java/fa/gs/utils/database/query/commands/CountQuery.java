@@ -13,16 +13,20 @@ import fa.gs.utils.mixins.Self;
  *
  * @author Fabio A. González Sosa
  */
-public class SelectCountQuery implements Query, Self<SelectCountQuery> {
+public class CountQuery implements Query, Self<CountQuery> {
 
     public static final String COUNT_FIELD_NAME = "total_count";
     private final String materializedSelect;
 
-    public SelectCountQuery(String materializedSelect) {
+    private CountQuery() {
+        this("SELECT 1");
+    }
+
+    private CountQuery(String materializedSelect) {
         this.materializedSelect = materializedSelect;
     }
 
-    static Query instance(SelectQuery select) {
+    static CountQuery instance(SelectQuery select) {
         // Crear una sentencia de seleccion omitiendo algunas clausulas no necesarias.
         SelectQuery transformed = new SelectQuery();
         transformed.projectionClause = select.projectionClause;
@@ -34,14 +38,14 @@ public class SelectCountQuery implements Query, Self<SelectCountQuery> {
 
         // Materializar sentencia transformada.
         String sql = transformed.stringify(null);
-        return new SelectCountQuery(sql);
+        return new CountQuery(sql);
     }
 
     @Override
     public String stringify(Dialect dialect) {
         StringBuilder2 builder = new StringBuilder2();
         builder.append(" SELECT ");
-        builder.append("   count(tmp.*) as \"%s\"", SelectCountQuery.COUNT_FIELD_NAME);
+        builder.append("   count(tmp.*) as \"%s\"", CountQuery.COUNT_FIELD_NAME);
         builder.append(" FROM ");
         builder.append("   (%s) as tmp", materializedSelect);
         return builder.toString();

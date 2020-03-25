@@ -18,7 +18,7 @@ import javax.naming.InitialContext;
  *
  * @author Fabio A. González Sosa
  */
-public class Jndi {
+public class Lookup {
 
     //<editor-fold defaultstate="collapsed" desc="JNDI">
     /**
@@ -28,12 +28,12 @@ public class Jndi {
      * @param jndi Nombre JNDI del bean a inyectar.
      * @return Bean asociado al nombre dado. Caso contrario, {@code null}.
      */
-    public static <T> Result<T> lookup(String jndi) {
+    public static <T> Result<T> withJNDI(String jndi) {
         Result<T> result;
 
         try {
             Context context = new InitialContext();
-            result = lookup(context, jndi);
+            result = Lookup.withJNDI(context, jndi);
         } catch (Throwable thr) {
             result = Results.ko()
                     .cause(thr)
@@ -53,7 +53,7 @@ public class Jndi {
      * @param jndi Nombre JNDI del bean a inyectar.
      * @return Bean asociado al nombre dado. Caso contrario, {@code null}.
      */
-    public static <T> Result<T> lookup(Context context, String jndi) {
+    public static <T> Result<T> withJNDI(Context context, String jndi) {
         Result<T> result;
 
         if (context == null) {
@@ -87,37 +87,59 @@ public class Jndi {
      * Realiza una busqueda para la inyeccion de beans CDI.
      *
      * @param <T> Tipo esperado del bean a inyectar.
-     * @param cdiBeanClass Clase del bean CDI a inyectar.
+     * @param klass Clase del bean a inyectar via CDI.
      * @return Instancia del CDI indicado.
      */
-    public static <T> T lookupCdiBean(Class<T> cdiBeanClass) {
+    public static <T> Result<T> withCDI(Class<T> klass) {
+        Result<T> result;
+
         try {
-            Object bean = CDI.current().select(cdiBeanClass).get();
-            return (bean != null) ? (T) bean : null;
-        } catch (Exception e) {
-            return null;
+            Object bean = CDI.current().select(klass).get();
+            T instance = (bean != null) ? (T) bean : null;
+            result = Results.ok()
+                    .value(instance)
+                    .build();
+        } catch (Throwable thr) {
+            result = Results.ko()
+                    .cause(thr)
+                    .message("Ocurrio un error resolviendo bean via cdi.")
+                    .tag("bean.class", klass.getCanonicalName())
+                    .build();
         }
+
+        return result;
     }
 
     /**
      * Realiza una búsqueda manual para la inyección de managed beans.
      *
      * @param <T> Parametro de tipo.
-     * @param managedBeanClass Clase del bean a inyectar.
+     * @param klass Clase del bean a inyectar via BeanManager.
      * @return Manged Bean asociado a la clase indicada. Caso contrario,
      * {@code null}.
      */
-    public static <T> T lookupManagedBean(Class<T> managedBeanClass) {
+    public static <T> Result<T> withBeanManager(Class<T> klass) {
+        Result<T> result;
+
         try {
-            Result<BeanManager> res = Jndi.lookup("java:comp/BeanManager");
+            Result<BeanManager> res = Lookup.withJNDI("java:comp/BeanManager");
             res.raise();
             BeanManager bm = res.value();
-            Bean<T> mbean = (Bean<T>) bm.getBeans(managedBeanClass).iterator().next();
+            Bean<T> mbean = (Bean<T>) bm.getBeans(klass).iterator().next();
             CreationalContext<T> ctx = bm.createCreationalContext(mbean);
-            return (T) (bm.getReference(mbean, managedBeanClass, ctx));
+            T instance = (T) (bm.getReference(mbean, klass, ctx));
+            result = Results.ok()
+                    .value(instance)
+                    .build();
         } catch (Throwable thr) {
-            return null;
+            result = Results.ko()
+                    .cause(thr)
+                    .message("Ocurrio un error resolviendo bean via BeanManager.")
+                    .tag("bean.class", klass.getCanonicalName())
+                    .build();
         }
+
+        return result;
     }
     //</editor-fold>
 

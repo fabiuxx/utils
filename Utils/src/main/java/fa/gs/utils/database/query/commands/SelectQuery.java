@@ -49,8 +49,8 @@ public class SelectQuery implements Query, Self<SelectQuery> {
         this.offset = null;
     }
 
-    public Query forCount() {
-        return SelectCountQuery.instance(this);
+    public CountQuery forCount() {
+        return CountQuery.instance(this);
     }
 
     public ProjectionExpressionBuilder projection() {

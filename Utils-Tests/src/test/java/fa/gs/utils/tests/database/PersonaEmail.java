@@ -5,11 +5,11 @@
  */
 package fa.gs.utils.tests.database;
 
-import fa.gs.utils.database.dto.FgDto;
-import fa.gs.utils.database.dto.FgJoin;
-import fa.gs.utils.database.dto.FgOrderBy;
-import fa.gs.utils.database.dto.FgProjection;
-import fa.gs.utils.database.dto.FgWhere;
+import fa.gs.utils.database.dto.annotations.FgDto;
+import fa.gs.utils.database.dto.annotations.FgJoin;
+import fa.gs.utils.database.dto.annotations.FgOrderBy;
+import fa.gs.utils.database.dto.annotations.FgProjection;
+import fa.gs.utils.database.dto.annotations.FgWhere;
 import fa.gs.utils.database.query.expressions.JoinExpression;
 import java.io.Serializable;
 

@@ -5,6 +5,18 @@
  */
 package fa.gs.utils.database.dto;
 
+import fa.gs.utils.database.dto.annotations.FgDto;
+import fa.gs.utils.database.dto.annotations.FgGroupBy;
+import fa.gs.utils.database.dto.annotations.FgGroupBys;
+import fa.gs.utils.database.dto.annotations.FgHaving;
+import fa.gs.utils.database.dto.annotations.FgHavings;
+import fa.gs.utils.database.dto.annotations.FgJoin;
+import fa.gs.utils.database.dto.annotations.FgJoins;
+import fa.gs.utils.database.dto.annotations.FgOrderBy;
+import fa.gs.utils.database.dto.annotations.FgOrderBys;
+import fa.gs.utils.database.dto.annotations.FgProjection;
+import fa.gs.utils.database.dto.annotations.FgWhere;
+import fa.gs.utils.database.dto.annotations.FgWheres;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Reflection;
 

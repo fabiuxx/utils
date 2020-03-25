@@ -6,7 +6,7 @@
 package fa.gs.utils.jsf;
 
 import fa.gs.utils.collections.Maps;
-import fa.gs.utils.injection.Jndi;
+import fa.gs.utils.injection.Lookup;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Strings;
@@ -42,7 +42,7 @@ public class Jsf {
     public static BeanManager getBeanManager() {
         if (Jsf.beanManager == null) {
             try {
-                Result<BeanManager> resInjection = Jndi.lookup("java:comp/BeanManager");
+                Result<BeanManager> resInjection = Lookup.withJNDI("java:comp/BeanManager");
                 resInjection.raise();
                 BeanManager beanManager0 = resInjection.value();
                 Jsf.beanManager = beanManager0;

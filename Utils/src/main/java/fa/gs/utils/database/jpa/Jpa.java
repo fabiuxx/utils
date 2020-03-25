@@ -1,0 +1,40 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package fa.gs.utils.database.jpa;
+
+import fa.gs.utils.collections.Lists;
+import fa.gs.utils.collections.Maps;
+import fa.gs.utils.misc.Numeric;
+import java.util.Collection;
+import java.util.Map;
+import javax.persistence.EntityManager;
+import org.hibernate.transform.Transformers;
+
+/**
+ *
+ * @author Fabio A. González Sosa
+ */
+public class Jpa {
+
+    public static Long count(String sql, String countFieldName, EntityManager em) throws Throwable {
+        // Ejecutar consulta.
+        Collection<Map<String, Object>> resultsSet = select(sql, em);
+
+        // Mapear resultado.
+        Map<String, Object> resultSet = Lists.first(resultsSet);
+        Object count0 = Maps.get(resultSet, countFieldName);
+        return Numeric.adaptAsLong(count0);
+    }
+
+    public static Collection<Map<String, Object>> select(String sql, EntityManager em) throws Throwable {
+        // Ejecutar la query e indicar que necesitamos mapear el resultset a un mapa, valga la redundancia.
+        org.hibernate.Query hibernateQuery = em.createNativeQuery(sql)
+                .unwrap(org.hibernate.Query.class)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        return (Collection<Map<String, Object>>) hibernateQuery.list();
+    }
+
+}

@@ -23,12 +23,12 @@ public class Injector {
 
     public <T> Result<T> bean(Context context, Class<T> beanClass) {
         String jndi = nameGenerator.getJndiName(beanClass);
-        return Jndi.lookup(context, jndi);
+        return Lookup.withJNDI(context, jndi);
     }
 
     public <T> Result<T> bean(Class<T> beanClass) {
         String jndi = nameGenerator.getJndiName(beanClass);
-        return Jndi.lookup(jndi);
+        return Lookup.withJNDI(jndi);
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getters y Setters">

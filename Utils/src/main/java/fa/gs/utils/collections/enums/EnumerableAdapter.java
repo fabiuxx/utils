@@ -8,6 +8,7 @@ package fa.gs.utils.collections.enums;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T> Parametro de tipo.
  */
 public interface EnumerableAdapter<T extends Enum<T>> {
 
