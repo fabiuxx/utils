@@ -6,29 +6,68 @@
 package fa.gs.utils.jsf;
 
 import fa.gs.utils.collections.Maps;
+import fa.gs.utils.injection.Jndi;
 import fa.gs.utils.misc.Assertions;
-import fa.gs.utils.misc.Type;
-import fa.gs.utils.misc.text.StringTyper;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
+import fa.gs.utils.result.simple.Result;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.faces.application.ConfigurableNavigationHandler;
+import javax.faces.application.FacesMessage;
 import javax.faces.application.NavigationCase;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.FaceletContext;
 import org.omnifaces.util.Ajax;
+import org.omnifaces.util.Faces;
 
 /**
  *
  * @author Fabio A. González Sosa
  */
 public class Jsf {
+
+    private static BeanManager beanManager = null;
+
+    public static BeanManager getBeanManager() {
+        if (Jsf.beanManager == null) {
+            try {
+                Result<BeanManager> resInjection = Jndi.lookup("java:comp/BeanManager");
+                resInjection.raise();
+                BeanManager beanManager0 = resInjection.value();
+                Jsf.beanManager = beanManager0;
+            } catch (Throwable thr) {
+                Errors.dump(System.err, thr, "Ocurrio un error obteniendo bean manager.");
+                Jsf.beanManager = null;
+            }
+        }
+
+        return Jsf.beanManager;
+    }
+
+    public static <T> T getManagedBean(String beanName, String className) throws Throwable {
+        Class<?> klass = Thread.currentThread().getContextClassLoader().loadClass(className);
+        return (T) getManagedBean(beanName, klass);
+    }
+
+    public static <T> T getManagedBean(String beanName, Class<T> klass) throws Throwable {
+        BeanManager beanManager0 = getBeanManager();
+        Set<Bean<?>> beans = beanManager0.getBeans(beanName);
+        Bean<? extends Object> resolve = beanManager0.resolve(beans);
+        CreationalContext<? extends Object> createCreationalContext = beanManager0.createCreationalContext(resolve);
+        Object reference = beanManager0.getReference(resolve, klass, createCreationalContext);
+        return klass.cast(reference);
+    }
 
     /**
      * Obtiene el contexto del entorno JSF.
@@ -45,23 +84,33 @@ public class Jsf {
      * @return Contexto externo.
      */
     public static ExternalContext getExternalContext() {
-        return getFacesContext().getExternalContext();
+        FacesContext context = getFacesContext();
+        return context.getExternalContext();
     }
 
     /**
      * Obtiene el contexto de facelets del entorno JSF. Fuente:
      * https://github.com/primefaces/primefaces/blob/7.0/src/main/java/org/primefaces/behavior/base/AbstractBehaviorHandler.java#L170.
      *
-     * @param context Contexto JSF.
-     * @return Contexti de facelets.
+     * @return Contexto de facelets.
      */
-    public static FaceletContext getFaceletContext(FacesContext context) {
+    public static FaceletContext getFaceletContext() {
+        FacesContext context = getFacesContext();
         FaceletContext faceletContext = (FaceletContext) context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
         if (faceletContext == null) {
             faceletContext = (FaceletContext) context.getAttributes().get("com.sun.faces.facelets.FACELET_CONTEXT");
         }
 
         return faceletContext;
+    }
+
+    public static String getRequestParameter(String name) {
+        return getRequestParameter(name, "");
+    }
+
+    public static String getRequestParameter(String name, String fallback) {
+        ExternalContext ctx = getExternalContext();
+        return getRequestParameter0(ctx, name, fallback);
     }
 
     /**
@@ -78,40 +127,24 @@ public class Jsf {
         try {
             Map<String, String> params = ctx.getRequestParameterMap();
             if (params == null) {
-                throw new IllegalStateException("No se puede obtener el mapa de parametros");
+                throw new IllegalStateException("No se puede obtener el mapa de parametros.");
             }
             return Maps.get(params, name, fallback);
         } catch (Throwable thr) {
+            Errors.dump(System.err, thr, "Ocurrio un error obteniendo parametro de peticion: '%s'", name);
             return fallback;
         }
     }
 
-    public static <T> T getRequestParameter(String name, Type type) {
-        return getRequestParameter(name, type, null);
-    }
-
-    public static <T> T getRequestParameter(String name, Type type, T fallback) {
-        return getRequestParameter(getFacesContext(), name, type, fallback);
-    }
-
-    public static <T> T getRequestParameter(FacesContext ctx, String name, Type type) {
-        return getRequestParameter(ctx, name, type, null);
-    }
-
-    public static <T> T getRequestParameter(FacesContext ctx, String name, Type type, T fallback) {
-        return getRequestParameter(ctx.getExternalContext(), name, type, fallback);
-    }
-
-    public static <T> T getRequestParameter(ExternalContext ctx, String name, Type type) {
-        return getRequestParameter(ctx, name, type, null);
-    }
-
-    public static <T> T getRequestParameter(ExternalContext ctx, String name, Type type, T fallback) {
-        String param = getRequestParameter0(ctx, name, null);
-        return StringTyper.typeCast(param, type, fallback);
-    }
-
-    public static String resolveNavigationOutcome(FacesContext ctx, String outcome) {
+    //<editor-fold defaultstate="collapsed" desc="Navegacion">
+    /**
+     * Resuelve una definicion de outcome a una url concreta.
+     *
+     * @param ctx Contexto JSF.
+     * @param outcome Path relativo en contexto de aplicacion.
+     * @return URL concreta.
+     */
+    public static String resolveOutcome(FacesContext ctx, String outcome) {
         if (Assertions.stringNullOrEmpty(outcome)) {
             return "#";
         }
@@ -135,25 +168,28 @@ public class Jsf {
      * Permite realizar una redireccion en el lado cliente, de manera
      * programatica desde el lado del servidor..
      *
-     * @param path Path relativo a la vista a la que se desea redireccionar.
+     * @param outcome Path relativo a la vista a la que se desea redireccionar.
      */
-    public static void redirect(String path) {
+    public static boolean redirect(String outcome) {
         // Controlar que el path empiece con el caracter de separacion esperado.
-        if (!path.startsWith("/")) {
-            path = "/" + path;
+        if (!outcome.startsWith("/")) {
+            outcome = "/" + outcome;
         }
 
         // Normalizar slashes dobles.
-        path = Text.normalizeSlashes(path);
+        outcome = Text.normalizeSlashes(outcome);
 
         // Intentar redireccionar.
         try {
             ExternalContext context = Jsf.getExternalContext();
-            context.redirect(context.getRequestContextPath() + path);
-        } catch (Exception e) {
-            ;
+            context.redirect(context.getRequestContextPath() + outcome);
+            return true;
+        } catch (Throwable thr) {
+            Errors.dump(System.err, thr, "Ocurrio un error redireccionando outcome: '%s'", outcome);
+            return false;
         }
     }
+    //</editor-fold>
 
     /**
      * Permite enviar un archivo como respuesta a una peticion JSF no ajax.
@@ -198,19 +234,6 @@ public class Jsf {
         ctx.responseComplete();
     }
 
-    public static boolean hasMessagesQueued(String clientId) {
-        try {
-            Iterator it = Jsf.getFacesContext().getMessages(clientId);
-            return it.hasNext();
-        } catch (Throwable thr) {
-            return false;
-        }
-    }
-
-    public static JsfMessageBuilder msg() {
-        return new JsfMessageBuilder();
-    }
-
     /**
      * Permite indicar componentes a redibujar durante el ciclo de procesamiento
      * JSF.
@@ -232,5 +255,63 @@ public class Jsf {
         String code = Strings.format(fmt, args);
         Ajax.oncomplete(code);
     }
+
+    public static void clearMessages() {
+        clearMessages(null);
+    }
+
+    public static void clearMessages(String clientId) {
+        try {
+            Iterator<FacesMessage> it = (Assertions.stringNullOrEmpty(clientId)) ? getFacesContext().getMessages() : getFacesContext().getMessages(clientId);
+            while (it.hasNext()) {
+                it.next();
+                it.remove();
+            }
+        } catch (Throwable thr) {
+            Errors.dump(System.err, thr, "No se pudieron limpiar los mensajes.");
+        }
+    }
+
+    public static JsfMessageBuilder msg() {
+        return new JsfMessageBuilder();
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="GestiÃģn de Cookies">
+    /**
+     * Wrapper para
+     * {@link Faces#addResponseCookie(java.lang.String, java.lang.String, int) Faces.addResponseCookie}.
+     * * {@inheritDoc }
+     */
+    public static void addCookie(String name, String value, int maxAge) {
+        Faces.addResponseCookie(name, value, maxAge);
+    }
+
+    /**
+     * Wrapper para
+     * {@link Faces#addResponseCookie(java.lang.String, java.lang.String, java.lang.String, int) Faces.addResponseCookie}.
+     * {@inheritDoc }
+     */
+    public static void addCookie(String name, String value, String path, int maxAge) {
+        Faces.addResponseCookie(name, value, path, maxAge);
+    }
+
+    /**
+     * Wrapper para
+     * {@link Faces#addResponseCookie(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int) Faces.addResponseCookie}.
+     * {@inheritDoc }
+     */
+    public static void addCookie(String name, String value, String domain, String path, int maxAge) {
+        Faces.addResponseCookie(name, value, domain, path, maxAge);
+    }
+
+    /**
+     * Wrapper para
+     * {@link Faces#removeResponseCookie(java.lang.String, java.lang.String) Faces.removeResponseCookie}.
+     * {@inheritDoc }
+     */
+    public static void removeCookie(String name, String path) {
+        Faces.removeResponseCookie(name, path);
+    }
+    //</editor-fold>
 
 }

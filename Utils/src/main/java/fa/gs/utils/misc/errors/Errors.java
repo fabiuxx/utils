@@ -8,6 +8,7 @@ package fa.gs.utils.misc.errors;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
+import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.utils.Failure;
 import java.io.PrintStream;
 
@@ -38,16 +39,47 @@ public class Errors {
         return new ErrnoImpl(descripcion, codigo);
     }
 
+    public static UnsupportedOperationException unsupported() {
+        return unsupported("TODO");
+    }
+
+    public static UnsupportedOperationException unsupported(String fmt, Object... args) {
+        String msg = Strings.format(fmt, args);
+        return new UnsupportedOperationException(msg);
+    }
+
+    public static IllegalArgumentException illegalArgument() {
+        return illegalArgument("ILLEGAL ARGUMENT");
+    }
+
+    public static IllegalArgumentException illegalArgument(String fmt, Object... args) {
+        return illegalArgument(null, fmt, args);
+    }
+
+    public static IllegalArgumentException illegalArgument(Throwable cause, String fmt, Object... args) {
+        String msg = Strings.format(fmt, args);
+        return new IllegalArgumentException(msg, cause);
+    }
+
+    public static IllegalStateException illegalState() {
+        return illegalState("ILLEGAL STATE");
+    }
+
+    public static IllegalStateException illegalState(String fmt, Object... args) {
+        return illegalState(null, fmt, args);
+    }
+
+    public static IllegalStateException illegalState(Throwable cause, String fmt, Object... args) {
+        String msg = Strings.format(fmt, args);
+        return new IllegalStateException(msg, cause);
+    }
+
     public static AppErrorException.Builder builder() {
         return new AppErrorExceptionBuilder();
     }
 
     public static AppErrorException failure(Failure failure) {
         return new AppErrorException(failure);
-    }
-
-    public static UnsupportedOperationException unsupported() {
-        return new UnsupportedOperationException("TODO");
     }
 
     public static void popStackTrace(Throwable throwable) {
@@ -61,7 +93,20 @@ public class Errors {
         throwable.setStackTrace(cleanedUpStackTrace);
     }
 
-    public static void dump(PrintStream stream, Throwable thr) {
+    public synchronized static void dump(PrintStream stream, Result result) {
+        if (result.isFailure()) {
+            Failure failure = result.failure();
+            dump(stream, failure.cause(), Text.select(failure.message(), "ERROR"));
+        }
+    }
+
+    public synchronized static void dump(PrintStream stream, Throwable thr) {
+        dumpThrowable(stream, thr, 0);
+    }
+
+    public synchronized static void dump(PrintStream stream, Throwable thr, String fmt, Object... args) {
+        String msg = Strings.format(fmt, args);
+        stream.println(msg);
         dumpThrowable(stream, thr, 0);
     }
 
@@ -127,4 +172,5 @@ public class Errors {
         }
 
     }
+
 }

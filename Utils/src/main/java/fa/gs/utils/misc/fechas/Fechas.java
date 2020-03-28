@@ -141,22 +141,40 @@ public class Fechas {
      * de tiempo (hh:mm).
      */
     public static Date[] separarFechaHora(Date fecha) {
-        Calendar cFechaHora = Calendar.getInstance();
-        cFechaHora.setTime(fecha);
+        Date fechaNormalizada = normalizarFecha(fecha);
+        Date horaNormalizada = normalizarHora(fecha);
+
+        Date[] fechaHora = new Date[]{fechaNormalizada, horaNormalizada};
+        return fechaHora;
+    }
+
+    public static Date normalizarFecha(Date fecha) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
 
         Calendar cFecha = Calendar.getInstance();
         cFecha.set(Calendar.ERA, GregorianCalendar.AD);
-        cFecha.set(Calendar.YEAR, cFechaHora.get(Calendar.YEAR));
-        cFecha.set(Calendar.MONTH, cFechaHora.get(Calendar.MONTH));
-        cFecha.set(Calendar.DAY_OF_MONTH, cFechaHora.get(Calendar.DAY_OF_MONTH));
+        cFecha.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+        cFecha.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+        cFecha.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
+        cFecha.set(Calendar.HOUR_OF_DAY, 0);
+        cFecha.set(Calendar.MINUTE, 0);
+        cFecha.set(Calendar.SECOND, 0);
+        return cFecha.getTime();
+    }
+
+    public static Date normalizarHora(Date fecha) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
 
         Calendar cHora = Calendar.getInstance();
-        cHora.set(Calendar.HOUR_OF_DAY, cFechaHora.get(Calendar.HOUR_OF_DAY));
-        cHora.set(Calendar.MINUTE, cFechaHora.get(Calendar.MINUTE));
-        cHora.set(Calendar.SECOND, cFechaHora.get(Calendar.SECOND));
-
-        Date[] fechaHora = new Date[]{cFecha.getTime(), cHora.getTime()};
-        return fechaHora;
+        cHora.set(Calendar.ERA, GregorianCalendar.AD);
+        cHora.set(Calendar.YEAR, 0);
+        cHora.set(Calendar.DAY_OF_YEAR, 1);
+        cHora.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+        cHora.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+        cHora.set(Calendar.SECOND, calendar.get(Calendar.SECOND));
+        return cHora.getTime();
     }
 
     /**
@@ -451,29 +469,38 @@ public class Fechas {
         }
     }
 
+    private static int comparar(Date a, Date b) {
+        Long ea = toEpoch(a);
+        Long eb = toEpoch(b);
+        return ea.compareTo(eb);
+    }
+
+    public static Date min(Date a, Date b) {
+        return comparar(a, b) < 0 ? a : b;
+    }
+
+    public static Date max(Date a, Date b) {
+        return comparar(a, b) > 0 ? a : b;
+    }
+
     public static boolean menor(Date a, Date b) {
-        int compare = a.compareTo(b);
-        return compare < 0;
+        return comparar(a, b) < 0;
     }
 
     public static boolean mayor(Date a, Date b) {
-        int compare = a.compareTo(b);
-        return compare > 0;
+        return comparar(a, b) > 0;
     }
 
     public static boolean igual(Date a, Date b) {
-        int compare = a.compareTo(b);
-        return compare == 0;
+        return comparar(a, b) == 0;
     }
 
     public static boolean menorIgual(Date a, Date b) {
-        int compare = a.compareTo(b);
-        return compare <= 0;
+        return comparar(a, b) <= 0;
     }
 
     public static boolean mayorIgual(Date a, Date b) {
-        int compare = a.compareTo(b);
-        return compare >= 0;
+        return comparar(a, b) >= 0;
     }
 
 }
