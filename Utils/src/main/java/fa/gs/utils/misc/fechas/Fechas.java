@@ -24,7 +24,7 @@ public class Fechas {
     /**
      * Nombres de los 12 meses del año.
      */
-    public static final String[] meses = {
+    public static final String[] nombresMeses = {
         "Enero",
         "Febrero",
         "Marzo",
@@ -37,6 +37,21 @@ public class Fechas {
         "Octubre",
         "Noviembre",
         "Diciembre"
+    };
+
+    public static final String[] nombresMesesCorto = {
+        "ene",
+        "feb",
+        "mar",
+        "abr",
+        "may",
+        "jun",
+        "jul",
+        "ago",
+        "sep",
+        "oct",
+        "nov",
+        "dic"
     };
 
     /**
@@ -65,6 +80,8 @@ public class Fechas {
     public static Date parse(String text, String format) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(format, es_Es);
+            sdf.getDateFormatSymbols().setMonths(nombresMeses);
+            sdf.getDateFormatSymbols().setShortMonths(nombresMesesCorto);
             return sdf.parse(text);
         } catch (Throwable thr) {
             return null;
@@ -81,7 +98,7 @@ public class Fechas {
         if (m < 1 || m > 12) {
             throw new IllegalArgumentException("Se esperaba un valor entre 1 y 12");
         }
-        return meses[m - 1];
+        return nombresMeses[m - 1];
     }
 
     /**
