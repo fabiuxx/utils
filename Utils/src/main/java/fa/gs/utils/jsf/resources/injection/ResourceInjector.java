@@ -99,7 +99,7 @@ public abstract class ResourceInjector implements SystemEventListener {
     }
 
     private boolean isLibraryComponent(UIComponent component) {
-        String library = (String) component.getAttributes().get("library");
+        String library = readAttribute(component, "library");
         return Assertions.equals(library, getLibraryName());
     }
 
@@ -145,7 +145,7 @@ public abstract class ResourceInjector implements SystemEventListener {
             if (a || b) {
                 Integer priority = ResourceRequirement.MIN_PRIORITY - 1;
                 if (hasPriority) {
-                    Object priority0 = resource.getAttributes().get("data-priority");
+                    Object priority0 = readAttribute(resource, "data-priority");
                     if (priority0 instanceof Number) {
                         priority = ((Number) priority0).intValue();
                     }
@@ -183,12 +183,12 @@ public abstract class ResourceInjector implements SystemEventListener {
     }
 
     private String computeResourceKey(UIComponent resource) {
-        String url = (String) resource.getAttributes().get("url");
+        String url = readAttribute(resource, "url");
         if (!Assertions.stringNullOrEmpty(url)) {
             return url;
         } else {
-            String name = (String) resource.getAttributes().get("name");
-            String library = (String) resource.getAttributes().get("library");
+            String name = readAttribute(resource, "name");
+            String library = readAttribute(resource, "library");
             return library + "/" + name + "/" + resource.getClass().getName();
         }
     }
@@ -203,6 +203,18 @@ public abstract class ResourceInjector implements SystemEventListener {
         for (UIComponent component : components) {
             root.removeComponentResource(context, component, "head");
         }
+    }
+
+    private <T> T readAttribute(UIComponent component, String name) {
+        Object value;
+        if (component.getAttributes().containsKey(name)) {
+            value = component.getAttributes().get(name);
+        } else if (component.getPassThroughAttributes().containsKey(name)) {
+            value = component.getPassThroughAttributes().get(name);
+        } else {
+            value = null;
+        }
+        return (value != null) ? (T) value : null;
     }
 
 }
