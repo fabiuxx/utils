@@ -138,6 +138,15 @@ public class Jsf {
 
     //<editor-fold defaultstate="collapsed" desc="Navegacion">
     /**
+     * Crea una instancia de constructor para URLs de vistas JSF.
+     *
+     * @return Constructor de URLs.
+     */
+    public static JsfNavigationOutcomeBuilder buildOutcome() {
+        return JsfNavigationOutcomeBuilder.instance();
+    }
+
+    /**
      * Resuelve una definicion de outcome a una url concreta.
      *
      * @param ctx Contexto JSF.
@@ -169,6 +178,7 @@ public class Jsf {
      * programatica desde el lado del servidor..
      *
      * @param outcome Path relativo a la vista a la que se desea redireccionar.
+     * @return Si la redireccion tuvo exito.
      */
     public static boolean redirect(String outcome) {
         // Controlar que el path empiece con el caracter de separacion esperado.
