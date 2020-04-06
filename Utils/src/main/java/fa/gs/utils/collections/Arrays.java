@@ -29,4 +29,20 @@ public class Arrays {
         return list.toArray(array);
     }
 
+    public static <T> int size(byte[] array) {
+        if (array == null) {
+            return 0;
+        } else {
+            return array.length;
+        }
+    }
+
+    public static <T> int size(T[] array) {
+        if (array == null) {
+            return 0;
+        } else {
+            return array.length;
+        }
+    }
+
 }
