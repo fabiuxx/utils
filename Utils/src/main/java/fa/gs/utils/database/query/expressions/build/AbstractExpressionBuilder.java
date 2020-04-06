@@ -163,6 +163,30 @@ public abstract class AbstractExpressionBuilder<T extends AbstractExpressionBuil
         pushOperator(Operators.GREATER_EQUAL);
         return self();
     }
+
+    @Override
+    public T like() {
+        pushOperator(Operators.LIKE);
+        return self();
+    }
+
+    @Override
+    public T ilike() {
+        pushOperator(Operators.ILIKE);
+        return self();
+    }
+
+    @Override
+    public T notLike() {
+        pushOperator(Operators.NOT_LIKE);
+        return self();
+    }
+
+    @Override
+    public T notIlike() {
+        pushOperator(Operators.NOT_ILIKE);
+        return self();
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Constants">

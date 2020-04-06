@@ -61,6 +61,14 @@ public interface ExpressionStep<T extends ExpressionStep<T>> extends NameStep<T>
     T greater();
 
     T greaterEquals();
+
+    T like();
+
+    T ilike();
+
+    T notLike();
+
+    T notIlike();
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Constants">
