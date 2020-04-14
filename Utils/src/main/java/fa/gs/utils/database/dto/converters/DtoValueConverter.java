@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.dto.annotations;
+package fa.gs.utils.database.dto.converters;
 
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T> Parametro de tipo.
  */
-public interface FgProjectionResultConverter<T> {
+public interface DtoValueConverter<T> {
+
+    DtoValueConverterTarget target();
 
     T convert(Object instance);
 

@@ -6,6 +6,7 @@
 package fa.gs.utils.misc;
 
 import fa.gs.utils.collections.Lists;
+import fa.gs.utils.misc.errors.Errors;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -194,6 +195,20 @@ public class Reflection {
             }
         } catch (Throwable thr) {
             return null;
+        }
+    }
+
+    public static <T> T tryCreateInstance(Class<T> klass) {
+        return tryCreateInstance(klass, null);
+    }
+
+    public static <T> T tryCreateInstance(Class<T> klass, T fallback) {
+        try {
+            Object instance = createInstance(klass);
+            return (instance != null) ? klass.cast(instance) : fallback;
+        } catch (Throwable thr) {
+            Errors.dump(System.err, thr);
+            return fallback;
         }
     }
 

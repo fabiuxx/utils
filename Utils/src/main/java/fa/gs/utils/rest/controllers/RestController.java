@@ -99,8 +99,7 @@ public abstract class RestController implements Serializable {
      */
     public Response executeControllerAction(Class<? extends RestControllerAction> actionClass, Object param) {
         try {
-            Object action0 = Reflection.createInstance(actionClass);
-            RestControllerAction action = actionClass.cast(action0);
+            RestControllerAction action = Reflection.tryCreateInstance(actionClass);
             return action.doAction(param);
         } catch (Throwable thr) {
             throw new ApiInternalErrorException(thr);

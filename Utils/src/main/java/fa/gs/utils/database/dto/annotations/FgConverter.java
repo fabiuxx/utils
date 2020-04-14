@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.database.dto.annotations;
 
+import fa.gs.utils.database.dto.converters.DtoValueConverter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,12 +17,8 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface FgProjection {
+public @interface FgConverter {
 
-    String value();
-
-    String as() default "";
-
-    boolean useRaw() default false;
+    Class<? extends DtoValueConverter> converter() default DtoValueConverter.class;
 
 }

@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.database.dto;
 
+import fa.gs.utils.database.dto.annotations.FgConverter;
 import fa.gs.utils.database.dto.annotations.FgDto;
 import fa.gs.utils.database.dto.annotations.FgGroupBy;
 import fa.gs.utils.database.dto.annotations.FgGroupBys;
@@ -28,6 +29,7 @@ public class AnnotationTypes {
 
     public static Class<FgDto> FGDTO = FgDto.class;
     public static Class<FgProjection> FGPROJECTION = FgProjection.class;
+    public static Class<FgConverter> FGCONVERTER = FgConverter.class;
     public static Class<FgJoin> FGJOIN = FgJoin.class;
     public static Class<FgJoins> FGJOINS = FgJoins.class;
     public static Class<FgWhere> FGWHERE = FgWhere.class;

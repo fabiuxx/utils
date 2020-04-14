@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 public class Test_Errnos {
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test0() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Errors.errno("", "");
@@ -24,6 +25,7 @@ public class Test_Errnos {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test1() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Errors.errno("A", "");
@@ -31,6 +33,7 @@ public class Test_Errnos {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test2() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Errors.errno("AB", "");
@@ -38,6 +41,7 @@ public class Test_Errnos {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test3() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Errors.errno("ABC", "");
@@ -45,6 +49,7 @@ public class Test_Errnos {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test4() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Errors.errno("ABC", "0");
@@ -52,6 +57,7 @@ public class Test_Errnos {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test5() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Errors.errno("ABC", "00000");
@@ -96,6 +102,7 @@ public class Test_Errnos {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test12() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Errors.errno("");
@@ -103,6 +110,7 @@ public class Test_Errnos {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test13() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Errors.errno("A");
@@ -110,6 +118,7 @@ public class Test_Errnos {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test14() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Errors.errno("AA");
@@ -117,6 +126,7 @@ public class Test_Errnos {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test15() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Errno errno = Errors.errno("AAAB");

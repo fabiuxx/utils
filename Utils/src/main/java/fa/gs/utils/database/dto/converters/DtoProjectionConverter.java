@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.tests.database;
-
-import fa.gs.utils.database.dto.converters.DtoValueConverter;
-import fa.gs.utils.database.dto.converters.DtoValueConverterTarget;
+package fa.gs.utils.database.dto.converters;
 
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T> Parametro de tipo.
  */
-public class EnumTestConverter implements DtoValueConverter<EnumTest> {
+public abstract class DtoProjectionConverter<T> implements DtoValueConverter<T> {
 
     @Override
     public DtoValueConverterTarget target() {
@@ -20,8 +18,10 @@ public class EnumTestConverter implements DtoValueConverter<EnumTest> {
     }
 
     @Override
-    public EnumTest convert(Object instance) {
-        return EnumTest.E1;
+    public T convert(Object instance) {
+        return convertProjection(instance);
     }
+
+    public abstract T convertProjection(Object projection);
 
 }

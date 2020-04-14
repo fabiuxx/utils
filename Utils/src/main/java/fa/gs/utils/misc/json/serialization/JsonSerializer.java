@@ -134,8 +134,7 @@ public class JsonSerializer {
             }
 
             if (!adapters.containsKey(adapterClass)) {
-                Object instance = Reflection.createInstance(adapterClass);
-                JsonAdapterToJson converter = adapterClass.cast(instance);
+                JsonAdapterToJson converter = Reflection.tryCreateInstance(adapterClass);
                 adapters.put(adapterClass, converter);
             }
 

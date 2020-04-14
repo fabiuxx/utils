@@ -9,6 +9,7 @@ import fa.gs.utils.database.dto.DtoMapper;
 import fa.gs.utils.database.dto.DtoQuery;
 import fa.gs.utils.database.query.commands.SelectQuery;
 import fa.gs.utils.misc.Numeric;
+import fa.gs.utils.tests.database.EnumTest;
 import fa.gs.utils.tests.database.Persistence;
 import fa.gs.utils.tests.database.PersonaEmail;
 import javax.persistence.EntityManager;
@@ -75,6 +76,20 @@ public class Test_DatabaseQuery {
         System.out.println(sql);
         Assertions.assertFalse(fa.gs.utils.misc.Assertions.stringNullOrEmpty(sql));
         Assertions.assertTrue(sql.contains("3 = 3"));
+    }
+
+    @Test
+    public void test5() throws Throwable {
+        
+        SelectQuery query = DtoQuery.prepareSelectStatement(PersonaEmail.class);
+        String sql = query.stringify(null);
+        
+        EntityManager em = persistence.getEntityManager();
+        DtoMapper<PersonaEmail> mapper = DtoMapper.prepare(PersonaEmail.class);
+        PersonaEmail[] instances = mapper.select(sql, em);
+        for(PersonaEmail instance : instances) {
+            Assertions.assertEquals(EnumTest.E1, instance.enumTest);
+        }
     }
 
 }

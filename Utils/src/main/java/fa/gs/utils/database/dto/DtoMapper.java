@@ -8,13 +8,16 @@ package fa.gs.utils.database.dto;
 import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.collections.Maps;
+import fa.gs.utils.database.dto.annotations.FgConverter;
 import fa.gs.utils.database.dto.annotations.FgPostConstruct;
 import fa.gs.utils.database.dto.annotations.FgProjection;
-import fa.gs.utils.database.dto.annotations.FgProjectionResultConverter;
+import fa.gs.utils.database.dto.converters.DtoValueConverter;
+import fa.gs.utils.database.dto.converters.DtoValueConverterTarget;
 import fa.gs.utils.database.query.expressions.Expression;
 import fa.gs.utils.database.query.expressions.build.ProjectionExpressionBuilder;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Reflection;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Strings;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -104,20 +107,20 @@ public class DtoMapper<T> {
     }
 
     private Object mapInstance(Class klass, Map<String, Field> mappings, Map<String, Object> values) throws Throwable {
-        Map<Class<? extends FgProjectionResultConverter>, FgProjectionResultConverter> converters = Maps.empty();
+        Map<Class<? extends DtoValueConverter>, DtoValueConverter> converters = Maps.empty();
 
         Object instance = Reflection.createInstanceUnsafe(klass);
 
         for (Map.Entry<String, Field> entry : mappings.entrySet()) {
             // Crear instancia de convertidor, si hubiere.
-            FgProjectionResultConverter converter = null;
-            FgProjection projectionInfo = Reflection.getAnnotation(entry.getValue(), FgProjection.class);
-            if (projectionInfo != null && projectionInfo.converter() != null) {
-                Class<? extends FgProjectionResultConverter> converterClass = projectionInfo.converter();
-                // Omitir el valor por defecto de la anotacion (una interface no instanciable).
-                if (!Objects.equals(converterClass, FgProjectionResultConverter.class)) {
+            DtoValueConverter converter = null;
+            FgConverter converterAnnotation = Reflection.getAnnotation(entry.getValue(), AnnotationTypes.FGCONVERTER);
+            if (converterAnnotation != null && converterAnnotation.converter() != null) {
+                Class<? extends DtoValueConverter> converterClass = converterAnnotation.converter();
+                // Omitir el valor por defecto de la anotacion, ya que esta representa una interfaz no instanciable.
+                if (!Objects.equals(converterClass, DtoValueConverter.class)) {
                     if (!converters.containsKey(converterClass)) {
-                        converter = createConverterInstance(converterClass);
+                        converter = Reflection.tryCreateInstance(converterClass);
                         converters.put(converterClass, converter);
                     } else {
                         converter = converters.get(converterClass);
@@ -125,13 +128,23 @@ public class DtoMapper<T> {
                 }
             }
 
-            // Obtener nombre de mapeo y valor correspondiente.
+            // Obtener nombre de mapeo y el campo concreto al cual se debe asignar el valor.
             String mappingName = entry.getKey();
             Object value = Maps.get(values, mappingName);
 
             // Utilizar convertidor de valores, si hubiere.
             if (converter != null) {
-                value = converter.convert(value);
+                DtoValueConverterTarget conversionTarget = converter.target();
+                if (conversionTarget == DtoValueConverterTarget.ROW) {
+                    // Convertir toda la fila.
+                    value = converter.convert(values);
+                } else if (conversionTarget == DtoValueConverterTarget.PROJECTION) {
+                    // Convertir proyeccion.
+                    value = converter.convert(value);
+                } else {
+                    // No deberia ocurrir.
+                    throw Errors.illegalState();
+                }
             }
 
             // Verificar que valor sea asignable a campo.
@@ -153,18 +166,6 @@ public class DtoMapper<T> {
             } catch (Throwable thr) {
                 throw new IllegalArgumentException(String.format("Método '%s' de clase '%s' no se puede ejecutar.", postConstruct.getName(), klass.getCanonicalName()));
             }
-        }
-    }
-
-    private FgProjectionResultConverter createConverterInstance(Class<? extends FgProjectionResultConverter> klass) throws Throwable {
-        Object instance;
-
-        try {
-            instance = Reflection.createInstance(klass);
-            return klass.cast(instance);
-        } catch (Throwable thr) {
-            instance = Reflection.createInstanceUnsafe(klass);
-            return klass.cast(instance);
         }
     }
 

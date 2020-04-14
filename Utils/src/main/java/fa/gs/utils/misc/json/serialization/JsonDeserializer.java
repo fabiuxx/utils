@@ -229,8 +229,7 @@ public class JsonDeserializer {
             }
 
             if (!adapters.containsKey(adapterClass)) {
-                Object instance = Reflection.createInstance(adapterClass);
-                JsonAdapterFromJson converter = adapterClass.cast(instance);
+                JsonAdapterFromJson converter = Reflection.tryCreateInstance(adapterClass);
                 adapters.put(adapterClass, converter);
             }
 

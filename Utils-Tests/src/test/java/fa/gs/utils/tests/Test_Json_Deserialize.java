@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 public class Test_Json_Deserialize {
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test0() throws Throwable {
         /**
          * Debe lanzar una excepcion ya que Payload0 define dos propiedades
@@ -41,6 +42,7 @@ public class Test_Json_Deserialize {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test1() throws Throwable {
         /**
          * Debe lanzar una excepcion ya que Payload0 define dos propiedades
@@ -53,6 +55,7 @@ public class Test_Json_Deserialize {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test2() throws Throwable {
         /**
          * Debe lanzar una excepcion ya que Payload0 define dos propiedades
@@ -76,6 +79,7 @@ public class Test_Json_Deserialize {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test4() throws Throwable {
         /**
          * Debe lanzar una excepcion ya que si no se define un nombre para la
@@ -101,6 +105,7 @@ public class Test_Json_Deserialize {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test6() throws Throwable {
         /**
          * Ok. Por mas que X sea una propiedad opcional, se sigue validando su
@@ -179,6 +184,7 @@ public class Test_Json_Deserialize {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test13() throws Throwable {
         /**
          * Debe lanzar una excepcion ya que solo se permiten arrays con tipos
@@ -268,6 +274,7 @@ public class Test_Json_Deserialize {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test18() throws Throwable {
         /**
          * Debe lanzar una excepcion, ya que el convertidor espera un elemento
@@ -280,6 +287,7 @@ public class Test_Json_Deserialize {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     public void test19() throws Throwable {
         /**
          * Debe lanzar una excepcion, ya que se respetan las propiedades
