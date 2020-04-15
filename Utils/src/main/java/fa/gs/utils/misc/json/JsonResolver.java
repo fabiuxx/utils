@@ -8,6 +8,7 @@ package fa.gs.utils.misc.json;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fa.gs.utils.misc.Type;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.fechas.Fechas;
 
 /**
@@ -35,13 +36,13 @@ public class JsonResolver {
     public static <T> T get(JsonObject json, String path, Type type) {
         JsonElement resolved = Json.resolvePath(json, path);
         if (resolved == null) {
-            throw new IllegalArgumentException(String.format("No se puede resolver el camino '%s'", path));
+            throw Errors.illegalArgument("No se puede resolver el camino '%s'", path);
         }
         try {
             T value = reduceValue(resolved, type, false, null);
             return value;
         } catch (Throwable thr) {
-            throw new IllegalArgumentException(String.format(""), thr);
+            throw Errors.illegalArgument(thr, "No se puede resolver el camino '%s'", path);
         }
     }
 

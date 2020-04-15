@@ -20,7 +20,7 @@ public class Errors {
 
     public static Errno errno(String errno) {
         if (Assertions.stringNullOrEmpty(errno) || errno.length() < 3) {
-            throw new IllegalArgumentException("Valor no válido.");
+            throw Errors.illegalArgument("Valor no válido.");
         }
 
         String descriptor = errno.substring(0, 3);
@@ -150,11 +150,11 @@ public class Errors {
 
         ErrnoImpl(String descriptor, String codigo) {
             if (Assertions.stringNullOrEmpty(codigo) || codigo.length() != 6) {
-                throw new IllegalArgumentException("El valor del 'código' debe ser una cadena de 6 caracteres");
+                throw Errors.illegalArgument("El valor del 'código' debe ser una cadena de 6 caracteres");
             }
 
             if (Assertions.stringNullOrEmpty(descriptor) || descriptor.length() != 3) {
-                throw new IllegalArgumentException("El valor del 'descriptor' debe ser una cadena de 3 caracteres");
+                throw Errors.illegalArgument("El valor del 'descriptor' debe ser una cadena de 3 caracteres");
             }
 
             this.codigo = codigo;

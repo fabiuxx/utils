@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.misc;
 
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Strings;
 
 /**
@@ -15,7 +16,7 @@ public class Buffer {
 
     public static int len(final char[] buffer) {
         if (buffer == null) {
-            throw new IllegalArgumentException("El parametro no puede ser nulo");
+            throw Errors.illegalArgument("El parametro no puede ser nulo");
         }
 
         int len = 0;

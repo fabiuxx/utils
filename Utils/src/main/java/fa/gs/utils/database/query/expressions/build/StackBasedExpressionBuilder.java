@@ -14,6 +14,7 @@ import fa.gs.utils.database.query.expressions.Operators;
 import fa.gs.utils.database.query.expressions.UnaryExpression;
 import fa.gs.utils.database.query.expressions.literals.Literal;
 import fa.gs.utils.database.query.expressions.names.Name;
+import fa.gs.utils.misc.errors.Errors;
 import java.util.Stack;
 
 /**
@@ -41,7 +42,8 @@ public abstract class StackBasedExpressionBuilder implements ExpressionBuilder {
         if (exp instanceof LiteralExpression) {
             return ((LiteralExpression) exp).literal();
         }
-        throw new IllegalArgumentException();
+
+        throw Errors.illegalArgument();
     }
 
     protected void pushName(Name name) {
@@ -54,7 +56,8 @@ public abstract class StackBasedExpressionBuilder implements ExpressionBuilder {
         if (exp instanceof NameExpression) {
             return ((NameExpression) exp).name();
         }
-        throw new IllegalArgumentException();
+
+        throw Errors.illegalArgument();
     }
 
     protected void pushExpression(Expression exp) {

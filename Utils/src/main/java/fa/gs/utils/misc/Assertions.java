@@ -40,7 +40,7 @@ public class Assertions {
      */
     public static void raiseIfNull(Object object) throws IllegalArgumentException {
         if (object == null) {
-            IllegalArgumentException npe = new IllegalArgumentException();
+            IllegalArgumentException npe = Errors.illegalArgument();
             Errors.popStackTrace(npe, 1);
             throw npe;
         }

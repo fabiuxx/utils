@@ -164,7 +164,7 @@ public class DtoMapper<T> {
                 postConstruct.setAccessible(true);
                 postConstruct.invoke(instance);
             } catch (Throwable thr) {
-                throw new IllegalArgumentException(String.format("Método '%s' de clase '%s' no se puede ejecutar.", postConstruct.getName(), klass.getCanonicalName()));
+                throw Errors.illegalArgument("Método '%s' de clase '%s' no se puede ejecutar.", postConstruct.getName(), klass.getCanonicalName());
             }
         }
     }
@@ -178,7 +178,7 @@ public class DtoMapper<T> {
                 String n0 = fieldType.getCanonicalName();
                 String c0 = field.getName();
                 String n1 = valueType.getCanonicalName();
-                throw new IllegalArgumentException(String.format("No se puede asignar un valor de tipo '%s' al campo '%s' de tipo '%s'.", n1, c0, n0));
+                throw Errors.illegalArgument("No se puede asignar un valor de tipo '%s' al campo '%s' de tipo '%s'.", n1, c0, n0);
             }
         }
     }

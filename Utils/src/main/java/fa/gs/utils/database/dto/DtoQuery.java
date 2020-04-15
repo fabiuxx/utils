@@ -24,6 +24,7 @@ import fa.gs.utils.database.query.expressions.build.ProjectionExpressionBuilder;
 import fa.gs.utils.database.query.expressions.build.TableExpressionBuilder;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Reflection;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Strings;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -246,19 +247,19 @@ public class DtoQuery implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Controles de validacion">
     private static void assertIsDtoAnnotated(FgDto annotation, Class klass) {
         if (annotation == null) {
-            throw new IllegalArgumentException(String.format("Clase '%s' no es un DTO.", klass.getCanonicalName()));
+            throw Errors.illegalArgument("Clase '%s' no es un DTO.", klass.getCanonicalName());
         }
     }
 
     private static void assertDtoAnnotationHasTable(FgDto annotation, Class klass) {
         if (Assertions.stringNullOrEmpty(annotation.table())) {
-            throw new IllegalArgumentException(String.format("Clase '%s' no posee un nombre de tabla.", klass.getCanonicalName()));
+            throw Errors.illegalArgument("Clase '%s' no posee un nombre de tabla.", klass.getCanonicalName());
         }
     }
 
     private static void assertDtoAnnotationHasAlias(FgDto annotation, Class klass) {
         if (Assertions.stringNullOrEmpty(annotation.as())) {
-            throw new IllegalArgumentException(String.format("Clase '%s' no posee un alias.", klass.getCanonicalName()));
+            throw Errors.illegalArgument("Clase '%s' no posee un alias.", klass.getCanonicalName());
         }
     }
     //</editor-fold>

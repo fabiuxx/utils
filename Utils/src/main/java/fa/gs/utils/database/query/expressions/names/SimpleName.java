@@ -7,6 +7,7 @@ package fa.gs.utils.database.query.expressions.names;
 
 import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Text;
 
 /**
@@ -29,7 +30,7 @@ public class SimpleName implements Name<String> {
     @Override
     public String stringify(Dialect dialect) {
         if (Assertions.stringNullOrEmpty(name)) {
-            throw new IllegalArgumentException();
+            throw Errors.illegalState();
         }
 
         if (name.equals("*")) {

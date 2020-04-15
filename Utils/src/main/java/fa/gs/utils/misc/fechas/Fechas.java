@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.misc.fechas;
 
+import fa.gs.utils.misc.errors.Errors;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -83,7 +84,7 @@ public class Fechas {
      */
     public static String getNombreMes(Integer m) {
         if (m < 1 || m > 12) {
-            throw new IllegalArgumentException("Se esperaba un valor entre 1 y 12");
+            throw Errors.illegalArgument("Se esperaba un valor entre 1 y 12");
         }
         return meses[m - 1];
     }

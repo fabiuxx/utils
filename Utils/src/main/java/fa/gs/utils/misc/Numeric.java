@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.misc;
 
+import fa.gs.utils.misc.errors.Errors;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -120,7 +121,7 @@ public class Numeric {
             return ((BigDecimal) obj).intValue();
         }
 
-        throw new IllegalArgumentException(String.format("No se puede convertir '%s' a Integer.", obj.getClass().getCanonicalName()));
+        throw Errors.illegalArgument("No se puede convertir '%s' a Integer.", obj.getClass().getCanonicalName());
     }
 
     /**
@@ -155,7 +156,7 @@ public class Numeric {
             return ((BigDecimal) obj).longValue();
         }
 
-        throw new IllegalArgumentException(String.format("No se puede convertir '%s' a Long.", obj.getClass().getCanonicalName()));
+        throw Errors.illegalArgument("No se puede convertir '%s' a Long.", obj.getClass().getCanonicalName());
     }
 
     /**
@@ -192,7 +193,7 @@ public class Numeric {
             return ((BigDecimal) obj).toBigInteger();
         }
 
-        throw new IllegalArgumentException(String.format("No se puede convertir '%s' a BigInteger.", obj.getClass().getCanonicalName()));
+        throw Errors.illegalArgument("No se puede convertir '%s' a BigInteger.", obj.getClass().getCanonicalName());
     }
 
     /**
@@ -235,7 +236,7 @@ public class Numeric {
             return (BigDecimal) obj;
         }
 
-        throw new IllegalArgumentException(String.format("No se puede convertir '%s' a BigDecimal.", obj.getClass().getCanonicalName()));
+        throw Errors.illegalArgument("No se puede convertir '%s' a BigDecimal.", obj.getClass().getCanonicalName());
     }
 
     /**
@@ -458,7 +459,7 @@ public class Numeric {
      */
     public static BigDecimal sub(BigDecimal... values) {
         if (values == null || values.length < 2) {
-            throw new IllegalArgumentException("Se esperan como minimo dos valores");
+            throw Errors.illegalArgument("Se esperan como minimo dos valores");
         }
         BigDecimal sub = values[0];
         for (int i = 1; i < values.length; i++) {
@@ -478,7 +479,7 @@ public class Numeric {
      */
     public static BigDecimal mul(BigDecimal... values) {
         if (values == null || values.length < 2) {
-            throw new IllegalArgumentException("Se esperan como minimo dos valores");
+            throw Errors.illegalArgument("Se esperan como minimo dos valores");
         }
         BigDecimal mul = values[0];
         for (int i = 1; i < values.length; i++) {
@@ -498,7 +499,7 @@ public class Numeric {
      */
     public static BigDecimal div(BigDecimal... values) {
         if (values == null || values.length < 2) {
-            throw new IllegalArgumentException("Se esperan como minimo dos valores");
+            throw Errors.illegalArgument("Se esperan como minimo dos valores");
         }
         BigDecimal div = values[0];
         for (int i = 1; i < values.length; i++) {
