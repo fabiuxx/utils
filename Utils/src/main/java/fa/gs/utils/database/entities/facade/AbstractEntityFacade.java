@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.jpa;
+package fa.gs.utils.database.entities.facade;
 
+import fa.gs.utils.collections.Lists;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.validation.ConstraintViolation;
@@ -17,8 +19,9 @@ import javax.validation.ValidatorFactory;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T> Parametro de tipo.
  */
-public abstract class AbstractFacade<T> implements Facade<T> {
+public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
 
     /**
      * Clase de la entidad asociada a la fachada.
@@ -30,7 +33,7 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      *
      * @param entityClass Clase de la entidad asociada a la fachada.
      */
-    public AbstractFacade(Class<T> entityClass) {
+    public AbstractEntityFacade(Class<T> entityClass) {
         this.entityClass = entityClass;
     }
 
@@ -39,6 +42,7 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      *
      * @return Clase de la entidad asociada a la facahada.
      */
+    @Override
     public Class<T> getEntityClass() {
         return entityClass;
     }
@@ -134,7 +138,7 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      * {@inheritDoc }
      */
     @Override
-    public T find(Object id) {
+    public T selectById(Object id) {
         EntityManager em = getEntityManager();
         T entity = em.find(entityClass, id);
         return entity;
@@ -144,12 +148,26 @@ public abstract class AbstractFacade<T> implements Facade<T> {
      * {@inheritDoc }
      */
     @Override
-    public Collection<T> findAll() {
+    public Collection<T> selectAll() {
         EntityManager em = getEntityManager();
         javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
         cq.select(cq.from(entityClass));
         javax.persistence.Query q = em.createQuery(cq);
         return q.getResultList();
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public T selectFirst() {
+        EntityManager em = getEntityManager();
+        javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(entityClass));
+        javax.persistence.Query q = em.createQuery(cq);
+        q.setMaxResults(1);
+        List<T> L = q.getResultList();
+        return Lists.first(L);
     }
 
 }

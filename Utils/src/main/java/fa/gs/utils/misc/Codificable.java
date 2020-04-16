@@ -3,15 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.collections.enums;
+package fa.gs.utils.misc;
+
+import java.io.Serializable;
 
 /**
  *
- * @author Fabio A. González Sosa
- * @param <T> Parametro de tipo.
+ * @author Sergio D. Riveros Vazquez
  */
-public interface EnumerableAdapter<T extends Enum<T>> {
+public interface Codificable extends Serializable {
 
-    T getEnumerable(Object value);
+    String codigo();
+
+    String descripcion();
 
 }

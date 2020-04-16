@@ -10,6 +10,8 @@ import fa.gs.utils.adapters.Adapter;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <TFrom> Parametro de tipo de entrada.
+ * @param <TTo> Parametro de tipo de salida.
  */
 public interface JsonAdapter<TFrom, TTo> extends Adapter<TFrom, TTo> {
 

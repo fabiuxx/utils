@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.jpa.persistence;
+package fa.gs.utils.database.jpa;
 
 import fa.gs.utils.collections.Lists;
-import fa.gs.utils.database.jpa.DatasourceProvider;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
@@ -24,19 +23,18 @@ import org.hibernate.jpa.HibernatePersistenceProvider;
  */
 public abstract class AbstractPersistenceUnit implements PersistenceUnitInfo {
 
-    public static final String DEFAULT_DATASOURCE_NAME = "jdbc/sepsa_postgres_recepcion";
-
     private final Properties props;
 
     private final DatasourceProvider datasourceProvider;
 
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public AbstractPersistenceUnit(DatasourceProvider datasourceProvider) {
         this.datasourceProvider = datasourceProvider;
         this.props = new Properties();
         fillProperties(props);
     }
 
-    abstract void fillProperties(Properties props);
+    protected abstract void fillProperties(Properties props);
 
     @Override
     public Properties getProperties() {

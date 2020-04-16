@@ -29,9 +29,9 @@ import javax.faces.event.SystemEventListener;
  */
 public abstract class ResourceInjector implements SystemEventListener {
 
-    private static final String SCRIPT_RESOURCES_KEY = "fa.gs.utils.jsfags.jsf.listeners.AddResourcesListener.ResourceFiles.Script";
+    private static final String SCRIPT_RESOURCES_KEY = "fa.gs.utils.jsf.jsfags.listeners.AddResourcesListener.ResourceFiles.Script";
 
-    private static final String CSS_RESOURCES_KEY = "fa.gs.utils.jsfags.jsf.listeners.AddResourcesListener.ResourceFiles.Stylesheet";
+    private static final String CSS_RESOURCES_KEY = "fa.gs.utils.jsf.jsfags.listeners.AddResourcesListener.ResourceFiles.Stylesheet";
 
     private static final String OUTPUT_SCRIPT_RENDERER = "javax.faces.resource.Script";
 

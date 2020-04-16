@@ -14,6 +14,10 @@ import fa.gs.utils.misc.text.Strings;
  */
 public class PasswordHasher_SHA256 implements PasswordHasher {
 
+    PasswordHasher_SHA256() {
+        ;
+    }
+
     @Override
     public String hash(String plain) throws Throwable {
         byte[] bytes = Strings.getBytes(plain);

@@ -46,7 +46,7 @@ public class JsonDeserializer {
         }
 
         // Procesamiento de valores primitivos.
-        if (Utils.isGsonPrimitive(targetClass)) {
+        if (GsonUtils.isGsonPrimitive(targetClass)) {
             return resolvePrimitive(ctx, element, targetClass);
         }
 

@@ -5,21 +5,27 @@
  */
 package fa.gs.utils.adapters.impl.json;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import fa.gs.utils.adapters.Adapters;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.json.JsonArrayBuilder;
 import fa.gs.utils.misc.json.JsonObjectBuilder;
+import fa.gs.utils.misc.json.adapter.JsonAdapterToJson;
 
 /**
  *
  * @author Fabio A. González Sosa
  */
-public class ThrowableAdapter extends ToJsonAdapter<Throwable> {
+public class Throwable2Json extends JsonAdapterToJson<Throwable> {
 
     @Override
-    protected JsonElement adapt0(Throwable obj) {
+    public Class<Throwable> getInputConversionType() {
+        return Throwable.class;
+    }
+
+    @Override
+    public JsonElement adapt(Throwable obj, Object... args) {
         JsonObject json = new JsonObject();
 
         try {
@@ -61,15 +67,20 @@ public class ThrowableAdapter extends ToJsonAdapter<Throwable> {
      * @return Objeto JSON.
      */
     public JsonElement adapt(StackTraceElement[] stackTrace) {
-        JsonArrayBuilder array = JsonArrayBuilder.instance();
+        JsonArrayBuilder arrayBuilder = JsonArrayBuilder.instance();
         if (!Assertions.isNullOrEmpty(stackTrace)) {
             for (StackTraceElement element : stackTrace) {
                 JsonElement json = adapt(element);
-                array.add(json);
+                arrayBuilder.add(json);
             }
         }
 
-        return Adapters.adapt(JsonArrayAdapter.class, array.build());
+        JsonArray array = arrayBuilder.build();
+
+        JsonObjectBuilder builder = JsonObjectBuilder.instance();
+        builder.add("total", array.size());
+        builder.add("data", array);
+        return builder.build();
     }
 
     /**

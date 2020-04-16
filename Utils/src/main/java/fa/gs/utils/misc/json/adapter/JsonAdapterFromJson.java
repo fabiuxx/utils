@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T> Parametro de tipo de salida.
  */
 public abstract class JsonAdapterFromJson<T> implements JsonAdapter<JsonElement, T> {
 

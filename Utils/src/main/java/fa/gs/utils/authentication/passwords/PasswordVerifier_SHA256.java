@@ -13,6 +13,10 @@ import fa.gs.utils.misc.Assertions;
  */
 public class PasswordVerifier_SHA256 implements PasswordVerifier {
 
+    PasswordVerifier_SHA256() {
+        ;
+    }
+
     @Override
     public boolean verifies(String plain, String hashed) throws Throwable {
         PasswordHasher hasher = new PasswordHasher_SHA256();

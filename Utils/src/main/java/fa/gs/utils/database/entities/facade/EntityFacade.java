@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.jpa;
+package fa.gs.utils.database.entities.facade;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -13,7 +13,14 @@ import java.util.Collection;
  * @author Fabio A. González Sosa
  * @param <T> Parametro de tipo.
  */
-public interface Facade<T> extends Serializable {
+public interface EntityFacade<T> extends Serializable {
+
+    /**
+     * Obtiene el tipo concreto de la entidad.
+     *
+     * @return Tipo de la entidad.
+     */
+    Class<T> getEntityClass();
 
     /**
      * Agrega una entidad dada al contexto de persistencia, a manera que las
@@ -21,7 +28,7 @@ public interface Facade<T> extends Serializable {
      *
      * @param entity Entidad.
      */
-    public void attach(T entity);
+    void attach(T entity);
 
     /**
      * Elimina una entidad dada del contexto de persistencia, indicando que
@@ -30,7 +37,7 @@ public interface Facade<T> extends Serializable {
      *
      * @param entity Entidad.
      */
-    public void detach(T entity);
+    void detach(T entity);
 
     /**
      * Crea un nuevo registro para la entidad.
@@ -38,7 +45,7 @@ public interface Facade<T> extends Serializable {
      * @param entity Objeto a ser persistido.
      * @return Entidad persistida.
      */
-    public T create(T entity);
+    T create(T entity);
 
     /**
      * Guarda los cambios efectuados sobre una entidad.
@@ -46,31 +53,35 @@ public interface Facade<T> extends Serializable {
      * @param entity Objeto cuyas modificaciones seran persistidas.
      * @return Entidad modificada.
      */
-    public T edit(T entity);
+    T edit(T entity);
 
     /**
      * Elimina el registro asociado a la entidad.
      *
      * @param entity Objeto a ser eliminado.
      */
-    public void remove(T entity);
+    void remove(T entity);
 
     /**
      * Obtiene la información de una entidad respecto a un Identificador.
      *
      * @param id Identificador de la entidad solicitada.
      * @return Objeto asociado al Identificador.
-     *
-     * @deprecated Utilizar funcionalidades de DTOs.
      */
-    public T find(Object id);
+    T selectById(Object id);
 
     /**
      * Obtiene la lista completa de registros en una tabla.
      *
      * @return Lista de registros.
-     * @deprecated Utilizar funcionalidades de DTOs.
      */
-    public Collection<T> findAll();
+    Collection<T> selectAll();
+
+    /**
+     * Obtiene el primer registro disponible de una tabla.
+     *
+     * @return Primer registro de una tabla.
+     */
+    T selectFirst();
 
 }

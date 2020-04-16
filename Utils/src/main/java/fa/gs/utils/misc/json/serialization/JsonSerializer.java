@@ -40,7 +40,7 @@ public class JsonSerializer {
         Class sourceClass = instance.getClass();
 
         // Procesamiento de valores primitivos.
-        if (Utils.isGsonPrimitive(sourceClass)) {
+        if (GsonUtils.isGsonPrimitive(sourceClass)) {
             return resolvePrimitive(ctx, instance, sourceClass);
         }
 

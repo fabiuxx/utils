@@ -296,4 +296,5 @@ public class DtoQuery implements Serializable {
 
     }
     //</editor-fold>
+
 }

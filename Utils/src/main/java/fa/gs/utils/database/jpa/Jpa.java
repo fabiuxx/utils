@@ -11,6 +11,7 @@ import fa.gs.utils.misc.Numeric;
 import java.util.Collection;
 import java.util.Map;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import org.hibernate.transform.Transformers;
 
 /**
@@ -37,4 +38,21 @@ public class Jpa {
         return (Collection<Map<String, Object>>) hibernateQuery.list();
     }
 
+    public static Long executeUpdate(String sql, EntityManager em) {
+        // Limpiar query.
+        sql = sanitizeQuery(sql);
+
+        // Ejecutar consulta.
+        Query q = em.createNativeQuery(sql);
+        return (long) q.executeUpdate();
+    }
+
+    private static String sanitizeQuery(String sql) {
+        // Fuente: https://hibernate.atlassian.net/browse/HHH-7962.
+        if (sql.startsWith("(") && sql.endsWith(")")) {
+            sql = sql.substring(1, Math.max(0, sql.length() - 1));
+        }
+
+        return sql;
+    }
 }

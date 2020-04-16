@@ -5,8 +5,6 @@
  */
 package fa.gs.utils.misc.json.serialization;
 
-import fa.gs.utils.misc.Reflection;
-import fa.gs.utils.misc.errors.Errors;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Objects;
@@ -15,7 +13,7 @@ import java.util.Objects;
  *
  * @author Fabio A. González Sosa
  */
-public class Utils {
+public class GsonUtils {
 
     /**
      * Array de tipos que son directamente convertibles por GSON.
@@ -42,17 +40,6 @@ public class Utils {
             }
         }
         return false;
-    }
-
-    static void checkIsJsonProcessable(Object instance) {
-        checkIsJsonProcessable(instance.getClass());
-    }
-
-    static void checkIsJsonProcessable(Class sourceClass) {
-        Class targetClass = JsonProcessable.class;
-        if (!Reflection.isInstanceOf(sourceClass, targetClass)) {
-            throw Errors.illegalArgument("La instancia no implementa la interface '%s'.", targetClass.getCanonicalName());
-        }
     }
 
 }

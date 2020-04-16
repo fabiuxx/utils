@@ -20,6 +20,7 @@ import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Strings;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -33,7 +34,7 @@ import org.hibernate.transform.Transformers;
  * @author Fabio A. González Sosa
  * @param <T> Parametro de tipo.
  */
-public class DtoMapper<T> {
+public class DtoMapper<T> implements Serializable {
 
     private Class<T> klass;
     private Map<String, Field> mappings;

@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.database.crud;
 
-import fa.gs.utils.database.jpa.Facade;
+import fa.gs.utils.database.entities.facade.EntityFacade;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.simple.Results;
 
@@ -15,7 +15,7 @@ import fa.gs.utils.result.simple.Results;
  */
 public class Editar {
 
-    public static <T> Result<T> entity(Facade<T> facade, T entity) {
+    public static <T> Result<T> entity(EntityFacade<T> facade, T entity) {
         Result<T> result;
 
         try {

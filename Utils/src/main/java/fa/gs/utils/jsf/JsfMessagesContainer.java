@@ -54,7 +54,7 @@ public class JsfMessagesContainer {
         return id;
     }
 
-    public boolean isHasMessages() {
+    public boolean getHasMessages() {
         return hasMessages;
     }
 

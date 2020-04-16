@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.database.jpa.persistence;
 
+import fa.gs.utils.database.jpa.AbstractPersistenceUnit;
 import fa.gs.utils.database.jpa.DatasourceProvider;
 import java.util.Properties;
 
@@ -19,7 +20,7 @@ public abstract class AbstractWildflyPersistenceUnit extends AbstractPersistence
     }
 
     @Override
-    void fillProperties(Properties props) {
+    protected void fillProperties(Properties props) {
         PersistenceUnitProperties.enableHibernateForPostgresql94(props);
         PersistenceUnitProperties.enableWildflyJTAManager(props);
     }

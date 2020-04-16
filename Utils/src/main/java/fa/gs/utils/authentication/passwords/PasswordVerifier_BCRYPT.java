@@ -13,6 +13,10 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class PasswordVerifier_BCRYPT implements PasswordVerifier {
 
+    PasswordVerifier_BCRYPT() {
+        ;
+    }
+
     @Override
     public boolean verifies(String plain, String hashed) throws Throwable {
         return BCrypt.checkpw(plain, hashed);

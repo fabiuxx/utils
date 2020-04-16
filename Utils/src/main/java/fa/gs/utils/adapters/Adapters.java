@@ -5,11 +5,10 @@
  */
 package fa.gs.utils.adapters;
 
-import fa.gs.utils.adapters.construction.Constructor;
-import fa.gs.utils.adapters.construction.NormalConstructionStrategy;
-import fa.gs.utils.adapters.construction.UnsafeConstructionStrategy;
 import fa.gs.utils.collections.Lists;
+import fa.gs.utils.collections.maps.LRUCache;
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.Reflection;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 
@@ -23,18 +22,7 @@ public class Adapters {
     /**
      * Cache para adaptadores mas utilizados.
      */
-    private static volatile Cache CACHE = null;
-
-    /**
-     * Constructor que implementa una estrategia normal de instanciacion.
-     */
-    private static final Constructor normalConstructor;
-
-    /**
-     * Constructor que implementa una estrategia no administrada (segura) de
-     * instanciacion.
-     */
-    private static final Constructor unsafeConstructor;
+    private static volatile LRUCache<Class<? extends Adapter>, Adapter> CACHE = null;
     //</editor-fold>
 
     /**
@@ -42,20 +30,16 @@ public class Adapters {
      */
     static {
         // Inicializar cache.
-        Cache CACHE_ = Adapters.CACHE;
+        LRUCache<Class<? extends Adapter>, Adapter> CACHE_ = Adapters.CACHE;
         if (CACHE_ == null) {
             synchronized (Adapters.class) {
                 CACHE_ = Adapters.CACHE;
                 if (CACHE_ == null) {
-                    CACHE_ = Cache.instance(200);
+                    CACHE_ = LRUCache.instance(200);
                     Adapters.CACHE = CACHE_;
                 }
             }
         }
-
-        // Inicializar constructores.
-        normalConstructor = new NormalConstructionStrategy();
-        unsafeConstructor = new UnsafeConstructionStrategy();
     }
 
     /**
@@ -110,18 +94,11 @@ public class Adapters {
             return null;
         }
 
-        // Determinar estrategia de creacion.
-        Construction.Strategy strategy = Construction.Strategy.NORMAL;
-        if (adapterClass.isAnnotationPresent(Construction.class)) {
-            Construction c = (Construction) adapterClass.getAnnotation(Construction.class);
-            strategy = c.strategy();
-        }
-
         // Obtener una instancia del adaptador desde cache o instanciar uno nuevo.
         Adapter adapter = CACHE.get(adapterClass);
         if (adapter == null) {
             try {
-                adapter = create(adapterClass, strategy);
+                adapter = Reflection.tryCreateInstance(adapterClass);
                 CACHE.put(adapterClass, adapter);
             } catch (Throwable thr) {
                 thr.printStackTrace(System.err);
@@ -129,26 +106,6 @@ public class Adapters {
             }
         }
         return adapter;
-    }
-
-    /**
-     * Instancia un nuevo adaptador dependiendo de su estrategia de
-     * construccion.
-     *
-     * @param klass Clase del adaptador.
-     * @param strategy Estrategia de construccion.
-     * @return Nueva instancia, si hubiere.
-     * @throws Throwable Error producido durante la construccion.
-     */
-    private static Adapter create(Class<? extends Adapter> klass, Construction.Strategy strategy) throws Throwable {
-        switch (strategy) {
-            case NORMAL:
-                return normalConstructor.instantiate(klass);
-            case UNSAFE:
-                return unsafeConstructor.instantiate(klass);
-            default:
-                return null;
-        }
     }
 
 }

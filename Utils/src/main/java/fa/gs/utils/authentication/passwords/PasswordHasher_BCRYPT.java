@@ -13,6 +13,10 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class PasswordHasher_BCRYPT implements PasswordHasher {
 
+    PasswordHasher_BCRYPT() {
+        ;
+    }
+
     @Override
     public String hash(String plain) throws Throwable {
         return BCrypt.hashpw(plain, BCrypt.gensalt());
