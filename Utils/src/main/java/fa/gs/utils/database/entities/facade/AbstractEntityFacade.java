@@ -85,6 +85,7 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
     public void attach(T entity) {
         EntityManager em = getEntityManager();
         em.merge(entity);
+        em.flush();
     }
 
     /**
@@ -94,6 +95,7 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
     public void detach(T entity) {
         EntityManager em = getEntityManager();
         em.detach(entity);
+        em.flush();
     }
 
     /**
@@ -130,8 +132,8 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
     @Override
     public void remove(T entity) {
         EntityManager em = getEntityManager();
-        T entity0 = em.merge(entity);
-        em.remove(entity0);
+        em.remove(entity);
+        em.flush();
     }
 
     /**

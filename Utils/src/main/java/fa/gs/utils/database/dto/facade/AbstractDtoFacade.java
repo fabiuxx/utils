@@ -9,7 +9,6 @@ import fa.gs.utils.database.dto.DtoMapper;
 import fa.gs.utils.database.jpa.Jpa;
 import fa.gs.utils.database.query.commands.CountQuery;
 import fa.gs.utils.misc.Assertions;
-import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.simple.Results;
 import javax.persistence.EntityManager;
@@ -102,12 +101,14 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
             Result<T[]> resSelect = selectAll(query);
             resSelect.raise();
 
+            T value;
             T[] values = resSelect.value(null);
             if (Assertions.isNullOrEmpty(values)) {
-                throw Errors.illegalState();
+                value = null;
+            } else {
+                value = values[0];
             }
 
-            T value = values[0];
             result = Results.ok()
                     .value(value)
                     .build();

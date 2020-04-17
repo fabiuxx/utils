@@ -12,7 +12,6 @@ import fa.gs.utils.database.entities.facade.EntityFacade;
 import fa.gs.utils.database.jpa.Jpa;
 import fa.gs.utils.database.query.commands.CountQuery;
 import fa.gs.utils.misc.Assertions;
-import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.simple.Results;
 import java.util.Collection;
@@ -112,12 +111,14 @@ public abstract class AbstractMixedFacade<T> implements EntityFacade<T>, DtoFaca
             Result<T[]> resSelect = selectAll(query);
             resSelect.raise();
 
+            T value;
             T[] values = resSelect.value(null);
             if (Assertions.isNullOrEmpty(values)) {
-                throw Errors.illegalState();
+                value = null;
+            } else {
+                value = values[0];
             }
 
-            T value = values[0];
             result = Results.ok()
                     .value(value)
                     .build();
@@ -173,6 +174,7 @@ public abstract class AbstractMixedFacade<T> implements EntityFacade<T>, DtoFaca
     public void attach(T entity) {
         EntityManager em = getEntityManager();
         em.merge(entity);
+        em.flush();
     }
 
     /**
@@ -182,6 +184,7 @@ public abstract class AbstractMixedFacade<T> implements EntityFacade<T>, DtoFaca
     public void detach(T entity) {
         EntityManager em = getEntityManager();
         em.detach(entity);
+        em.flush();
     }
 
     /**
@@ -218,8 +221,7 @@ public abstract class AbstractMixedFacade<T> implements EntityFacade<T>, DtoFaca
     @Override
     public void remove(T entity) {
         EntityManager em = getEntityManager();
-        T entity0 = em.merge(entity);
-        em.remove(entity0);
+        em.remove(entity);
     }
 
     /**
