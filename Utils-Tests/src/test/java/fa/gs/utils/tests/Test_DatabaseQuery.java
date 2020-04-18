@@ -80,14 +80,14 @@ public class Test_DatabaseQuery {
 
     @Test
     public void test5() throws Throwable {
-        
+
         SelectQuery query = DtoQuery.prepareSelectStatement(PersonaEmail.class);
         String sql = query.stringify(null);
-        
+
         EntityManager em = persistence.getEntityManager();
         DtoMapper<PersonaEmail> mapper = DtoMapper.prepare(PersonaEmail.class);
         PersonaEmail[] instances = mapper.select(sql, em);
-        for(PersonaEmail instance : instances) {
+        for (PersonaEmail instance : instances) {
             Assertions.assertEquals(EnumTest.E1, instance.enumTest);
         }
     }

@@ -12,7 +12,6 @@ import fa.gs.utils.collections.Lists;
 import fa.gs.utils.misc.Numeric;
 import fa.gs.utils.misc.json.adapter.JsonAdapterToJson;
 import fa.gs.utils.misc.json.serialization.JsonPostConstruct;
-import fa.gs.utils.misc.json.serialization.JsonProcessable;
 import fa.gs.utils.misc.json.serialization.JsonProperty;
 import fa.gs.utils.misc.json.serialization.JsonResolution;
 import fa.gs.utils.misc.json.serialization.JsonSerializer;
@@ -49,7 +48,7 @@ public class Test_Json_Serialize {
     }
 
     @ToString
-    private static class AB implements JsonProcessable {
+    private static class AB {
 
         @JsonProperty(name = "a")
         public Integer A = null;
