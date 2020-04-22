@@ -8,10 +8,13 @@ package fa.gs.utils.database.jpa;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.collections.Maps;
 import fa.gs.utils.misc.Numeric;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.Collection;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
 /**
@@ -47,7 +50,22 @@ public class Jpa {
         return (long) q.executeUpdate();
     }
 
+    public static void executeBatch(final String[] statements, EntityManager em) throws Throwable {
+        Session session = em.unwrap(Session.class);
+        session.doWork((Connection conn) -> {
+            try (Statement stmt = conn.createStatement()) {
+                for (String statement : statements) {
+                    String sql = sanitizeQuery(statement);
+                    stmt.addBatch(sql);
+                }
+                stmt.executeBatch();
+            }
+        });
+    }
+
     private static String sanitizeQuery(String sql) {
+        sql = sql.trim();
+
         // Fuente: https://hibernate.atlassian.net/browse/HHH-7962.
         if (sql.startsWith("(") && sql.endsWith(")")) {
             sql = sql.substring(1, Math.max(0, sql.length() - 1));
