@@ -6,12 +6,15 @@
 package fa.gs.utils.misc;
 
 import fa.gs.utils.crypto.SHA256;
+import fa.gs.utils.misc.text.StringBuilder2;
 import fa.gs.utils.misc.text.Strings;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.MessageDigest;
 
 /**
@@ -62,6 +65,21 @@ public class Files {
             byte[] hash = digest.digest();
             return Strings.bytesToHexString(hash);
         }
+    }
+
+    public static String readAll(File file) throws IOException {
+        InputStream is = new FileInputStream(file);
+        return readAll(is);
+    }
+
+    public static String readAll(InputStream is) throws IOException {
+        StringBuilder2 sb = new StringBuilder2();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.appendln(line);
+        }
+        return sb.toString();
     }
 
 }
