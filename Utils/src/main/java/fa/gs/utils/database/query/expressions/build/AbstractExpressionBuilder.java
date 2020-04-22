@@ -11,6 +11,7 @@ import fa.gs.utils.database.query.expressions.Operators;
 import fa.gs.utils.database.query.expressions.literals.BooleanLiteral;
 import fa.gs.utils.database.query.expressions.literals.CollectionLiteral;
 import fa.gs.utils.database.query.expressions.literals.DateLiteral;
+import fa.gs.utils.database.query.expressions.literals.DateLiteral.DateType;
 import fa.gs.utils.database.query.expressions.literals.Literal;
 import fa.gs.utils.database.query.expressions.literals.NullLiteral;
 import fa.gs.utils.database.query.expressions.literals.NumberLiteral;
@@ -290,12 +291,24 @@ public abstract class AbstractExpressionBuilder<T extends AbstractExpressionBuil
         pushLiteral(lit);
         return self();
     }
+
+    @Override
+    public T literal(Number value) {
+        Literal lit = new NumberLiteral(value);
+        pushLiteral(lit);
+        return self();
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Date Literals">
     @Override
     public T literal(Date value) {
-        Literal lit = new DateLiteral(value);
+        return literal(value, DateLiteral.DateType.FECHA_HORA);
+    }
+
+    @Override
+    public T literal(Date value, DateLiteral.DateType dateType) {
+        Literal lit = new DateLiteral(value, dateType);
         pushLiteral(lit);
         return self();
     }
@@ -333,8 +346,12 @@ public abstract class AbstractExpressionBuilder<T extends AbstractExpressionBuil
     }
 
     public T in(Date... values) {
+        return in(DateLiteral.DateType.FECHA_HORA, values);
+    }
+
+    public T in(DateLiteral.DateType dateType, Date... values) {
         pushOperator(Operators.IN);
-        pushLiteral(CollectionLiteral.instance(values));
+        pushLiteral(CollectionLiteral.instance(dateType, values));
         return self();
     }
 
@@ -369,8 +386,12 @@ public abstract class AbstractExpressionBuilder<T extends AbstractExpressionBuil
     }
 
     public T notIn(Date... values) {
+        return notIn(DateType.FECHA_HORA, values);
+    }
+
+    public T notIn(DateLiteral.DateType dateType, Date... values) {
         pushOperator(Operators.NOT_IN);
-        pushLiteral(CollectionLiteral.instance(values));
+        pushLiteral(CollectionLiteral.instance(dateType, values));
         return self();
     }
     //</editor-fold>

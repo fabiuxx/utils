@@ -6,8 +6,8 @@
 package fa.gs.utils.database.query.expressions.literals;
 
 import fa.gs.utils.database.query.Dialect;
-import fa.gs.utils.misc.fechas.Fechas;
-import fa.gs.utils.misc.text.Strings;
+import fa.gs.utils.database.query.expressions.build.SQLStringLiterals;
+import fa.gs.utils.misc.errors.Errors;
 import java.util.Date;
 
 /**
@@ -17,9 +17,11 @@ import java.util.Date;
 public class DateLiteral implements Literal<Date> {
 
     private final Date value;
+    private final DateType type;
 
-    public DateLiteral(Date value) {
+    public DateLiteral(Date value, DateType type) {
         this.value = value;
+        this.type = type;
     }
 
     @Override
@@ -27,10 +29,28 @@ public class DateLiteral implements Literal<Date> {
         return value;
     }
 
+    public DateType dateType() {
+        return type;
+    }
+
     @Override
     public String stringify(Dialect dialect) {
-        String txt = Fechas.toString(value, "yyyy-MM-dd hh:mm:ss");
-        return Strings.format("'%s'", txt);
+        switch (type) {
+            case FECHA:
+                return SQLStringLiterals.fecha(value);
+            case HORA:
+                return SQLStringLiterals.hora(value);
+            case FECHA_HORA:
+                return SQLStringLiterals.fechaHora(value);
+            default:
+                throw Errors.illegalState();
+        }
+    }
+
+    public static enum DateType {
+        FECHA,
+        HORA,
+        FECHA_HORA
     }
 
 }

@@ -6,6 +6,7 @@
 package fa.gs.utils.database.query.expressions.build;
 
 import fa.gs.utils.database.query.expressions.Expression;
+import fa.gs.utils.database.query.expressions.literals.DateLiteral;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -101,10 +102,14 @@ public interface ExpressionStep<T extends ExpressionStep<T>> extends NameStep<T>
     T literal(BigInteger value);
 
     T literal(BigDecimal value);
+
+    T literal(Number value);
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Date Literals">
     T literal(Date value);
+
+    T literal(Date value, DateLiteral.DateType dateType);
     //</editor-fold>
 
 }

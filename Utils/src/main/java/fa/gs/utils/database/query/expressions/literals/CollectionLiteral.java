@@ -70,9 +70,13 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
     }
 
     public static CollectionLiteral instance(Date... values) {
+        return instance(DateLiteral.DateType.FECHA_HORA, values);
+    }
+
+    public static CollectionLiteral instance(DateLiteral.DateType dateType, Date... values) {
         Literal[] literals = Arrays.asList(values)
                 .stream()
-                .map(v -> new DateLiteral(v))
+                .map(v -> new DateLiteral(v, dateType))
                 .toArray(Literal[]::new);
         return new CollectionLiteral(literals);
     }
