@@ -314,6 +314,14 @@ public abstract class AbstractExpressionBuilder<T extends AbstractExpressionBuil
     }
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Any Literal">
+    @Override
+    public <L> T literal(Literal<L> value) {
+        pushLiteral(value);
+        return self();
+    }
+    //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="Collection Literals">
     public T in(Integer... values) {
         pushOperator(Operators.IN);
