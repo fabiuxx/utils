@@ -5,7 +5,9 @@
  */
 package fa.gs.utils.database.query.expressions.build;
 
+import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.fechas.Fechas;
+import fa.gs.utils.misc.text.Joiner;
 import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
 import java.util.Date;
@@ -16,8 +18,23 @@ import java.util.Date;
  */
 public class SQLStringLiterals {
 
+    public static final String WHITESPACE_SEPARATOR = " ";
+
     public static String contains(String value) {
-        return Strings.format("%%%s%%", value);
+        return contains(value, null);
+    }
+
+    public static String contains(String value, String separator) {
+        if (Assertions.stringNullOrEmpty(value)) {
+            return "";
+        }
+
+        if (Assertions.stringNullOrEmpty(separator)) {
+            return Strings.format("%%%s%%", value);
+        } else {
+            String[] parts = value.split(separator);
+            return Joiner.of(parts).prefix("%").posfix("%").separator(" ").join();
+        }
     }
 
     public static String startsWith(String value) {
