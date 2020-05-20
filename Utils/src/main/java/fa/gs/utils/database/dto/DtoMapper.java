@@ -11,10 +11,11 @@ import fa.gs.utils.collections.Maps;
 import fa.gs.utils.database.dto.annotations.FgConverter;
 import fa.gs.utils.database.dto.annotations.FgPostConstruct;
 import fa.gs.utils.database.dto.annotations.FgProjection;
+import fa.gs.utils.database.dto.annotations.FgQueryResultSetAdapter;
 import fa.gs.utils.database.dto.converters.DtoValueConverter;
 import fa.gs.utils.database.dto.converters.DtoValueConverterTarget;
-import fa.gs.utils.database.query.expressions.Expression;
-import fa.gs.utils.database.query.expressions.build.ProjectionExpressionBuilder;
+import fa.gs.utils.database.dto.mapping.HibernateOrmResultSetAdapter;
+import fa.gs.utils.database.dto.mapping.QueryResultSetAdapter;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.Errors;
@@ -27,7 +28,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import javax.persistence.EntityManager;
-import org.hibernate.transform.Transformers;
 
 /**
  *
@@ -36,70 +36,105 @@ import org.hibernate.transform.Transformers;
  */
 public class DtoMapper<T> implements Serializable {
 
+    /**
+     * Clase de la cual se obtienen los campos con definiciones de proyeccion de
+     * tablas y columnas.
+     */
     private Class<T> klass;
+
+    /**
+     * Mapeos entre campos y columnas de resultset.
+     */
     private Map<String, Field> mappings;
 
+    /**
+     * Adaptador de resultset de base de datos a valores escalares.
+     */
+    private QueryResultSetAdapter queryResultSetAdapter;
+
+    /**
+     * Inicializador estatico.
+     *
+     * @param klass Clase que se desea mapear.
+     * @return Instancia de esta misma clase.
+     */
     public static DtoMapper prepare(Class klass) {
         DtoMapper mapper = new DtoMapper();
         prepareInstance(mapper, klass);
         return mapper;
     }
 
+    /**
+     * Inicializa una instancia de mapper en base a una clase dada.
+     *
+     * @param mapper Instancia de mapeador de proyecciones.
+     * @param klass Clase con definiciones de proyecciones.
+     */
     private static void prepareInstance(final DtoMapper mapper, Class klass) {
         // Validar definicion.
         DtoQuery.validate(klass);
 
         // Inicializar datos.
         MappingContext ctx = new MappingContext(klass);
-        prepareMappings(ctx);
+        prepareFieldMappings(ctx);
+        prepareMappingStrategy(ctx);
 
         mapper.klass = ctx.klass;
         mapper.mappings = ctx.mappings;
+        mapper.queryResultSetAdapter = ctx.queryResultSetAdapter;
     }
 
-    private static Collection<Expression> prepareMappings(MappingContext ctx) {
-        Collection<Expression> projections = Lists.empty();
-
+    /**
+     * Procesa las definiciones de mapeo de proyecciones.
+     *
+     * @param ctx Contexto de mapeo.
+     */
+    private static void prepareFieldMappings(MappingContext ctx) {
+        // Obtener todos los campos (incluso los heredados) definidos en la clase a mapear.
         Collection<Field> declaredFields = Reflection.getAllFields(ctx.klass);
         for (Field field : declaredFields) {
             FgProjection projectionAnnotation = Reflection.getAnnotation(field, AnnotationTypes.FGPROJECTION);
             if (projectionAnnotation != null) {
-                ProjectionExpressionBuilder builder = ProjectionExpressionBuilder.instance();
-                // Proyeccion.
-                if (projectionAnnotation.useRaw()) {
-                    builder.raw(projectionAnnotation.value());
-                } else {
-                    builder.name(projectionAnnotation.value());
-                }
-
-                // Alias.
+                // Mapeo de alias a campo concreto.
                 String alias0 = ctx.resolveAlias(projectionAnnotation);
-                builder.as(alias0);
-
-                // Expression de proyeccion.
-                Expression projection = builder.build();
-                projections.add(projection);
-
-                // Mapeo.
                 ctx.mappings.put(alias0, field);
             }
         }
+    }
 
-        return projections;
+    /**
+     * Procesa la estrategia de adaptacion de valores de resultset a objetos de
+     * datos.
+     *
+     * @param ctx Contexto de mapeo.
+     */
+    private static void prepareMappingStrategy(MappingContext ctx) {
+        // Crear instancia de estrategia de adaptacion de result sets de base de datos, si hubiere.
+        QueryResultSetAdapter adapter = null;
+        FgQueryResultSetAdapter queryAdapterAnnotation = Reflection.getAnnotation(ctx.klass, AnnotationTypes.FGQUERYRSADAPTER);
+        if (queryAdapterAnnotation != null && queryAdapterAnnotation.adapter() != null) {
+            Class<? extends QueryResultSetAdapter> adapterClass = queryAdapterAnnotation.adapter();
+            adapter = Reflection.tryCreateInstance(adapterClass);
+            if (adapter == null) {
+                throw Errors.illegalArgument("Clase '%s' no es instanciable.", adapterClass);
+            }
+        }
+
+        // Crear estrategia por defecto.
+        if (adapter == null) {
+            adapter = new HibernateOrmResultSetAdapter();
+        }
+
+        ctx.queryResultSetAdapter = adapter;
     }
 
     public T[] select(String sql, EntityManager em) throws Throwable {
-        // Ejecutar la query e indicar que necesitamos mapear el resultset a un mapa, valga la redundancia.
-        org.hibernate.Query hibernateQuery = em.createNativeQuery(sql)
-                .unwrap(org.hibernate.Query.class)
-                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-
-        // Mapear result set.
         Collection<T> instances = Lists.empty();
-        Collection<Map<String, Object>> resultsSet = (Collection<Map<String, Object>>) hibernateQuery.list();
-        for (Map<String, Object> resultSet : resultsSet) {
+
+        final Collection<Map<String, Object>> rows = queryResultSetAdapter.select(sql, em);
+        for (Map<String, Object> row : rows) {
             // Crear instancia y aplicar operacion de postconstruccion.
-            Object instance = mapInstance(klass, mappings, resultSet);
+            Object instance = mapInstance(klass, mappings, row);
             postConstruct(klass, instance);
             instances.add(klass.cast(instance));
         }
@@ -203,6 +238,7 @@ public class DtoMapper<T> implements Serializable {
         private Long counter;
         private final Class klass;
         private final Map<String, Field> mappings;
+        private QueryResultSetAdapter queryResultSetAdapter;
 
         public MappingContext(Class klass) {
             this.counter = 0L;

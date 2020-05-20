@@ -17,6 +17,7 @@ import java.util.Collection;
  */
 public class Obtener {
 
+    @Deprecated
     public static final <T> Result<T> porId(EntityFacade<T> facade, Object id) {
         Result<T> result;
 
@@ -38,6 +39,7 @@ public class Obtener {
         return result;
     }
 
+    @Deprecated
     public static final <T> Result<Collection<T>> todos(EntityFacade<T> facade) {
         Result<Collection<T>> result;
 
@@ -59,6 +61,7 @@ public class Obtener {
         return result;
     }
 
+    @Deprecated
     public static final <T> Result<T> primero(EntityFacade<T> facade) {
         Result<T> result;
 

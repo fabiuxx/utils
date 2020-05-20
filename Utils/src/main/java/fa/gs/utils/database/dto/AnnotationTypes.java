@@ -16,6 +16,7 @@ import fa.gs.utils.database.dto.annotations.FgJoins;
 import fa.gs.utils.database.dto.annotations.FgOrderBy;
 import fa.gs.utils.database.dto.annotations.FgOrderBys;
 import fa.gs.utils.database.dto.annotations.FgProjection;
+import fa.gs.utils.database.dto.annotations.FgQueryResultSetAdapter;
 import fa.gs.utils.database.dto.annotations.FgWhere;
 import fa.gs.utils.database.dto.annotations.FgWheres;
 import fa.gs.utils.misc.Assertions;
@@ -28,6 +29,7 @@ import fa.gs.utils.misc.Reflection;
 public class AnnotationTypes {
 
     public static Class<FgDto> FGDTO = FgDto.class;
+    public static Class<FgQueryResultSetAdapter> FGQUERYRSADAPTER = FgQueryResultSetAdapter.class;
     public static Class<FgProjection> FGPROJECTION = FgProjection.class;
     public static Class<FgConverter> FGCONVERTER = FgConverter.class;
     public static Class<FgJoin> FGJOIN = FgJoin.class;
@@ -41,6 +43,12 @@ public class AnnotationTypes {
     public static Class<FgGroupBy> FGGROUPBY = FgGroupBy.class;
     public static Class<FgGroupBys> FGGROUPBYS = FgGroupBys.class;
 
+    /**
+     * Obtiene todas las anotaciones {@link FgJoin FgJoin} en una clase dada.
+     *
+     * @param klass Clase.
+     * @return Array de anotaciones, si hubiere.
+     */
     public static FgJoin[] getAllJoins(Class klass) {
         FgJoins collector = Reflection.getAnnotation(klass, FGJOINS);
         if (collector != null && Assertions.isNullOrEmpty(collector.value()) == false) {
@@ -55,6 +63,12 @@ public class AnnotationTypes {
         return null;
     }
 
+    /**
+     * Obtiene todas las anotaciones {@link FgWhere FgWhere} en una clase dada.
+     *
+     * @param klass Clase.
+     * @return Array de anotaciones, si hubiere.
+     */
     public static FgWhere[] getAllWheres(Class klass) {
         FgWheres collector = Reflection.getAnnotation(klass, FGWHERES);
         if (collector != null && Assertions.isNullOrEmpty(collector.value()) == false) {
@@ -69,6 +83,13 @@ public class AnnotationTypes {
         return null;
     }
 
+    /**
+     * Obtiene todas las anotaciones {@link FgGroupBy FgGroupBy} en una clase
+     * dada.
+     *
+     * @param klass Clase.
+     * @return Array de anotaciones, si hubiere.
+     */
     public static FgGroupBy[] getAllGroupBys(Class klass) {
         FgGroupBys collector = Reflection.getAnnotation(klass, FGGROUPBYS);
         if (collector != null && Assertions.isNullOrEmpty(collector.value()) == false) {
@@ -83,6 +104,13 @@ public class AnnotationTypes {
         return null;
     }
 
+    /**
+     * Obtiene todas las anotaciones {@link FgHaving FgHaving} en una clase
+     * dada.
+     *
+     * @param klass Clase.
+     * @return Array de anotaciones, si hubiere.
+     */
     public static FgHaving[] getAllHavings(Class klass) {
         FgHavings collector = Reflection.getAnnotation(klass, FGHAVINGS);
         if (collector != null && Assertions.isNullOrEmpty(collector.value()) == false) {
@@ -97,6 +125,13 @@ public class AnnotationTypes {
         return null;
     }
 
+    /**
+     * Obtiene todas las anotaciones {@link FgOrderBy FgOrderBy} en una clase
+     * dada.
+     *
+     * @param klass Clase.
+     * @return Array de anotaciones, si hubiere.
+     */
     public static FgOrderBy[] getAllOrderBys(Class klass) {
         FgOrderBys collector = Reflection.getAnnotation(klass, FGORDERBYS);
         if (collector != null && Assertions.isNullOrEmpty(collector.value()) == false) {

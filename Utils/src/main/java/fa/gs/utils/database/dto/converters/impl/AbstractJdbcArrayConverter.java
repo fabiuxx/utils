@@ -6,7 +6,8 @@
 package fa.gs.utils.database.dto.converters.impl;
 
 import fa.gs.utils.database.dto.converters.DtoProjectionConverter;
-import fa.gs.utils.misc.Codificable;
+import fa.gs.utils.database.dto.mapping.NativeJdbcResultSetAdapter.JdbcArray;
+import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.errors.Errors;
 
 /**
@@ -14,7 +15,7 @@ import fa.gs.utils.misc.errors.Errors;
  * @author Fabio A. González Sosa
  * @param <T> Parametro de tipo.
  */
-public abstract class AbstractCodificableProjectionConverter<T extends Codificable> extends DtoProjectionConverter<T> {
+public abstract class AbstractJdbcArrayConverter<T> extends DtoProjectionConverter<T> {
 
     @Override
     public T convertProjection(Object projection) {
@@ -22,14 +23,19 @@ public abstract class AbstractCodificableProjectionConverter<T extends Codificab
             return null;
         }
 
-        if (projection instanceof String) {
-            String codigo = (String) projection;
-            return convertCodificable(codigo);
+        if (projection instanceof JdbcArray) {
+            JdbcArray array = (JdbcArray) projection;
+            Object[] values = array.getValue();
+            if (Assertions.isNullOrEmpty(values)) {
+                return null;
+            }
+
+            return nullSafeConvert(values);
         }
 
         throw Errors.illegalArgument("Tipo '%s' no soportado.", projection.getClass().getCanonicalName());
     }
 
-    protected abstract T convertCodificable(String codigo);
+    protected abstract T nullSafeConvert(Object[] values);
 
 }

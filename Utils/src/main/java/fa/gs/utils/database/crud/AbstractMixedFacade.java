@@ -228,6 +228,7 @@ public abstract class AbstractMixedFacade<T> implements EntityFacade<T>, DtoFaca
      * {@inheritDoc }
      */
     @Override
+    @Deprecated
     public T selectById(Object id) {
         EntityManager em = getEntityManager();
         T entity = em.find(getEntityClass(), id);
@@ -238,6 +239,7 @@ public abstract class AbstractMixedFacade<T> implements EntityFacade<T>, DtoFaca
      * {@inheritDoc }
      */
     @Override
+    @Deprecated
     public Collection<T> selectAll() {
         EntityManager em = getEntityManager();
         javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -250,6 +252,7 @@ public abstract class AbstractMixedFacade<T> implements EntityFacade<T>, DtoFaca
      * {@inheritDoc }
      */
     @Override
+    @Deprecated
     public T selectFirst() {
         EntityManager em = getEntityManager();
         javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();

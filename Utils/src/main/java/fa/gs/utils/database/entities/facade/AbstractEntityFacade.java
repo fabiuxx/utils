@@ -140,6 +140,7 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
      * {@inheritDoc }
      */
     @Override
+    @Deprecated
     public T selectById(Object id) {
         EntityManager em = getEntityManager();
         T entity = em.find(entityClass, id);
@@ -150,6 +151,7 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
      * {@inheritDoc }
      */
     @Override
+    @Deprecated
     public Collection<T> selectAll() {
         EntityManager em = getEntityManager();
         javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -162,6 +164,7 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
      * {@inheritDoc }
      */
     @Override
+    @Deprecated
     public T selectFirst() {
         EntityManager em = getEntityManager();
         javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();

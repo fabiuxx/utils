@@ -67,21 +67,27 @@ public interface EntityFacade<T> extends Serializable {
      *
      * @param id Identificador de la entidad solicitada.
      * @return Objeto asociado al Identificador.
+     * @deprecated Utilizar DTOs para busqueda de elementos.
      */
+    @Deprecated
     T selectById(Object id);
 
     /**
      * Obtiene la lista completa de registros en una tabla.
      *
      * @return Lista de registros.
+     * @deprecated Utilizar DTOs para busqueda de elementos.
      */
+    @Deprecated
     Collection<T> selectAll();
 
     /**
      * Obtiene el primer registro disponible de una tabla.
      *
      * @return Primer registro de una tabla.
+     * @deprecated Utilizar DTOs para busqueda de elementos.
      */
+    @Deprecated
     T selectFirst();
 
 }

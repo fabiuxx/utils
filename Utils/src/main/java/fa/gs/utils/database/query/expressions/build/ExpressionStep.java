@@ -112,7 +112,7 @@ public interface ExpressionStep<T extends ExpressionStep<T>> extends NameStep<T>
 
     T literal(Date value, DateLiteral.DateType dateType);
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="Any Literal">
     <L> T literal(Literal<L> value);
     //</editor-fold>
