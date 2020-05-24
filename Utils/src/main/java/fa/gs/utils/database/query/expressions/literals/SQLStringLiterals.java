@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.query.expressions.build;
+package fa.gs.utils.database.query.expressions.literals;
 
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.fechas.Fechas;

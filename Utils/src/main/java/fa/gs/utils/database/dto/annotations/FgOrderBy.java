@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.database.dto.annotations;
 
-import fa.gs.utils.database.query.expressions.OrderExpression;
+import fa.gs.utils.database.query.elements.Order;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 @Repeatable(FgOrderBys.class)
 public @interface FgOrderBy {
 
-    OrderExpression.Type type() default OrderExpression.Type.ASC;
+    Order.Type type() default Order.Type.ASC;
 
     String value();
 

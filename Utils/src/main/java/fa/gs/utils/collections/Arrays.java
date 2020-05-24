@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.stream.Stream;
 
 /**
  *
@@ -59,6 +60,18 @@ public class Arrays {
         ArrayList<T> list = Collections.list(enumeration);
         T[] array = (T[]) Array.newInstance(type, list.size());
         return list.toArray(array);
+    }
+
+    /**
+     * Obtiene un objeto que permite aplicar operadores de flujo sobre un array
+     * de elementos.
+     *
+     * @param <T> Parametro de tipo.
+     * @param elements Array de elementos.
+     * @return Stream de elementos.
+     */
+    public static <T> Stream<T> stream(T[] elements) {
+        return Lists.wrap(elements).stream();
     }
 
     /**

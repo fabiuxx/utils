@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.database.dto;
 
+import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.database.dto.annotations.FgDto;
 import fa.gs.utils.database.dto.annotations.FgGroupBy;
@@ -13,15 +14,19 @@ import fa.gs.utils.database.dto.annotations.FgJoin;
 import fa.gs.utils.database.dto.annotations.FgOrderBy;
 import fa.gs.utils.database.dto.annotations.FgProjection;
 import fa.gs.utils.database.dto.annotations.FgWhere;
+import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.commands.CountQuery;
 import fa.gs.utils.database.query.commands.SelectQuery;
-import fa.gs.utils.database.query.expressions.EmptyExpression;
-import fa.gs.utils.database.query.expressions.Expression;
-import fa.gs.utils.database.query.expressions.build.ConditionsExpressionBuilder;
-import fa.gs.utils.database.query.expressions.build.JoinExpressionBuilder;
-import fa.gs.utils.database.query.expressions.build.OrderExpressionBuilder;
-import fa.gs.utils.database.query.expressions.build.ProjectionExpressionBuilder;
-import fa.gs.utils.database.query.expressions.build.TableExpressionBuilder;
+import fa.gs.utils.database.query.elements.Expression;
+import fa.gs.utils.database.query.elements.Join;
+import fa.gs.utils.database.query.elements.Name;
+import fa.gs.utils.database.query.elements.Order;
+import fa.gs.utils.database.query.elements.Projection;
+import fa.gs.utils.database.query.elements.Table;
+import fa.gs.utils.database.query.elements.build.ExpressionBuilder;
+import fa.gs.utils.database.query.elements.utils.Joins;
+import fa.gs.utils.database.query.elements.utils.Projections;
+import fa.gs.utils.database.query.elements.utils.Tables;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.Errors;
@@ -76,171 +81,167 @@ public class DtoQuery implements Serializable {
     }
 
     private static void prepareProjectionExpressions(PreparationContext ctx) {
-        Collection<Expression> projections = Lists.empty();
+        Collection<Projection> projections = Lists.empty();
 
         Collection<Field> declaredFields = Reflection.getAllFields(ctx.klass);
         for (Field field : declaredFields) {
             FgProjection projectionAnnotation = Reflection.getAnnotation(field, AnnotationTypes.FGPROJECTION);
             if (projectionAnnotation != null) {
-                ProjectionExpressionBuilder builder = ProjectionExpressionBuilder.instance();
-                // Proyeccion.
+                // 1) Resolver proyeccion.
+                Object projection0;
                 if (projectionAnnotation.useRaw()) {
-                    builder.raw(projectionAnnotation.value());
+                    projection0 = projectionAnnotation.value();
                 } else {
-                    builder.name(projectionAnnotation.value());
+                    projection0 = new Name(projectionAnnotation.value());
                 }
 
-                // Alias.
+                // 2) Resolver alias.
                 String alias0 = ctx.resolveAlias(projectionAnnotation);
-                builder.as(alias0);
 
-                // Expression de proyeccion.
-                Expression projection = builder.build();
+                // 3) Expression de proyeccion.
+                Projection projection = Projections.build(ctx.dialect, projection0, alias0);
                 projections.add(projection);
             }
         }
 
-        ctx.projectionExpressions = projections;
+        ctx.projections = projections;
     }
 
     private static void prepareTableExpression(PreparationContext ctx) {
         FgDto annotation = Reflection.getAnnotation(ctx.klass, AnnotationTypes.FGDTO);
-        TableExpressionBuilder builder = TableExpressionBuilder.instance();
 
-        // Nombre de tabla.
-        builder.name(annotation.table());
+        // 1) Resolver nombre.
+        Object name0 = new Name(annotation.table());
 
-        // Alias.
-        if (!Assertions.stringNullOrEmpty(annotation.as())) {
-            builder.as(annotation.as());
-        }
+        // 2) Resolver alias.
+        String alias0 = annotation.as();
 
-        ctx.tableExpression = builder.build();
+        // 3) Expresion de tabla.
+        Table table = Tables.build(ctx.dialect, name0, alias0);
+        ctx.table = table;
     }
 
     private static void prepareTableJoinClauses(PreparationContext ctx) {
-        Collection<Expression> expressions = Lists.empty();
+        Collection<Join> expressions = Lists.empty();
 
         FgJoin[] joins = AnnotationTypes.getAllJoins(ctx.klass);
         if (!Assertions.isNullOrEmpty(joins)) {
             for (FgJoin join : joins) {
-                JoinExpressionBuilder builder = JoinExpressionBuilder.instance();
-                builder.type(join.type());
-                builder.name(join.table());
-                builder.as(join.as());
-                builder.on().raw(join.on());
+                // 1) Resolver tipo de join.
+                Join.Type type0 = join.type();
 
-                Expression expression = builder.build();
-                expressions.add(expression);
+                // 2) Resolver tabla de join.
+                Name name0 = new Name(join.table());
+
+                // 3) Resolver alias.
+                String alias0 = join.as();
+
+                // 4) Resolver condicion de join.
+                String on0 = join.on();
+
+                // 5) Expresion de join.
+                Join join0 = Joins.build(ctx.dialect, type0, name0, alias0, on0);
+                expressions.add(join0);
             }
         }
 
-        ctx.joinClauses = expressions;
+        ctx.joins = expressions;
     }
 
     private static void prepareWhereClauses(PreparationContext ctx) {
         Expression whereClause;
         FgWhere[] wheres = AnnotationTypes.getAllWheres(ctx.klass);
         if (!Assertions.isNullOrEmpty(wheres)) {
-            ConditionsExpressionBuilder builder = ConditionsExpressionBuilder.instance();
+            ExpressionBuilder builder = ExpressionBuilder.instance();
             builder = builder.TRUE();
 
             for (FgWhere where : wheres) {
                 String value = where.value();
                 if (!Assertions.stringNullOrEmpty(value)) {
-                    builder = builder.and().lpar().raw(value).rpar();
+                    builder = builder.and().lpar().wrap(value).rpar();
                 }
             }
 
-            whereClause = builder.build();
+            whereClause = builder.build(ctx.dialect);
         } else {
-            whereClause = EmptyExpression.instance();
+            whereClause = null;
         }
 
-        ctx.whereClause = whereClause;
+        ctx.where = whereClause;
     }
 
     private static void prepareHavingClauses(PreparationContext ctx) {
         Expression havingClause;
         FgHaving[] havings = AnnotationTypes.getAllHavings(ctx.klass);
         if (!Assertions.isNullOrEmpty(havings)) {
-            ConditionsExpressionBuilder builder = ConditionsExpressionBuilder.instance();
+            // 1) Inicializar condicion veradera.
+            ExpressionBuilder builder = ExpressionBuilder.instance();
             builder = builder.TRUE();
 
-            for (FgHaving where : havings) {
-                String value = where.value();
+            // 2) Incluir otras condiciones mediante operadores AND.
+            for (FgHaving having : havings) {
+                String value = having.value();
                 if (!Assertions.stringNullOrEmpty(value)) {
-                    builder = builder.and().lpar().raw(value).rpar();
+                    builder = builder.and().lpar().wrap(value).rpar();
                 }
             }
 
-            havingClause = builder.build();
+            // 3) Resolver expresion de filtro.
+            havingClause = builder.build(ctx.dialect);
         } else {
-            havingClause = EmptyExpression.instance();
+            havingClause = null;
         }
 
-        ctx.havingClause = havingClause;
+        ctx.having = havingClause;
     }
 
     private static void prepareGroupClauses(PreparationContext ctx) {
-        Collection<Expression> expressions = Lists.empty();
+        Collection<Name> names = Lists.empty();
 
         FgGroupBy[] groupBys = AnnotationTypes.getAllGroupBys(ctx.klass);
         if (!Assertions.isNullOrEmpty(groupBys)) {
             for (FgGroupBy groupBy : groupBys) {
-                ConditionsExpressionBuilder builder = ConditionsExpressionBuilder.instance();
-                builder.raw(groupBy.value());
+                // 1) Resolver nombre de columna.
+                Name name0 = new Name(groupBy.value());
 
-                Expression expression = builder.build();
-                expressions.add(expression);
+                // 2) Clausula de agrupacion.
+                names.add(name0);
             }
         }
 
-        ctx.groupClauses = expressions;
+        ctx.groupBy = names;
     }
 
     private static void prepareOrderClauses(PreparationContext ctx) {
-        Collection<Expression> expressions = Lists.empty();
+        Collection<Order> orders = Lists.empty();
 
         FgOrderBy[] orderBys = AnnotationTypes.getAllOrderBys(ctx.klass);
         if (!Assertions.isNullOrEmpty(orderBys)) {
             for (FgOrderBy orderBy : orderBys) {
-                OrderExpressionBuilder builder = OrderExpressionBuilder.instance();
-                builder.type(orderBy.type());
-                builder.name(orderBy.value());
+                // 1) Resolver tipo de ordenacion.
+                Order.Type type0 = orderBy.type();
 
-                Expression expression = builder.build();
-                expressions.add(expression);
+                // 2) Resolver criterio de ordenacion.
+                Name name0 = new Name(orderBy.value());
+
+                // 3) Clausula de ordenacion
+                Order order = new Order(name0, type0);
+                orders.add(order);
             }
         }
 
-        ctx.orderClauses = expressions;
+        ctx.orderBy = orders;
     }
 
     private static <T> SelectQuery buildSelectQuery(PreparationContext<T> ctx) {
         SelectQuery query = new SelectQuery();
-
-        // Expresion de tabla principal.
-        query.from().wrap(ctx.tableExpression);
-
-        // Clausulas join.
-        ctx.joinClauses.forEach(exp -> query.join().wrap(exp));
-
-        // Proyecciones.
-        ctx.projectionExpressions.forEach(exp -> query.projection().wrap(exp));
-
-        // Clausula where.
-        query.where().wrap(ctx.whereClause);
-
-        // Clausulas de agrupacion.
-        ctx.groupClauses.forEach((groupBy) -> query.group().wrap(groupBy));
-
-        // Clausula having.
-        query.having().wrap(ctx.havingClause);
-
-        // Criterios de ordenacion.
-        ctx.orderClauses.forEach((orderBy) -> query.order().wrap(orderBy));
-
+        query.setFrom(ctx.table);
+        query.setProjections(Arrays.unwrap(ctx.projections, Projection.class));
+        query.setJoins(Arrays.unwrap(ctx.joins, Join.class));
+        query.setWhere(ctx.where);
+        query.setGroupBy(Arrays.unwrap(ctx.groupBy, Name.class));
+        query.setHaving(ctx.having);
+        query.setOrderBy(Arrays.unwrap(ctx.orderBy, Order.class));
         return query;
     }
 
@@ -267,19 +268,25 @@ public class DtoQuery implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Clases Auxiliares">
     private static class PreparationContext<T> {
 
+        private Dialect dialect;
         private Long counter;
         private Class<T> klass;
-        private Expression tableExpression;
-        private Collection<Expression> joinClauses;
-        private Collection<Expression> projectionExpressions;
-        private Expression whereClause;
-        private Expression havingClause;
-        private Collection<Expression> groupClauses;
-        private Collection<Expression> orderClauses;
+        private Table table;
+        private Collection<Projection> projections;
+        private Collection<Join> joins;
+        private Expression where;
+        private Expression having;
+        private Collection<Name> groupBy;
+        private Collection<Order> orderBy;
 
         public PreparationContext(Class<T> klass) {
-            this.klass = klass;
+            this(klass, null);
+        }
+
+        public PreparationContext(Class<T> klass, Dialect dialect) {
+            this.dialect = dialect;
             this.counter = 0L;
+            this.klass = klass;
         }
 
         public Long nextCount() {

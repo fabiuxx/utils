@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.query.expressions;
+package fa.gs.utils.database.query.expressions.operators;
 
 import fa.gs.utils.database.query.QueryPart;
 import java.util.Objects;

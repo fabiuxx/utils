@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.query.commands;
+package fa.gs.utils.database.jpa;
 
-import fa.gs.utils.database.query.QueryPart;
+import javax.persistence.EntityManager;
 
 /**
  *
  * @author Fabio A. González Sosa
  */
-public interface Query extends QueryPart {
+public interface EntityManagerProvider {
+
+    EntityManager getEntityManager();
 
 }

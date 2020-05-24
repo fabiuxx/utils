@@ -6,7 +6,6 @@
 package fa.gs.utils.database.query.expressions.literals;
 
 import fa.gs.utils.database.query.Dialect;
-import fa.gs.utils.database.query.expressions.build.SQLStringLiterals;
 import fa.gs.utils.misc.errors.Errors;
 import java.util.Date;
 

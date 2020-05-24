@@ -11,7 +11,7 @@ import fa.gs.utils.database.dto.annotations.FgJoin;
 import fa.gs.utils.database.dto.annotations.FgOrderBy;
 import fa.gs.utils.database.dto.annotations.FgProjection;
 import fa.gs.utils.database.dto.annotations.FgWhere;
-import fa.gs.utils.database.query.expressions.JoinExpression;
+import fa.gs.utils.database.query.elements.Join;
 import java.io.Serializable;
 
 /**
@@ -19,8 +19,8 @@ import java.io.Serializable;
  * @author Fabio A. González Sosa
  */
 @FgDto(table = "info.persona_email", as = "pe")
-@FgJoin(type = JoinExpression.Type.LEFT, table = "info.persona", as = "p", on = "pe.id_persona = p.id")
-@FgJoin(type = JoinExpression.Type.LEFT, table = "info.email", as = "e", on = "pe.id_email = e.id")
+@FgJoin(type = Join.Type.LEFT, table = "info.persona", as = "p", on = "pe.id_persona = p.id")
+@FgJoin(type = Join.Type.LEFT, table = "info.email", as = "e", on = "pe.id_email = e.id")
 @FgWhere(value = "3 = 3")
 @FgOrderBy(value = PersonaEmail.FILTERS.ID_PERSONA)
 public class PersonaEmail implements Serializable {

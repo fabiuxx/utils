@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.query.expressions;
+package fa.gs.utils.database.query.expressions.operators;
 
 import fa.gs.utils.database.query.Dialect;
 
@@ -14,9 +14,6 @@ import fa.gs.utils.database.query.Dialect;
 public enum Operators implements Operator {
     LEFT_PAR(Precedences.L00, Cardinalities.NONE, "("),
     RIGHT_PAR(Precedences.L00, Cardinalities.NONE, ")"),
-    TYPECAST(Precedences.L01, Cardinalities.BINARY, "::"),
-    AS(Precedences.L01, Cardinalities.BINARY, "AS"),
-    ARRAY_INDEX(Precedences.L02, Cardinalities.BINARY, "[]"),
     POW(Precedences.L03, Cardinalities.BINARY, "^"),
     MUL(Precedences.L04, Cardinalities.BINARY, "*"),
     DIV(Precedences.L04, Cardinalities.BINARY, "/"),

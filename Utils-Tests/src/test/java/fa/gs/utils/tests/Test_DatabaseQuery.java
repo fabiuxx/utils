@@ -60,7 +60,7 @@ public class Test_DatabaseQuery {
     @Test
     public void test3() throws Throwable {
         SelectQuery query = DtoQuery.prepareSelectStatement(PersonaEmail.class);
-        query.limit(10L);
+        query.setLimit(10L);
         String sql = query.stringify(null);
 
         DtoMapper<PersonaEmail> mapper = DtoMapper.prepare(PersonaEmail.class);
@@ -80,7 +80,6 @@ public class Test_DatabaseQuery {
 
     @Test
     public void test5() throws Throwable {
-
         SelectQuery query = DtoQuery.prepareSelectStatement(PersonaEmail.class);
         String sql = query.stringify(null);
 

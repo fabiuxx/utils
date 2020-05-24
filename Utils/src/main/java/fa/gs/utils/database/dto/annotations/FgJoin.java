@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.database.dto.annotations;
 
-import fa.gs.utils.database.query.expressions.JoinExpression;
+import fa.gs.utils.database.query.elements.Join;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 @Repeatable(FgJoins.class)
 public @interface FgJoin {
 
-    JoinExpression.Type type() default JoinExpression.Type.NORMAL;
+    Join.Type type() default Join.Type.NORMAL;
 
     String table();
 

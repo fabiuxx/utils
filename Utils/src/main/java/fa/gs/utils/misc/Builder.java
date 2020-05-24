@@ -11,6 +11,7 @@ import fa.gs.utils.mixins.Self;
  *
  * @author Fabio A. González Sosa
  * @param <T> Parametro de tipo.
+ * @param <Q> Parametro de tipo.
  */
 public interface Builder<T extends Builder<T, Q>, Q> extends Self<T> {
 

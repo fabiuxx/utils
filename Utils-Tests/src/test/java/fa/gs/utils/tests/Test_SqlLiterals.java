@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.tests;
 
-import fa.gs.utils.database.query.expressions.build.SQLStringLiterals;
+import fa.gs.utils.database.query.expressions.literals.SQLStringLiterals;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
