@@ -19,19 +19,19 @@ public class Test_SqlLiterals {
 
     @Test
     public void test0() {
-        String txt = SQLStringLiterals.contains("");
+        String txt = SQLStringLiterals.likefy("");
         Assertions.assertEquals("", txt);
     }
 
     @Test
     public void test1() {
-        String txt = SQLStringLiterals.contains("a");
+        String txt = SQLStringLiterals.likefy("a");
         Assertions.assertEquals("%a%", txt);
     }
 
     @Test
     public void test2() {
-        String txt = SQLStringLiterals.contains("a b");
+        String txt = SQLStringLiterals.likefy("a b");
         Assertions.assertEquals("%a b%", txt);
     }
 
@@ -55,19 +55,19 @@ public class Test_SqlLiterals {
 
     @Test
     public void test6() {
-        String txt = SQLStringLiterals.contains("", SEPARATOR);
+        String txt = SQLStringLiterals.phrasify("");
         Assertions.assertEquals("", txt);
     }
 
     @Test
     public void test7() {
-        String txt = SQLStringLiterals.contains("a", SEPARATOR);
+        String txt = SQLStringLiterals.phrasify("a");
         Assertions.assertEquals("%a%", txt);
     }
 
     @Test
     public void test8() {
-        String txt = SQLStringLiterals.contains("a b", SEPARATOR);
+        String txt = SQLStringLiterals.phrasify("a b");
         Assertions.assertEquals("%a% %b%", txt);
     }
 

@@ -1,6 +1,7 @@
 package fa.gs.utils.collections;
 
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.errors.Errors;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -90,6 +91,30 @@ public class Lists {
         return objects.stream()
                 .map(mapper)
                 .collect(Collectors.toList());
+    }
+
+    public static <T> void add(Collection<T> collection, T... elements) {
+        add(collection, true, elements);
+    }
+
+    public static <T> void add(Collection<T> collection, boolean acceptsNull, T... elements) {
+        if (Assertions.isNull(collection)) {
+            return;
+        }
+
+        if (Assertions.isNullOrEmpty(elements)) {
+            return;
+        }
+
+        for (T element : elements) {
+            if (element != null) {
+                collection.add(element);
+            } else if (element == null && acceptsNull) {
+                collection.add(element);
+            } else {
+                throw Errors.illegalArgument("No se permiten elementos nulos.");
+            }
+        }
     }
 
 }

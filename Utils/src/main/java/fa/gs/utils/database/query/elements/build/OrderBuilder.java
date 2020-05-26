@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.database.query.elements.build;
 
-import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Order;
 import fa.gs.utils.mixins.Self;
@@ -51,7 +50,7 @@ public class OrderBuilder<T extends OrderBuilder<T>> implements Self<T> {
         return type(Order.Type.DESC);
     }
 
-    public Order build(Dialect dialect) {
+    public Order build() {
         Name value0 = value;
         Order.Type type0 = type;
         return new Order(value0, type0);

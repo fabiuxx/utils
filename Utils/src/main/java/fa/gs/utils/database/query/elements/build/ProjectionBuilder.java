@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.database.query.elements.build;
 
-import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Projection;
@@ -44,8 +43,8 @@ public class ProjectionBuilder<T extends ProjectionBuilder<T>> implements Self<T
         return self();
     }
 
-    public Projection build(Dialect dialect) {
-        Expression value0 = value.build(dialect);
+    public Projection build() {
+        Expression value0 = value.build();
         Name alias0 = alias;
         return new Projection(value0, alias0);
     }

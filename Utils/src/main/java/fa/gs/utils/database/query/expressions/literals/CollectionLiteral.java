@@ -29,7 +29,7 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
         Collections.addAll(this.values, values);
     }
 
-    public static CollectionLiteral instance(Integer... values) {
+    public static CollectionLiteral instance(Integer[] values) {
         Literal[] literals = Arrays.asList(values)
                 .stream()
                 .map(v -> new NumberLiteral(v))
@@ -37,7 +37,7 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
         return new CollectionLiteral(literals);
     }
 
-    public static CollectionLiteral instance(Long... values) {
+    public static CollectionLiteral instance(Long[] values) {
         Literal[] literals = Arrays.asList(values)
                 .stream()
                 .map(v -> new NumberLiteral(v))
@@ -45,7 +45,7 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
         return new CollectionLiteral(literals);
     }
 
-    public static CollectionLiteral instance(BigInteger... values) {
+    public static CollectionLiteral instance(BigInteger[] values) {
         Literal[] literals = Arrays.asList(values)
                 .stream()
                 .map(v -> new NumberLiteral(v))
@@ -53,7 +53,7 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
         return new CollectionLiteral(literals);
     }
 
-    public static CollectionLiteral instance(BigDecimal... values) {
+    public static CollectionLiteral instance(BigDecimal[] values) {
         Literal[] literals = Arrays.asList(values)
                 .stream()
                 .map(v -> new NumberLiteral(v))
@@ -61,7 +61,7 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
         return new CollectionLiteral(literals);
     }
 
-    public static CollectionLiteral instance(String... values) {
+    public static CollectionLiteral instance(String[] values) {
         Literal[] literals = Arrays.asList(values)
                 .stream()
                 .map(v -> new StringLiteral(v))
@@ -69,11 +69,11 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
         return new CollectionLiteral(literals);
     }
 
-    public static CollectionLiteral instance(Date... values) {
-        return instance(DateLiteral.DateType.FECHA_HORA, values);
+    public static CollectionLiteral instance(Date[] values) {
+        return instance(values, DateLiteral.DateType.FECHA_HORA);
     }
 
-    public static CollectionLiteral instance(DateLiteral.DateType dateType, Date... values) {
+    public static CollectionLiteral instance(Date[] values, DateLiteral.DateType dateType) {
         Literal[] literals = Arrays.asList(values)
                 .stream()
                 .map(v -> new DateLiteral(v, dateType))

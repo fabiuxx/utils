@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.database.query.elements.utils;
 
-import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Projection;
 import fa.gs.utils.database.query.elements.build.ProjectionBuilder;
@@ -17,7 +16,7 @@ import fa.gs.utils.misc.errors.Errors;
  */
 public class Projections {
 
-    public static Projection build(Dialect dialect, Object projection, String alias) {
+    public static Projection build(Object projection, String alias) {
         ProjectionBuilder builder = ProjectionBuilder.instance();
 
         // Proyeccion.
@@ -32,7 +31,7 @@ public class Projections {
         // Alias.
         builder.as(alias);
 
-        return builder.build(dialect);
+        return builder.build();
     }
 
 }

@@ -20,8 +20,12 @@ public class SQLStringLiterals {
 
     public static final String WHITESPACE_SEPARATOR = " ";
 
-    public static String contains(String value) {
+    public static String likefy(String value) {
         return contains(value, null);
+    }
+
+    public static String phrasify(String value) {
+        return contains(value, WHITESPACE_SEPARATOR);
     }
 
     public static String contains(String value, String separator) {

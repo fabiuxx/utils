@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.database.query.elements.build;
 
-import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.Join;
 import fa.gs.utils.database.query.elements.Table;
@@ -44,10 +43,10 @@ public class JoinBuilder<T extends JoinBuilder<T>> implements Self<T> {
         return on;
     }
 
-    public Join build(Dialect dialect) {
+    public Join build() {
         Join.Type type0 = type;
-        Table table0 = (Table) table.build(dialect);
-        Expression on0 = on.build(dialect);
+        Table table0 = (Table) table.build();
+        Expression on0 = on.build();
         return new Join(type0, table0, on0);
     }
 

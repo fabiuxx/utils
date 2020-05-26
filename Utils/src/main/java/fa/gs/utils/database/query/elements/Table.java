@@ -7,6 +7,8 @@ package fa.gs.utils.database.query.elements;
 
 import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.QueryPart;
+import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Strings;
 import lombok.Data;
 
@@ -27,10 +29,17 @@ public class Table implements QueryPart {
 
     @Override
     public String stringify(Dialect dialect) {
-        if (alias != null) {
-            return Strings.format("%s AS %s", value.stringify(dialect), alias.stringify(dialect));
+        String value0 = (value != null) ? value.stringify(dialect) : null;
+        String alias0 = (alias != null) ? alias.stringify(dialect) : null;
+
+        if (Assertions.stringNullOrEmpty(value0)) {
+            throw Errors.illegalState();
+        }
+
+        if (!Assertions.stringNullOrEmpty(alias0)) {
+            return Strings.format("%s AS %s", value0, alias0);
         } else {
-            return Strings.format("%s", value.stringify(dialect));
+            return Strings.format("%s", value0);
         }
     }
 

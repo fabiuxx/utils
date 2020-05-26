@@ -7,6 +7,7 @@ package fa.gs.utils.database.query.elements;
 
 import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.QueryPart;
+import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.text.Strings;
 import lombok.Data;
 
@@ -29,10 +30,17 @@ public class Join implements QueryPart {
 
     @Override
     public String stringify(Dialect dialect) {
-        if (on != null) {
-            return Strings.format("%s %s ON %s", type.keyword, table.stringify(dialect), on.stringify(dialect));
+        String table0 = (table != null) ? table.stringify(dialect) : null;
+        String on0 = (on != null) ? on.stringify(dialect) : null;
+
+        if (Assertions.stringNullOrEmpty(table0)) {
+            return "";
+        }
+
+        if (!Assertions.stringNullOrEmpty(on0)) {
+            return Strings.format("%s %s ON %s", type.keyword, table0, on0);
         } else {
-            return Strings.format("%s %s", type.keyword, table.stringify(dialect));
+            return Strings.format("%s %s", type.keyword, table0);
         }
     }
 

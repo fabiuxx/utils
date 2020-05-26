@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.database.query.elements.utils;
 
-import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.elements.Join;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.build.JoinBuilder;
@@ -16,13 +15,13 @@ import fa.gs.utils.database.query.elements.build.JoinBuilder;
  */
 public class Joins {
 
-    public static Join build(Dialect dialect, Join.Type type, Name table, String alias, String on) {
+    public static Join build(Join.Type type, Name table, String alias, String on) {
         JoinBuilder builder = JoinBuilder.instance();
         builder.type(type);
         builder.table().table().name(table);
         builder.table().as(alias);
         builder.on().wrap(on);
-        return builder.build(dialect);
+        return builder.build();
     }
 
 }

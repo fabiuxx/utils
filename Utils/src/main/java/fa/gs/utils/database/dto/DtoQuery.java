@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.database.dto;
 
-import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.database.dto.annotations.FgDto;
 import fa.gs.utils.database.dto.annotations.FgGroupBy;
@@ -14,7 +13,6 @@ import fa.gs.utils.database.dto.annotations.FgJoin;
 import fa.gs.utils.database.dto.annotations.FgOrderBy;
 import fa.gs.utils.database.dto.annotations.FgProjection;
 import fa.gs.utils.database.dto.annotations.FgWhere;
-import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.commands.CountQuery;
 import fa.gs.utils.database.query.commands.SelectQuery;
 import fa.gs.utils.database.query.elements.Expression;
@@ -59,7 +57,7 @@ public class DtoQuery implements Serializable {
 
     public static CountQuery prepareCountStatement(Class klass) {
         SelectQuery query = prepareSelectStatement(klass);
-        return query.forCount();
+        return query.asCountQuery();
     }
 
     static void validate(Class klass) {
@@ -99,7 +97,7 @@ public class DtoQuery implements Serializable {
                 String alias0 = ctx.resolveAlias(projectionAnnotation);
 
                 // 3) Expression de proyeccion.
-                Projection projection = Projections.build(ctx.dialect, projection0, alias0);
+                Projection projection = Projections.build(projection0, alias0);
                 projections.add(projection);
             }
         }
@@ -117,7 +115,7 @@ public class DtoQuery implements Serializable {
         String alias0 = annotation.as();
 
         // 3) Expresion de tabla.
-        Table table = Tables.build(ctx.dialect, name0, alias0);
+        Table table = Tables.build(name0, alias0);
         ctx.table = table;
     }
 
@@ -140,7 +138,7 @@ public class DtoQuery implements Serializable {
                 String on0 = join.on();
 
                 // 5) Expresion de join.
-                Join join0 = Joins.build(ctx.dialect, type0, name0, alias0, on0);
+                Join join0 = Joins.build(type0, name0, alias0, on0);
                 expressions.add(join0);
             }
         }
@@ -162,7 +160,7 @@ public class DtoQuery implements Serializable {
                 }
             }
 
-            whereClause = builder.build(ctx.dialect);
+            whereClause = builder.build();
         } else {
             whereClause = null;
         }
@@ -187,7 +185,7 @@ public class DtoQuery implements Serializable {
             }
 
             // 3) Resolver expresion de filtro.
-            havingClause = builder.build(ctx.dialect);
+            havingClause = builder.build();
         } else {
             havingClause = null;
         }
@@ -235,13 +233,36 @@ public class DtoQuery implements Serializable {
 
     private static <T> SelectQuery buildSelectQuery(PreparationContext<T> ctx) {
         SelectQuery query = new SelectQuery();
-        query.setFrom(ctx.table);
-        query.setProjections(Arrays.unwrap(ctx.projections, Projection.class));
-        query.setJoins(Arrays.unwrap(ctx.joins, Join.class));
-        query.setWhere(ctx.where);
-        query.setGroupBy(Arrays.unwrap(ctx.groupBy, Name.class));
-        query.setHaving(ctx.having);
-        query.setOrderBy(Arrays.unwrap(ctx.orderBy, Order.class));
+
+        // From.
+        query.from(ctx.table);
+
+        // Proyecciones.
+        for (Projection projection : ctx.projections) {
+            query.projection(projection);
+        }
+
+        // Joins.
+        for (Join join : ctx.joins) {
+            query.join(join);
+        }
+
+        // Where.
+        query.where(ctx.where);
+
+        // Group by.
+        for (Name name : ctx.groupBy) {
+            query.groupBy(name);
+        }
+
+        // Having.
+        query.having(ctx.having);
+
+        // Order by.
+        for (Order order : ctx.orderBy) {
+            query.orderBy(order);
+        }
+
         return query;
     }
 
@@ -268,7 +289,6 @@ public class DtoQuery implements Serializable {
     //<editor-fold defaultstate="collapsed" desc="Clases Auxiliares">
     private static class PreparationContext<T> {
 
-        private Dialect dialect;
         private Long counter;
         private Class<T> klass;
         private Table table;
@@ -280,11 +300,6 @@ public class DtoQuery implements Serializable {
         private Collection<Order> orderBy;
 
         public PreparationContext(Class<T> klass) {
-            this(klass, null);
-        }
-
-        public PreparationContext(Class<T> klass, Dialect dialect) {
-            this.dialect = dialect;
             this.counter = 0L;
             this.klass = klass;
         }

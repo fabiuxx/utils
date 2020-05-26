@@ -5,6 +5,8 @@
  */
 package fa.gs.utils.database.query.commands;
 
+import fa.gs.utils.collections.Arrays;
+import fa.gs.utils.collections.Lists;
 import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.Join;
@@ -12,119 +14,145 @@ import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Order;
 import fa.gs.utils.database.query.elements.Projection;
 import fa.gs.utils.database.query.elements.Table;
-import fa.gs.utils.misc.Assertions;
-import fa.gs.utils.misc.text.Joiner;
 import fa.gs.utils.misc.text.StringBuilder2;
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  *
  * @author Fabio A. González Sosa
  */
-@Data
 public class SelectQuery extends AbstractQuery {
 
     Table from;
-    Projection[] projections;
-    Join[] joins;
-    Expression where;
-    Name[] groupBy;
-    Expression having;
-    Order[] orderBy;
+    final Collection<Projection> projections;
+    final Collection<Join> joins;
+    final Collection<Expression> where;
+    final Collection<Name> groupBy;
+    final Collection<Expression> having;
+    final Collection<Order> orderBy;
     Long limit;
     Long offset;
 
     public SelectQuery() {
         this.from = null;
-        this.projections = null;
-        this.joins = null;
-        this.where = null;
-        this.groupBy = null;
-        this.having = null;
-        this.orderBy = null;
+        this.projections = new ArrayList<>();
+        this.joins = new ArrayList<>();
+        this.where = new ArrayList<>();
+        this.groupBy = new ArrayList<>();
+        this.having = new ArrayList<>();
+        this.orderBy = new ArrayList<>();
         this.limit = null;
         this.offset = null;
     }
 
-    public CountQuery forCount() {
+    public CountQuery asCountQuery() {
         CountQuery count = new CountQuery();
         count.from = this.from;
-        count.joins = this.joins;
-        count.where = this.where;
-        count.groupBy = this.groupBy;
-        count.having = this.having;
+        count.joins.addAll(this.joins);
+        count.where.addAll(this.where);
+        count.groupBy.addAll(this.groupBy);
+        count.having.addAll(this.having);
         return count;
     }
 
     @Override
     public String stringify(final Dialect dialect) {
         StringBuilder2 builder = new StringBuilder2();
-
-        // Projections.
-        String[] projections0 = stringify(projections, dialect);
-        if (!Assertions.isNullOrEmpty(projections0)) {
-            builder.append(" SELECT ");
-            builder.append(Joiner.of(projections0).separator(", ").join());
-        }
-
-        // From.
-        if (!Assertions.isNull(from)) {
-            builder.append(" FROM ");
-            builder.append(from.stringify(dialect));
-        }
-
-        // Joins.
-        if (!Assertions.isNullOrEmpty(joins)) {
-            String[] joins0 = stringify(joins, dialect);
-            if (!Assertions.isNullOrEmpty(joins0)) {
-                builder.append(" ");
-                builder.append(Joiner.of(joins0).separator(" ").join());
-            }
-        }
-
-        // Where.
-        if (!Assertions.isNull(where)) {
-            builder.append(" WHERE ");
-            builder.append(where.stringify(dialect));
-        }
-
-        // Group by.
-        if (!Assertions.isNullOrEmpty(groupBy)) {
-            String[] groupBy0 = stringify(groupBy, dialect);
-            if (!Assertions.isNullOrEmpty(groupBy0)) {
-                builder.append(" GROUP BY ");
-                builder.append(Joiner.of(groupBy0).separator(", ").join());
-            }
-        }
-
-        // Having.
-        if (!Assertions.isNull(having)) {
-            builder.append(" HAVING ");
-            builder.append(having.stringify(dialect));
-        }
-
-        // Order by.
-        if (!Assertions.isNullOrEmpty(orderBy)) {
-            String[] orderBy0 = stringify(orderBy, dialect);
-            if (!Assertions.isNullOrEmpty(orderBy0)) {
-                builder.append(" ORDER BY ");
-                builder.append(Joiner.of(orderBy0).separator(", ").join());
-            }
-        }
-
-        // Limit.
-        if (limit != null) {
-            builder.append(" LIMIT ");
-            builder.append(limit);
-        }
-
-        // Offset.
-        if (offset != null) {
-            builder.append(" OFFSET ");
-            builder.append(offset);
-        }
-
+        builder.append(" SELECT ");
+        withProjections(builder, projections, dialect);
+        withFrom(builder, from, dialect);
+        withJoins(builder, joins, dialect);
+        withWhere(builder, where, dialect);
+        withGroupBy(builder, groupBy, dialect);
+        withHaving(builder, having, dialect);
+        withOrderBy(builder, orderBy, dialect);
+        withLimit(builder, limit);
+        withOffset(builder, offset);
         return builder.toString();
     }
+
+    //<editor-fold defaultstate="collapsed" desc="Getters y Setters">
+    public SelectQuery from(Table from) {
+        if (from != null) {
+            this.from = from;
+        }
+        return this;
+    }
+
+    public SelectQuery projection(Projection projection) {
+        Lists.add(projections, projection);
+        return this;
+    }
+
+    public Projection[] projections() {
+        return Arrays.unwrap(projections, Projection.class);
+    }
+
+    public SelectQuery join(Join join) {
+        Lists.add(joins, join);
+        return this;
+    }
+
+    public Join[] joins() {
+        return Arrays.unwrap(joins, Join.class);
+    }
+
+    public SelectQuery where(Expression expression) {
+        Lists.add(where, expression);
+        return this;
+    }
+
+    public Expression[] where() {
+        return Arrays.unwrap(where, Expression.class);
+    }
+
+    public SelectQuery groupBy(Name group) {
+        Lists.add(groupBy, group);
+        return this;
+    }
+
+    public Name[] groupsBy() {
+        return Arrays.unwrap(groupBy, Name.class);
+    }
+
+    public SelectQuery having(Expression expression) {
+        Lists.add(having, expression);
+        return this;
+    }
+
+    public Expression[] having() {
+        return Arrays.unwrap(having, Expression.class);
+    }
+
+    public SelectQuery orderBy(Order group) {
+        if (group != null) {
+            this.orderBy.add(group);
+        }
+        return this;
+    }
+
+    public Order[] ordersBy() {
+        return Arrays.unwrap(orderBy, Order.class);
+    }
+
+    public SelectQuery limit(Long limit) {
+        this.limit = limit;
+        return this;
+    }
+
+    public Long limit() {
+        return limit;
+    }
+
+    public SelectQuery offset(Long offset) {
+        this.offset = offset;
+        return this;
+    }
+
+    public Long offset() {
+        return offset;
+    }
+    //</editor-fold>
 
 }

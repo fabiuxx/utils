@@ -6,7 +6,6 @@
 package fa.gs.utils.database.query.elements.build;
 
 import fa.gs.utils.collections.Lists;
-import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.QueryPart;
 import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.Name;
@@ -19,8 +18,8 @@ import fa.gs.utils.database.query.expressions.literals.NullLiteral;
 import fa.gs.utils.database.query.expressions.literals.NumberLiteral;
 import fa.gs.utils.database.query.expressions.literals.RawLiteral;
 import fa.gs.utils.database.query.expressions.literals.StringLiteral;
+import fa.gs.utils.database.query.expressions.operators.Operator;
 import fa.gs.utils.database.query.expressions.operators.Operators;
-import fa.gs.utils.misc.text.StringBuilder2;
 import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.mixins.Self;
 import java.math.BigDecimal;
@@ -50,14 +49,8 @@ public class ExpressionBuilder implements Self<ExpressionBuilder> {
         }
     }
 
-    public Expression build(final Dialect dialect) {
-        final StringBuilder2 builder = new StringBuilder2();
-        for (QueryPart part : parts) {
-            String exp0 = part.stringify(dialect);
-            builder.append(" %s ", exp0);
-        }
-
-        return Expressions.build(dialect, builder.toString());
+    public Expression build() {
+        return Expressions.build(parts);
     }
 
     public ExpressionBuilder wrap(Expression exp) {
@@ -67,6 +60,11 @@ public class ExpressionBuilder implements Self<ExpressionBuilder> {
 
     public ExpressionBuilder wrap(String fmt, Object... args) {
         push(new RawLiteral(Strings.format(fmt, args)));
+        return self();
+    }
+
+    public ExpressionBuilder operator(Operator op) {
+        push(op);
         return self();
     }
 
@@ -285,83 +283,83 @@ public class ExpressionBuilder implements Self<ExpressionBuilder> {
     //</editor-fold>
 
     //<editor-fold publicstate="collapsed" desc="Collection Literals">
-    public ExpressionBuilder in(Integer... values) {
+    public ExpressionBuilder in(Integer[] values) {
         push(Operators.IN);
         push(CollectionLiteral.instance(values));
         return self();
     }
 
-    public ExpressionBuilder in(Long... values) {
+    public ExpressionBuilder in(Long[] values) {
         push(Operators.IN);
         push(CollectionLiteral.instance(values));
         return self();
     }
 
-    public ExpressionBuilder in(BigInteger... values) {
+    public ExpressionBuilder in(BigInteger[] values) {
         push(Operators.IN);
         push(CollectionLiteral.instance(values));
         return self();
     }
 
-    public ExpressionBuilder in(BigDecimal... values) {
+    public ExpressionBuilder in(BigDecimal[] values) {
         push(Operators.IN);
         push(CollectionLiteral.instance(values));
         return self();
     }
 
-    public ExpressionBuilder in(String... values) {
+    public ExpressionBuilder in(String[] values) {
         push(Operators.IN);
         push(CollectionLiteral.instance(values));
         return self();
     }
 
-    public ExpressionBuilder in(Date... values) {
-        return in(DateLiteral.DateType.FECHA_HORA, values);
+    public ExpressionBuilder in(Date[] values) {
+        return in(values, DateLiteral.DateType.FECHA_HORA);
     }
 
-    public ExpressionBuilder in(DateLiteral.DateType dateType, Date... values) {
+    public ExpressionBuilder in(Date[] values, DateLiteral.DateType dateType) {
         push(Operators.IN);
-        push(CollectionLiteral.instance(dateType, values));
+        push(CollectionLiteral.instance(values, dateType));
         return self();
     }
 
-    public ExpressionBuilder notIn(Integer... values) {
+    public ExpressionBuilder notIn(Integer[] values) {
         push(Operators.NOT_IN);
         push(CollectionLiteral.instance(values));
         return self();
     }
 
-    public ExpressionBuilder notIn(Long... values) {
+    public ExpressionBuilder notIn(Long[] values) {
         push(Operators.NOT_IN);
         push(CollectionLiteral.instance(values));
         return self();
     }
 
-    public ExpressionBuilder notIn(BigInteger... values) {
+    public ExpressionBuilder notIn(BigInteger[] values) {
         push(Operators.NOT_IN);
         push(CollectionLiteral.instance(values));
         return self();
     }
 
-    public ExpressionBuilder notIn(BigDecimal... values) {
+    public ExpressionBuilder notIn(BigDecimal[] values) {
         push(Operators.NOT_IN);
         push(CollectionLiteral.instance(values));
         return self();
     }
 
-    public ExpressionBuilder notIn(String... values) {
+    public ExpressionBuilder notIn(String[] values) {
         push(Operators.NOT_IN);
         push(CollectionLiteral.instance(values));
         return self();
     }
 
-    public ExpressionBuilder notIn(Date... values) {
-        return notIn(DateLiteral.DateType.FECHA_HORA, values);
+    public ExpressionBuilder notIn(Date[] values) {
+        return notIn(values, DateLiteral.DateType.FECHA_HORA);
     }
 
-    public ExpressionBuilder notIn(DateLiteral.DateType dateType, Date... values) {
+    public ExpressionBuilder notIn(Date[] values, DateLiteral.DateType dateType) {
         push(Operators.NOT_IN);
-        push(CollectionLiteral.instance(dateType, values));
+        push(CollectionLiteral.instance(values, dateType));
         return self();
     }
     //</editor-fold>

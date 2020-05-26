@@ -5,83 +5,94 @@
  */
 package fa.gs.utils.database.query.commands;
 
+import fa.gs.utils.collections.Arrays;
+import fa.gs.utils.collections.Lists;
 import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.Join;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Table;
-import fa.gs.utils.misc.Assertions;
-import fa.gs.utils.misc.text.Joiner;
 import fa.gs.utils.misc.text.StringBuilder2;
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  *
  * @author Fabio A. González Sosa
  */
-@Data
 public class CountQuery extends AbstractQuery {
 
     public static final String COUNT_FIELD_NAME = "total_count";
 
     Table from;
-    Join[] joins;
-    Expression where;
-    Name[] groupBy;
-    Expression having;
+    final Collection<Join> joins;
+    final Collection<Expression> where;
+    final Collection<Name> groupBy;
+    final Collection<Expression> having;
 
     public CountQuery() {
         this.from = null;
-        this.joins = null;
-        this.where = null;
-        this.groupBy = null;
-        this.having = null;
+        this.joins = new ArrayList<>();
+        this.where = new ArrayList<>();
+        this.groupBy = new ArrayList<>();
+        this.having = new ArrayList<>();
     }
 
     @Override
     public String stringify(Dialect dialect) {
         StringBuilder2 builder = new StringBuilder2();
-
-        // Projections.
         builder.append(" SELECT COUNT(*) AS \"%s\"", CountQuery.COUNT_FIELD_NAME);
-
-        // From.
-        if (!Assertions.isNull(from)) {
-            builder.append(" FROM ");
-            builder.append(from.stringify(dialect));
-        }
-
-        // Joins.
-        if (!Assertions.isNullOrEmpty(joins)) {
-            String[] joins0 = stringify(joins, dialect);
-            if (!Assertions.isNullOrEmpty(joins0)) {
-                builder.append(" ");
-                builder.append(Joiner.of(joins0).separator(" ").join());
-            }
-        }
-
-        // Where.
-        if (!Assertions.isNull(where)) {
-            builder.append(" WHERE ");
-            builder.append(where.stringify(dialect));
-        }
-
-        // Group by.
-        if (!Assertions.isNullOrEmpty(groupBy)) {
-            String[] groupBy0 = stringify(groupBy, dialect);
-            if (!Assertions.isNullOrEmpty(groupBy0)) {
-                builder.append(" GROUP BY ");
-                builder.append(Joiner.of(groupBy0).separator(", ").join());
-            }
-        }
-
-        // Having.
-        if (!Assertions.isNull(having)) {
-            builder.append(" HAVING ");
-            builder.append(having.stringify(dialect));
-        }
-
+        withFrom(builder, from, dialect);
+        withJoins(builder, joins, dialect);
+        withWhere(builder, where, dialect);
+        withGroupBy(builder, groupBy, dialect);
+        withHaving(builder, having, dialect);
         return builder.toString();
     }
+
+    //<editor-fold defaultstate="collapsed" desc="Getters y Setters">
+    public CountQuery from(Table from) {
+        if (from != null) {
+            this.from = from;
+        }
+        return this;
+    }
+
+    public CountQuery join(Join join) {
+        Lists.add(joins, join);
+        return this;
+    }
+
+    public Join[] joins() {
+        return Arrays.unwrap(joins, Join.class);
+    }
+
+    public CountQuery where(Expression expression) {
+        Lists.add(where, expression);
+        return this;
+    }
+
+    public Expression[] where() {
+        return Arrays.unwrap(where, Expression.class);
+    }
+
+    public CountQuery groupBy(Name group) {
+        Lists.add(groupBy, group);
+        return this;
+    }
+
+    public Name[] groupsBy() {
+        return Arrays.unwrap(groupBy, Name.class);
+    }
+
+    public CountQuery having(Expression expression) {
+        Lists.add(having, expression);
+        return this;
+    }
+
+    public Expression[] having() {
+        return Arrays.unwrap(having, Expression.class);
+    }
+    //</editor-fold>
 
 }

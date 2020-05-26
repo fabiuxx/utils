@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.database.query.elements.utils;
 
-import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Table;
 import fa.gs.utils.database.query.elements.build.TableBuilder;
@@ -17,7 +16,7 @@ import fa.gs.utils.misc.errors.Errors;
  */
 public class Tables {
 
-    public static Table build(Dialect dialect, Object projection, String alias) {
+    public static Table build(Object projection, String alias) {
         TableBuilder builder = TableBuilder.instance();
 
         // Proyeccion.
@@ -32,7 +31,7 @@ public class Tables {
         // Alias.
         builder.as(alias);
 
-        return builder.build(dialect);
+        return builder.build();
     }
 
 }

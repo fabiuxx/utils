@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.database.query.elements.build;
 
-import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Table;
@@ -44,8 +43,8 @@ public class TableBuilder<T extends TableBuilder<T>> implements Self<T> {
         return self();
     }
 
-    public Table build(Dialect dialect) {
-        Expression table0 = table.build(dialect);
+    public Table build() {
+        Expression table0 = table.build();
         Name alias0 = alias;
         return new Table(table0, alias0);
     }
