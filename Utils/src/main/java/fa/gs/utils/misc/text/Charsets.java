@@ -6,6 +6,7 @@
 package fa.gs.utils.misc.text;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -16,5 +17,11 @@ public class Charsets {
     /**
      * Charset para la codificacion UTF-8.
      */
-    public static final Charset UTF8 = Charset.forName("UTF-8");
+    public static final Charset UTF8 = StandardCharsets.UTF_8;
+
+    /**
+     * Charset para la codificacion ISO-8859-1.
+     */
+    public static final Charset ISO_8859_1 = StandardCharsets.ISO_8859_1;
+
 }

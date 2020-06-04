@@ -156,6 +156,26 @@ public class Text {
     }
 
     /**
+     * Reemplaza todas las ocurrencias de un patron de texto por otro. La fase
+     * de reemplazo se aplica varias veces hasta que no exista ninguna
+     * coincidencia del patron de texto que se desea reemplazar.
+     *
+     * @param text Texto original.
+     * @param replace Patron de texto a reemplazar.
+     * @param replacee Patron de texto de reemplazo.
+     * @return Texto modificado.
+     */
+    public static String replaceAll(String text, String replace, String replacee) {
+        String a = text;
+        String b = text.replace(replace, replacee);
+        while (!Objects.equals(a, b)) {
+            a = b;
+            b = b.replace(replace, replacee);
+        }
+        return a.trim();
+    }
+
+    /**
      * Convierte todas las secuencias de dos barras '//' a una sola barra '/'
      * dentro de una cadena de texto.
      *
@@ -163,13 +183,7 @@ public class Text {
      * @return Cadena de texto normalizada.
      */
     public static String normalizeSlashes(String text) {
-        String a = text;
-        String b = text.replace("//", "/");
-        while (!Objects.equals(a, b)) {
-            a = b;
-            b = b.replace("//", "/");
-        }
-        return a.trim();
+        return Text.replaceAll(text, "//", "/");
     }
 
     /**

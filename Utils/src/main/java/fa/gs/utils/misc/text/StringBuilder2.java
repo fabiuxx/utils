@@ -5,6 +5,8 @@
  */
 package fa.gs.utils.misc.text;
 
+import java.util.function.Supplier;
+
 /**
  *
  * @author Fabio A. González Sosa
@@ -122,12 +124,20 @@ public class StringBuilder2 {
      * @return Esta misma instancia.
      */
     public StringBuilder2 append(boolean flag, String fmt, Object... args) {
+        return append(flag, () -> Strings.format(fmt, args));
+    }
+
+    /**
+     * Permite agregar un texto de manera condicional.
+     *
+     * @param flag Indica si el texto debe ser agregado.
+     * @param supplier Bloque de codigo que se ejecuta para obtener de manera
+     * "lazy" el texto a agregar.
+     * @return Esta misma instancia.
+     */
+    public StringBuilder2 append(boolean flag, Supplier<String> supplier) {
         if (flag) {
-            if (args == null || args.length == 0) {
-                return append(fmt);
-            } else {
-                return append(String.format(fmt, args));
-            }
+            append(supplier.get());
         }
         return this;
     }
@@ -156,8 +166,21 @@ public class StringBuilder2 {
      * @return Esta misma instancia.
      */
     public synchronized StringBuilder2 appendln(boolean flag, String fmt, Object... args) {
+        return appendln(flag, () -> Strings.format(fmt, args));
+    }
+
+    /**
+     * Permite agregar un texto formateado de manera condicional y posterior a
+     * eso agrega una nueva linea.
+     *
+     * @param flag Indica si el texto debe ser agregado.
+     * @param supplier Bloque de codigo que se ejecuta para obtener de manera
+     * "lazy" el texto a agregar.
+     * @return Esta misma instancia.
+     */
+    public synchronized StringBuilder2 appendln(boolean flag, Supplier<String> supplier) {
         if (flag) {
-            append(fmt, args);
+            append(supplier.get());
             append(Text.nl());
         }
         return this;
