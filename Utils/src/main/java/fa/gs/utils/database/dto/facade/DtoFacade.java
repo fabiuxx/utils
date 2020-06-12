@@ -5,6 +5,8 @@
  */
 package fa.gs.utils.database.dto.facade;
 
+import fa.gs.utils.database.query.commands.CountQuery;
+import fa.gs.utils.database.query.commands.SelectQuery;
 import fa.gs.utils.result.simple.Result;
 
 /**
@@ -16,10 +18,10 @@ public interface DtoFacade<T> {
 
     Class<T> getDtoClass();
 
-    Result<Long> count(String query);
+    Result<Long> count(CountQuery query);
 
-    Result<T[]> selectAll(String query);
+    Result<T[]> selectAll(SelectQuery query);
 
-    Result<T> selectFirst(String query);
+    Result<T> selectFirst(SelectQuery query);
 
 }

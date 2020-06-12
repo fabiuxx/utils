@@ -7,6 +7,7 @@ package fa.gs.utils.database.jpa;
 
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.collections.Maps;
+import fa.gs.utils.misc.Holder;
 import fa.gs.utils.misc.Numeric;
 import java.sql.Connection;
 import java.sql.Statement;
@@ -50,17 +51,30 @@ public class Jpa {
         return (long) q.executeUpdate();
     }
 
-    public static void executeBatch(final String[] statements, EntityManager em) throws Throwable {
+    public static boolean executeBatch(final String[] statements, EntityManager em) throws Throwable {
+        Holder<Boolean> result = Holder.instance();
+
         Session session = em.unwrap(Session.class);
         session.doWork((Connection conn) -> {
-            try (Statement stmt = conn.createStatement()) {
-                for (String statement : statements) {
-                    String sql = sanitizeQuery(statement);
-                    stmt.addBatch(sql);
+            try {
+                try (Statement stmt = conn.createStatement()) {
+                    // Agregar sentencias a batch.
+                    for (String statement : statements) {
+                        String sql = sanitizeQuery(statement);
+                        stmt.addBatch(sql);
+                    }
+
+                    // Ejecutar batch de sentencias.
+                    stmt.executeBatch();
                 }
-                stmt.executeBatch();
+
+                result.set(true);
+            } catch (Throwable thr) {
+                result.set(false);
             }
         });
+
+        return result.get();
     }
 
     private static String sanitizeQuery(String sql) {
@@ -73,4 +87,5 @@ public class Jpa {
 
         return sql;
     }
+
 }

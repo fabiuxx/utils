@@ -139,7 +139,7 @@ public class DtoMapper<T> implements Serializable {
             instances.add(klass.cast(instance));
         }
 
-        return Arrays.array(instances, klass);
+        return Arrays.unwrap(instances, klass);
     }
 
     private Object mapInstance(Class klass, Map<String, Field> mappings, Map<String, Object> values) throws Throwable {

@@ -17,24 +17,47 @@ class Value_Builder<T> extends Value_Attributes<T> implements Value.Builder<T> {
      */
     public Value_Builder() {
         this.value = null;
-        this.nullable = false;
+        this.strict = true;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
+    @Deprecated
     public Value.Builder<T> nullable(boolean nullable) {
-        this.nullable = nullable;
+        if (nullable) {
+            strict(false);
+        } else {
+            strict(true);
+        }
         return this;
     }
 
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public Value.Builder<T> strict(boolean strict) {
+        this.strict = strict;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Value.Builder<T> value(T value) {
         this.value = value;
         return this;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public Value<T> build() {
-        return new Value<>(value, nullable);
+        return new Value<>(value, strict);
     }
 
 }

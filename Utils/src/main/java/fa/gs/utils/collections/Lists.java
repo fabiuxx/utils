@@ -93,10 +93,27 @@ public class Lists {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Agrega elementos a una coleccion del mismo tipo.
+     *
+     * @param <T> Parametro de tipo.
+     * @param collection Coleccion de elementos.
+     * @param elements Elementos a agregar.
+     */
     public static <T> void add(Collection<T> collection, T... elements) {
         add(collection, true, elements);
     }
 
+    /**
+     * Agrega elementos a una coleccion del mismo tipo.
+     *
+     * @param <T> Parametro de tipo.
+     * @param collection Coleccion de elementos.
+     * @param acceptsNull Bandera que indica si se aceptan valores nulos.
+     * @param elements Elementos a agregar.
+     * @throws IllegalArgumentException Si {@code acceptsNull == true} y existe
+     * algun elemento nulo por agregar.
+     */
     public static <T> void add(Collection<T> collection, boolean acceptsNull, T... elements) {
         if (Assertions.isNull(collection)) {
             return;

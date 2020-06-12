@@ -44,19 +44,18 @@ public class Name implements QueryPart {
         this.parts = Arrays.unwrap(parts0, String.class);
     }
 
+    private String map(Object obj) {
+        String part = (String) obj;
+        if (part.equals("*")) {
+            return part;
+        } else {
+            return Text.quoteDouble(part);
+        }
+    }
+
     @Override
     public String stringify(Dialect dialect) {
-        return Joiner.of(parts)
-                .separator(".")
-                .adapter((Object obj, Object... args) -> {
-                    String part = (String) obj;
-                    if (part.equals("*")) {
-                        return part;
-                    } else {
-                        return Text.quoteDouble(part);
-                    }
-                })
-                .join();
+        return Joiner.of(parts).separator(".").adapter(this::map).join();
     }
 
 }

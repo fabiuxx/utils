@@ -7,7 +7,9 @@ package fa.gs.utils.database.dto.facade;
 
 import fa.gs.utils.database.dto.DtoMapper;
 import fa.gs.utils.database.jpa.Jpa;
+import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.commands.CountQuery;
+import fa.gs.utils.database.query.commands.SelectQuery;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.simple.Results;
@@ -25,12 +27,18 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
     protected final Class<T> dtoClass;
 
     /**
+     * Mapeador por defecto para filas a DTOs.
+     */
+    private final DtoMapper<T> mapper;
+
+    /**
      * Constructor.
      *
      * @param dtoClass Claso de DTO.
      */
     protected AbstractDtoFacade(Class<T> dtoClass) {
         this.dtoClass = dtoClass;
+        this.mapper = DtoMapper.prepare(dtoClass);
     }
 
     /**
@@ -44,6 +52,14 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
     }
 
     /**
+     * Obtiene el dialecto SQL a utilizar para la generacion concreta de
+     * sentencias a ejecutar.
+     *
+     * @return Dialecto SQL.
+     */
+    public abstract Dialect getDialect();
+
+    /**
      * Obtiene una instancia del administrador de entidades de la capa de
      * persistencia.
      *
@@ -53,7 +69,13 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
     public abstract EntityManager getEntityManager();
 
     @Override
-    public Result<Long> count(String query) {
+    public Result<Long> count(CountQuery query) {
+        Dialect dialect = getDialect();
+        String sql = query.stringify(dialect);
+        return count(sql);
+    }
+
+    private Result<Long> count(String query) {
         Result<Long> result;
 
         try {
@@ -72,12 +94,10 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
         return result;
     }
 
-    @Override
-    public Result<T[]> selectAll(String query) {
+    private Result<T[]> selectAll(String query) {
         Result<T[]> result;
 
         try {
-            DtoMapper<T> mapper = DtoMapper.prepare(getDtoClass());
             T[] values = mapper.select(query, getEntityManager());
             result = Results.ok()
                     .value(values)
@@ -94,7 +114,20 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
     }
 
     @Override
-    public Result<T> selectFirst(String query) {
+    public Result<T[]> selectAll(SelectQuery query) {
+        Dialect dialect = getDialect();
+        String sql = query.stringify(dialect);
+        return selectAll(sql);
+    }
+
+    @Override
+    public Result<T> selectFirst(SelectQuery query) {
+        Dialect dialect = getDialect();
+        String sql = query.stringify(dialect);
+        return selectFirst(sql);
+    }
+
+    private Result<T> selectFirst(String query) {
         Result<T> result;
 
         try {

@@ -51,6 +51,34 @@ public class Results {
     }
 
     /**
+     * Obtiene el valor encapsulado dentro de un resultado o lanza una excepcion
+     * si el resultado representa un fallo.
+     *
+     * @param <S> Parametro de tipo.
+     * @param result Resultado de una operacion.
+     * @return Valor de resultado en caso de extio.
+     * @throws Throwable Excepcion si el resultado representa un caso de fallo.
+     */
+    public static <S> S valueOrRaise(Result<S> result) throws Throwable {
+        result.raise();
+        return result.value();
+    }
+
+    /**
+     * Obtiene el valor encapsulado dentro de un resultado o lanza una excepcion
+     * si el resultado es nulo o si el resultado en general representa un fallo.
+     *
+     * @param <S> Parametro de tipo.
+     * @param result Resultado de una operacion.
+     * @return Valor de resultado en caso de extio.
+     * @throws Throwable Excepcion si el resultado representa un caso de fallo.
+     */
+    public static <S> S valueNotEmptyOrRaise(Result<S> result) throws Throwable {
+        result.raise(true);
+        return result.value();
+    }
+
+    /**
      * Constructor general para resultados tanto de exito como de fallo.
      *
      * @param <S> Parámetro de tipo para valor de exito.
@@ -97,8 +125,19 @@ public class Results {
         }
 
         @Override
+        @Deprecated
         public Builder<S> nullable(boolean nullable) {
-            successBuilder.nullable(nullable);
+            if (nullable) {
+                strict(false);
+            } else {
+                strict(true);
+            }
+            return this;
+        }
+
+        @Override
+        public Builder<S> strict(boolean strict) {
+            successBuilder.strict(strict);
             return this;
         }
 

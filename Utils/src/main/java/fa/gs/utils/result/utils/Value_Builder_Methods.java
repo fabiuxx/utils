@@ -18,9 +18,23 @@ public interface Value_Builder_Methods<T, B extends Value_Builder_Methods<T, B>>
      *
      * @param nullable {@code true} para que el valor {@code null} se considere
      * valido, caso contrario {@code false}.
-     * @return Etsa misma instancia.
+     * @return Esta misma instancia.
+     *
+     * @deprecated Utilizar
+     * {@link Value_Builder_Methods#strict(boolean) strict}.
      */
+    @Deprecated
     public B nullable(boolean nullable);
+
+    /**
+     * Indica si se debe aplicar un control estricto para determinar si se
+     * acepta o no el valor contenido como valido.
+     *
+     * @param strict {@code true} para indicar el modo estricto de control de
+     * valores, caso contrario {@code false}.
+     * @return Esta misma instancia.
+     */
+    public B strict(boolean strict);
 
     /**
      * Establece el valor a almacenar.

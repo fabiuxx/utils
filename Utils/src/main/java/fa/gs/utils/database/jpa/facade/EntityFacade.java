@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.entities.facade;
+package fa.gs.utils.database.jpa.facade;
 
 import java.io.Serializable;
-import java.util.Collection;
 
 /**
  *
@@ -61,33 +60,5 @@ public interface EntityFacade<T> extends Serializable {
      * @param entity Objeto a ser eliminado.
      */
     void remove(T entity);
-
-    /**
-     * Obtiene la información de una entidad respecto a un Identificador.
-     *
-     * @param id Identificador de la entidad solicitada.
-     * @return Objeto asociado al Identificador.
-     * @deprecated Utilizar DTOs para busqueda de elementos.
-     */
-    @Deprecated
-    T selectById(Object id);
-
-    /**
-     * Obtiene la lista completa de registros en una tabla.
-     *
-     * @return Lista de registros.
-     * @deprecated Utilizar DTOs para busqueda de elementos.
-     */
-    @Deprecated
-    Collection<T> selectAll();
-
-    /**
-     * Obtiene el primer registro disponible de una tabla.
-     *
-     * @return Primer registro de una tabla.
-     * @deprecated Utilizar DTOs para busqueda de elementos.
-     */
-    @Deprecated
-    T selectFirst();
 
 }

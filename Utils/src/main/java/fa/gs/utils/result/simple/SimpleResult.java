@@ -55,6 +55,22 @@ final class SimpleResult<T> extends BaseResult<T, Failure> implements Result<T> 
      * {@inheritDoc }
      */
     @Override
+    public boolean isSuccess() {
+        return (valueSuccess != null && valueSuccess.hasValue());
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public boolean isFailure() {
+        return (valueFailure != null && valueFailure.hasValue());
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
     public void raise() throws AppErrorException {
         raise(false);
     }

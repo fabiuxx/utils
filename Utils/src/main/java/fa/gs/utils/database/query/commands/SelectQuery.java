@@ -34,6 +34,9 @@ public class SelectQuery extends AbstractQuery {
     Long limit;
     Long offset;
 
+    /**
+     * Constructor.
+     */
     public SelectQuery() {
         this.from = null;
         this.projections = new ArrayList<>();
@@ -46,6 +49,11 @@ public class SelectQuery extends AbstractQuery {
         this.offset = null;
     }
 
+    /**
+     * Convierte la sentencia de seleccion actual en una sentencia de conteo.
+     *
+     * @return Setencia de conteo basada en sentencia actual.
+     */
     public CountQuery asCountQuery() {
         CountQuery count = new CountQuery();
         count.from = this.from;

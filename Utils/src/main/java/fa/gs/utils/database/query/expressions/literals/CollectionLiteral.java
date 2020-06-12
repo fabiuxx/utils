@@ -11,7 +11,6 @@ import fa.gs.utils.misc.text.Joiner;
 import fa.gs.utils.misc.text.Strings;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -30,7 +29,7 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
     }
 
     public static CollectionLiteral instance(Integer[] values) {
-        Literal[] literals = Arrays.asList(values)
+        Literal[] literals = Lists.wrap(values)
                 .stream()
                 .map(v -> new NumberLiteral(v))
                 .toArray(Literal[]::new);
@@ -38,7 +37,7 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
     }
 
     public static CollectionLiteral instance(Long[] values) {
-        Literal[] literals = Arrays.asList(values)
+        Literal[] literals = Lists.wrap(values)
                 .stream()
                 .map(v -> new NumberLiteral(v))
                 .toArray(Literal[]::new);
@@ -46,7 +45,7 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
     }
 
     public static CollectionLiteral instance(BigInteger[] values) {
-        Literal[] literals = Arrays.asList(values)
+        Literal[] literals = Lists.wrap(values)
                 .stream()
                 .map(v -> new NumberLiteral(v))
                 .toArray(Literal[]::new);
@@ -54,7 +53,7 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
     }
 
     public static CollectionLiteral instance(BigDecimal[] values) {
-        Literal[] literals = Arrays.asList(values)
+        Literal[] literals = Lists.wrap(values)
                 .stream()
                 .map(v -> new NumberLiteral(v))
                 .toArray(Literal[]::new);
@@ -62,7 +61,7 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
     }
 
     public static CollectionLiteral instance(String[] values) {
-        Literal[] literals = Arrays.asList(values)
+        Literal[] literals = Lists.wrap(values)
                 .stream()
                 .map(v -> new StringLiteral(v))
                 .toArray(Literal[]::new);
@@ -74,7 +73,7 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
     }
 
     public static CollectionLiteral instance(Date[] values, DateLiteral.DateType dateType) {
-        Literal[] literals = Arrays.asList(values)
+        Literal[] literals = Lists.wrap(values)
                 .stream()
                 .map(v -> new DateLiteral(v, dateType))
                 .toArray(Literal[]::new);
@@ -88,14 +87,13 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
 
     @Override
     public String stringify(final Dialect dialect) {
-        Joiner j = Joiner
+        Joiner joiner = Joiner
                 .of(values)
-                .adapter((Object obj, Object... args) -> {
+                .adapter(obj -> {
                     Literal l = (Literal) obj;
                     return l.stringify(dialect);
                 });
-
-        return Strings.format("(%s)", j.join());
+        return Strings.format("(%s)", joiner.join());
     }
 
 }

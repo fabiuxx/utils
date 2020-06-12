@@ -5,7 +5,9 @@
  */
 package fa.gs.utils.result.utils;
 
+import fa.gs.utils.misc.Assertions;
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  *
@@ -20,8 +22,8 @@ public final class Value<T> extends Value_Attributes<T> implements Serializable 
      * @param value Valor encapsulado.
      * @param nullable Si se aceptan valores nulos como validos.
      */
-    Value(T value, boolean nullable) {
-        this.nullable = nullable;
+    Value(T value, boolean strict) {
+        this.strict = strict;
         this.value = value;
     }
 
@@ -43,10 +45,35 @@ public final class Value<T> extends Value_Attributes<T> implements Serializable 
      * contrario {@code false}.
      */
     public boolean hasValue() {
-        if (nullable) {
+        // Si se admiten valores nulos, no aplicar ningun control.
+        if (!strict) {
             return true;
         }
-        return (value != null);
+
+        if (strict) {
+            // No se admiten valores nulos.
+            if (value == null) {
+                return false;
+            }
+
+            // Si es un array, debe tener algun elemento.
+            if (value.getClass().isArray()) {
+                Object[] array = (Object[]) value;
+                if (Assertions.isNullOrEmpty(array)) {
+                    return false;
+                }
+            }
+
+            // Si es una coleccion, debe tener algun elemento.
+            if (value instanceof Collection) {
+                Collection collection = (Collection) value;
+                if (Assertions.isNullOrEmpty(collection)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

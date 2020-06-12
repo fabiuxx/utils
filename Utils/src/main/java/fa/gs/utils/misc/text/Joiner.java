@@ -6,8 +6,9 @@
 package fa.gs.utils.misc.text;
 
 import fa.gs.utils.adapters.Adapter;
-import java.util.Arrays;
+import fa.gs.utils.collections.Lists;
 import java.util.Iterator;
+import java.util.function.Function;
 
 /**
  *
@@ -60,7 +61,7 @@ public class Joiner {
      * @return Instancia de esta clase.
      */
     public static <T> Joiner of(T... objects) {
-        Iterable<T> iterables = Arrays.asList(objects);
+        Iterable<T> iterables = Lists.wrap(objects);
         return Joiner.of(iterables);
     }
 
@@ -128,6 +129,23 @@ public class Joiner {
     public Joiner adapter(Adapter<Object, String> adapter) {
         this.adapter = adapter;
         return this;
+    }
+
+    /**
+     * Establece la funcion que transforma objetos arbitrarios a cadenas de
+     * texto que pueden ser unificadas.
+     *
+     * @param mapper Funcion de mapeo.
+     * @return Misma instancia de esta clase.
+     */
+    public Joiner adapter(Function<Object, String> mapper) {
+        Adapter<Object, String> adapter = new Adapter<Object, String>() {
+            @Override
+            public String adapt(Object obj, Object... args) {
+                return mapper.apply(obj);
+            }
+        };
+        return adapter(adapter);
     }
 
     /**

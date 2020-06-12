@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.database.crud;
 
-import fa.gs.utils.database.entities.facade.EntityFacade;
+import fa.gs.utils.database.jpa.facade.EntityFacade;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.simple.Results;
 

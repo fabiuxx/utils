@@ -3,11 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.entities.facade;
+package fa.gs.utils.database.jpa.facade;
 
-import fa.gs.utils.collections.Lists;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.validation.ConstraintViolation;
@@ -78,6 +75,12 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
         return true;
     }
 
+    private void flush(EntityManager em) {
+        // TODO: VER QUE EFECTO TIENE MANTENER ESTO CUANDO SE DEBE HACER ROLLBACK DE TRANSACCIONES.
+        // https://stackoverflow.com/a/9908184
+        //em.flush();
+    }
+
     /**
      * {@inheritDoc }
      */
@@ -85,7 +88,7 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
     public void attach(T entity) {
         EntityManager em = getEntityManager();
         em.merge(entity);
-        em.flush();
+        flush(em);
     }
 
     /**
@@ -95,7 +98,7 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
     public void detach(T entity) {
         EntityManager em = getEntityManager();
         em.detach(entity);
-        em.flush();
+        flush(em);
     }
 
     /**
@@ -107,7 +110,7 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
         if (valid) {
             EntityManager em = getEntityManager();
             em.persist(entity);
-            em.flush();
+            flush(em);
         }
         return entity;
     }
@@ -121,7 +124,7 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
         if (valid) {
             EntityManager em = getEntityManager();
             em.merge(entity);
-            em.flush();
+            flush(em);
         }
         return entity;
     }
@@ -133,46 +136,7 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
     public void remove(T entity) {
         EntityManager em = getEntityManager();
         em.remove(entity);
-        em.flush();
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    @Deprecated
-    public T selectById(Object id) {
-        EntityManager em = getEntityManager();
-        T entity = em.find(entityClass, id);
-        return entity;
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    @Deprecated
-    public Collection<T> selectAll() {
-        EntityManager em = getEntityManager();
-        javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-        cq.select(cq.from(entityClass));
-        javax.persistence.Query q = em.createQuery(cq);
-        return q.getResultList();
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    @Deprecated
-    public T selectFirst() {
-        EntityManager em = getEntityManager();
-        javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-        cq.select(cq.from(entityClass));
-        javax.persistence.Query q = em.createQuery(cq);
-        q.setMaxResults(1);
-        List<T> L = q.getResultList();
-        return Lists.first(L);
+        flush(em);
     }
 
 }

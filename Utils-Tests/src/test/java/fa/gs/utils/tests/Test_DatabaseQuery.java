@@ -9,7 +9,6 @@ import fa.gs.utils.database.dto.DtoMapper;
 import fa.gs.utils.database.dto.DtoQuery;
 import fa.gs.utils.database.query.commands.SelectQuery;
 import fa.gs.utils.misc.Numeric;
-import fa.gs.utils.tests.database.EnumTest;
 import fa.gs.utils.tests.database.Persistence;
 import fa.gs.utils.tests.database.PersonaEmail;
 import javax.persistence.EntityManager;

@@ -15,9 +15,10 @@ import java.io.Serializable;
 public class Value_Attributes<T> implements Serializable {
 
     /**
-     * Indica si se acepta o no el valor {@code null} como valido.
+     * Indica si se debe aplicar un control estricto para determinar si el valor
+     * contenido es valido o no.
      */
-    protected boolean nullable;
+    protected boolean strict;
 
     /**
      * Valor encapsulado.
@@ -29,7 +30,7 @@ public class Value_Attributes<T> implements Serializable {
      */
     public Value_Attributes() {
         this.value = null;
-        this.nullable = false;
+        this.strict = false;
     }
 
 }

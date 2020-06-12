@@ -30,6 +30,9 @@ public class CountQuery extends AbstractQuery {
     final Collection<Name> groupBy;
     final Collection<Expression> having;
 
+    /**
+     * Constructor.
+     */
     public CountQuery() {
         this.from = null;
         this.joins = new ArrayList<>();

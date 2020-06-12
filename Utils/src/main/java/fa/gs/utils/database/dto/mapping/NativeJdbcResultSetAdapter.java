@@ -40,21 +40,26 @@ public class NativeJdbcResultSetAdapter implements QueryResultSetAdapter {
          */
         Session session = em.unwrap(Session.class);
         session.doWork((Connection conn) -> {
-            // Ejecutar query nativa.
             try (Statement stmt = conn.createStatement()) {
+                // Ejecutar query nativa.
                 stmt.execute(sql);
                 try (ResultSet rs = stmt.getResultSet()) {
+                    // Cantidad de columnas por fila.
                     ResultSetMetaData rsmd = rs.getMetaData();
                     int columnsNumber = rsmd.getColumnCount();
+
                     // Mapear filas.
                     while (rs.next()) {
+                        // Adaptar cada columna de la fila.
                         Map<String, Object> row = Maps.empty();
                         for (int i = 1; i <= columnsNumber; i++) {
                             // Determinar nombre de columna.
                             String columnAlias = rsmd.getColumnLabel(i);
-                            String columnaName = rsmd.getColumnName(i);
-                            String key = Text.select(columnAlias, columnaName);
+                            String columnName = rsmd.getColumnName(i);
+                            String key = Text.select(columnAlias, columnName);
+
                             try {
+                                // Determinar valor: escalar o array.
                                 JdbcValue value;
                                 int jdbcType = rsmd.getColumnType(i);
                                 if (jdbcType == java.sql.Types.ARRAY) {
@@ -62,12 +67,16 @@ public class NativeJdbcResultSetAdapter implements QueryResultSetAdapter {
                                 } else {
                                     value = getScalar(rs, rsmd, i);
                                 }
+
                                 row.put(key, value);
                             } catch (Throwable thr) {
+                                // Error.
                                 Errors.dump(System.err, thr);
                                 row.put(key, null);
                             }
                         }
+
+                        // Agregar fila a coleccion de filas adaptadas.
                         rows.add(row);
                     }
                 }
