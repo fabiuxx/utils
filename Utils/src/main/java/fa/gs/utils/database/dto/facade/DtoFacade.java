@@ -18,6 +18,12 @@ public interface DtoFacade<T> {
 
     Class<T> getDtoClass();
 
+    Result<Long> count(String query);
+
+    Result<T[]> selectAll(String query);
+
+    Result<T> selectFirst(String query);
+
     Result<Long> count(CountQuery query);
 
     Result<T[]> selectAll(SelectQuery query);

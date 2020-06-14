@@ -69,13 +69,7 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
     public abstract EntityManager getEntityManager();
 
     @Override
-    public Result<Long> count(CountQuery query) {
-        Dialect dialect = getDialect();
-        String sql = query.stringify(dialect);
-        return count(sql);
-    }
-
-    private Result<Long> count(String query) {
+    public Result<Long> count(String query) {
         Result<Long> result;
 
         try {
@@ -94,7 +88,8 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
         return result;
     }
 
-    private Result<T[]> selectAll(String query) {
+    @Override
+    public Result<T[]> selectAll(String query) {
         Result<T[]> result;
 
         try {
@@ -114,20 +109,7 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
     }
 
     @Override
-    public Result<T[]> selectAll(SelectQuery query) {
-        Dialect dialect = getDialect();
-        String sql = query.stringify(dialect);
-        return selectAll(sql);
-    }
-
-    @Override
-    public Result<T> selectFirst(SelectQuery query) {
-        Dialect dialect = getDialect();
-        String sql = query.stringify(dialect);
-        return selectFirst(sql);
-    }
-
-    private Result<T> selectFirst(String query) {
+    public Result<T> selectFirst(String query) {
         Result<T> result;
 
         try {
@@ -154,6 +136,27 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
         }
 
         return result;
+    }
+
+    @Override
+    public Result<Long> count(CountQuery query) {
+        Dialect dialect = getDialect();
+        String sql = query.stringify(dialect);
+        return count(sql);
+    }
+
+    @Override
+    public Result<T[]> selectAll(SelectQuery query) {
+        Dialect dialect = getDialect();
+        String sql = query.stringify(dialect);
+        return selectAll(sql);
+    }
+
+    @Override
+    public Result<T> selectFirst(SelectQuery query) {
+        Dialect dialect = getDialect();
+        String sql = query.stringify(dialect);
+        return selectFirst(sql);
     }
 
 }

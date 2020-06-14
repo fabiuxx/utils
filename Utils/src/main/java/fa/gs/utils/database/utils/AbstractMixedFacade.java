@@ -61,6 +61,21 @@ public abstract class AbstractMixedFacade<T> implements EntityFacade<T>, DtoFaca
     }
 
     @Override
+    public Result<Long> count(String query) {
+        return dtoFacadeImpl.count(query);
+    }
+
+    @Override
+    public Result<T[]> selectAll(String query) {
+        return dtoFacadeImpl.selectAll(query);
+    }
+
+    @Override
+    public Result<T> selectFirst(String query) {
+        return dtoFacadeImpl.selectFirst(query);
+    }
+
+    @Override
     public Result<Long> count(CountQuery query) {
         return dtoFacadeImpl.count(query);
     }
