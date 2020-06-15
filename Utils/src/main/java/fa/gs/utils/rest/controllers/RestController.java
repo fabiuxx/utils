@@ -8,6 +8,7 @@ package fa.gs.utils.rest.controllers;
 import fa.gs.utils.logging.app.AppLogger;
 import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.AppErrorException;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.rest.exceptions.ApiBadRequestException;
 import fa.gs.utils.rest.exceptions.ApiInternalErrorException;
 import fa.gs.utils.rest.exceptions.ApiRollbackException;
@@ -81,6 +82,25 @@ public abstract class RestController implements Serializable {
     }
 
     /**
+     * Permite aplicar logica opcional previa a la ejecucion de la accion.
+     *
+     * @param action Accion a ejectuar.
+     */
+    protected void beforeExecuteControllerAction(RestControllerAction action) {
+        ;
+    }
+
+    /**
+     * Permite aplicar logica opcional posterior a la ejecucion de la accion.
+     *
+     * @param action Accion ejecutada.
+     * @param response Respuesta obtenida tras ejecucion.
+     */
+    protected void afterExecuteControllerAction(RestControllerAction action, Response response) {
+        ;
+    }
+
+    /**
      * Ejecuta un bloque logico de "accion" que no recibe parametros.
      *
      * @param actionClass Clase que define la accion a ejecutar.
@@ -99,8 +119,23 @@ public abstract class RestController implements Serializable {
      */
     public Response executeControllerAction(Class<? extends RestControllerAction> actionClass, Object param) {
         try {
+            // Instanciar clase.
             RestControllerAction action = Reflection.tryCreateInstance(actionClass);
-            return action.doAction(param);
+            if (action == null) {
+                throw Errors.illegalState("No se pudo instanciar la clase '%s'.", actionClass.getCanonicalName());
+            }
+
+            // Aplicar logica adicional de preinicializacion.
+            beforeExecuteControllerAction(action);
+
+            // Ejecutar accion.
+            Response response = action.doAction(param);
+
+            // Aplicar logica adicional de postejecucion.
+            afterExecuteControllerAction(action, response);
+
+            // Respuesta final.
+            return response;
         } catch (Throwable thr) {
             throw new ApiInternalErrorException(thr);
         }
