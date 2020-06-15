@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.utils;
+package fa.gs.utils.database.tasks;
 
 import fa.gs.utils.result.simple.Result;
 
@@ -11,8 +11,13 @@ import fa.gs.utils.result.simple.Result;
  *
  * @author Fabio A. González Sosa
  */
-public interface DbValueGenerator {
+public abstract class DbValueGenerationTask<T> implements DbTask<Void, Void> {
 
-    Result<Void> generarValores();
+    @Override
+    public Result<Void> execute(Void input) {
+        return generarValores();
+    }
+
+    protected abstract Result<Void> generarValores();
 
 }

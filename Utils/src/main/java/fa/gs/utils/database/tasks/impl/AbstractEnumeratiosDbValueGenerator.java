@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.utils;
+package fa.gs.utils.database.tasks.impl;
 
+import fa.gs.utils.database.tasks.DbValueGenerationTask;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.simple.Results;
 
@@ -14,7 +15,7 @@ import fa.gs.utils.result.simple.Results;
  * @param <TEnum> Parametro de tipo.
  * @param <TDomain> Parametro de tipo.
  */
-public abstract class AbstractEnumeratiosDbValueGenerator<TEnum extends Enum<TEnum>, TDomain> implements DbValueGenerator {
+public abstract class AbstractEnumeratiosDbValueGenerator<TEnum extends Enum<TEnum>, TDomain> extends DbValueGenerationTask {
 
     private final Class<TEnum> enumClass;
 
@@ -23,7 +24,7 @@ public abstract class AbstractEnumeratiosDbValueGenerator<TEnum extends Enum<TEn
     }
 
     @Override
-    public Result<Void> generarValores() {
+    protected Result<Void> generarValores() {
         Result<Void> result;
 
         try {
