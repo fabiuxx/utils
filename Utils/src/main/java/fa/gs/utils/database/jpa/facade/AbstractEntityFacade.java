@@ -76,9 +76,31 @@ public abstract class AbstractEntityFacade<T> implements EntityFacade<T> {
     }
 
     private void flush(EntityManager em) {
-        // TODO: VER QUE EFECTO TIENE MANTENER ESTO CUANDO SE DEBE HACER ROLLBACK DE TRANSACCIONES.
-        // https://stackoverflow.com/a/9908184
-        //em.flush();
+        /**
+         * Por defecto, cada operacion a traves de hibernate se mantiene dentro
+         * del contexto del entity manager y son enviados a la base de datos al
+         * finalizar la transaccion actual (normalmente, cada metodo dentro de
+         * un EJB incluye una transaccion implicita). Cuando las modificaciones
+         * son enviadas (se hace flush) a la base de datos, la misma normalmente
+         * esta configurada con auto-commit, lo cual implica que cada sentencia
+         * es ejecutada y persistida directamente en la base de datos
+         * independientemente a las demas sentencias dentro de un bloque de
+         * sentencias de una funcionalidad EJB.
+         *
+         * Para mantener la transaccionabilidad, es necesario que cada bloque de
+         * sentencias hibernate (funcionalidades en un EJB) sean ancapsulados
+         * dentro de una transaccion explicita de usuario que pueda ser
+         * confirmada o rechazada directamente. Con esto, por mas que se haga
+         * flush de cada sentencia, las mismas no seran aplicadas hasta que la
+         * transaccion general sea confirmada (commit) o rechazada (rollback).
+         *
+         * Es necesario que los cambios a nivel hibernate esten disponibles
+         * inmediatamente en base de datos ya que existen funcionalidades que se
+         * ejecutan enteramente dentro del contexto de la base de datos
+         * (funciones/triggers plpython) y podrian requerir acceder a los datos
+         * que existen solo dentro del contexto del entity manager de hibernate.
+         */
+        em.flush();
     }
 
     /**
