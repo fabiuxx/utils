@@ -26,7 +26,7 @@ public class Epoch2Json extends JsonAdapterToJson<Date> {
     public JsonElement adapt(Date obj, Object... args) {
         Long epoch;
         if (obj == null) {
-            epoch = 1L;
+            epoch = -1L;
         } else {
             epoch = Fechas.toEpoch(obj);
         }

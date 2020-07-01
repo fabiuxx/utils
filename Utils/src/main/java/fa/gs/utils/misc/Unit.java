@@ -25,6 +25,14 @@ public interface Unit<T> {
             return fallback;
         }
     }
+    
+    static void execute(Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (Throwable thr) {
+            ;
+        }
+    }
 
     T execute() throws Throwable;
 

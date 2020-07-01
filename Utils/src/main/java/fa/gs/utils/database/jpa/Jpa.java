@@ -5,10 +5,13 @@
  */
 package fa.gs.utils.database.jpa;
 
+import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.collections.Maps;
 import fa.gs.utils.misc.Holder;
 import fa.gs.utils.misc.Numeric;
+import fa.gs.utils.result.simple.Result;
+import fa.gs.utils.result.simple.Results;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Collection;
@@ -51,30 +54,40 @@ public class Jpa {
         return (long) q.executeUpdate();
     }
 
-    public static boolean executeBatch(final String[] statements, EntityManager em) throws Throwable {
-        Holder<Boolean> result = Holder.instance();
+    public static Result<Boolean[]> executeBatch(final String[] statements, EntityManager em) throws Throwable {
+        final Holder<Result<Boolean[]>> holder = Holder.instance();
 
         Session session = em.unwrap(Session.class);
         session.doWork((Connection conn) -> {
-            try {
-                try (Statement stmt = conn.createStatement()) {
-                    // Agregar sentencias a batch.
-                    for (String statement : statements) {
-                        String sql = sanitizeQuery(statement);
-                        stmt.addBatch(sql);
-                    }
+            Result<Boolean[]> result;
 
-                    // Ejecutar batch de sentencias.
-                    stmt.executeBatch();
+            try {
+                Collection<Boolean> retcodes = Lists.empty();
+                for (String statement : statements) {
+                    try {
+                        Statement stmt = conn.createStatement();
+                        stmt.execute(statement);
+                        retcodes.add(Boolean.TRUE);
+                    } catch (Throwable thr) {
+                        retcodes.add(Boolean.FALSE);
+                    }
                 }
 
-                result.set(true);
+                Boolean[] retcodes1 = Arrays.unwrap(retcodes, Boolean.class);
+                result = Results.ok()
+                        .value(retcodes1)
+                        .build();
             } catch (Throwable thr) {
-                result.set(false);
+                result = Results.ko()
+                        .cause(thr)
+                        .message("Ocurrio un error ejecutando lote de sentencias.")
+                        .build();
             }
+
+            holder.set(result);
         });
 
-        return result.get();
+        return holder.get();
     }
 
     private static String sanitizeQuery(String sql) {

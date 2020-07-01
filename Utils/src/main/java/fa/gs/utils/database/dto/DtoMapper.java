@@ -145,7 +145,10 @@ public class DtoMapper<T> implements Serializable {
     private Object mapInstance(Class klass, Map<String, Field> mappings, Map<String, Object> values) throws Throwable {
         Map<Class<? extends DtoValueConverter>, DtoValueConverter> converters = Maps.empty();
 
-        Object instance = Reflection.createInstanceUnsafe(klass);
+        Object instance = Reflection.createInstance(klass);
+        if (instance == null) {
+            throw Errors.illegalState("No se puede crear una instancia de '%s'", klass.getCanonicalName());
+        }
 
         for (Map.Entry<String, Field> entry : mappings.entrySet()) {
             // Crear instancia de convertidor, si hubiere.

@@ -41,6 +41,13 @@ public class NativeJdbcResultSetAdapter implements QueryResultSetAdapter {
         Session session = em.unwrap(Session.class);
         session.doWork((Connection conn) -> {
             try (Statement stmt = conn.createStatement()) {
+                /**
+                 * NOTE: SE IMPRIME LA CONSULTA MANUALMENTE YA QUE LA MISMA NO
+                 * PASA POR HIBERNATE, EL CUAL ESTA CONFIGURADO PARA IMPRIMIR
+                 * LAS CONSULTAS REALIZADAS.
+                 */
+                System.out.println(sql);
+
                 // Ejecutar query nativa.
                 stmt.execute(sql);
                 try (ResultSet rs = stmt.getResultSet()) {

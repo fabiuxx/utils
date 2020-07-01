@@ -20,11 +20,45 @@ import java.util.Collection;
  */
 public class Expressions {
 
+    public static Expression TRUE() {
+        ExpressionBuilder builder = ExpressionBuilder.instance();
+        builder.TRUE();
+        return builder.build();
+    }
+
+    public static Expression FALSE() {
+        ExpressionBuilder builder = ExpressionBuilder.instance();
+        builder.FALSE();
+        return builder.build();
+    }
+
+    /**
+     * @param expressions Expresiones a unificar en una sola.
+     * @return Expresion que contiene a todas las expresiones individuales,
+     * unidas por operadores 'AND'.
+     * @deprecated Utilizar las funciones mas especificas
+     * {@link Expressions#joinWithAnd(java.util.Collection) joinWithAnd} o
+     * {@link Expressions#joinWithOr(java.util.Collection) joinWithOr}.
+     */
+    @Deprecated
     public static Expression join(Collection<Expression> expressions) {
+        return joinWithAnd(expressions);
+    }
+
+    public static Expression joinWithAnd(Collection<Expression> expressions) {
         ExpressionBuilder builder = ExpressionBuilder.instance();
         builder.TRUE();
         for (Expression expression : expressions) {
             builder.and().lpar().wrap(expression).rpar();
+        }
+        return builder.build();
+    }
+
+    public static Expression joinWithOr(Collection<Expression> expressions) {
+        ExpressionBuilder builder = ExpressionBuilder.instance();
+        builder.FALSE();
+        for (Expression expression : expressions) {
+            builder.or().lpar().wrap(expression).rpar();
         }
         return builder.build();
     }

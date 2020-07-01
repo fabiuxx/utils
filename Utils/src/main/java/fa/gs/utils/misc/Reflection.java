@@ -15,7 +15,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import javassist.Modifier;
-import sun.reflect.ReflectionFactory;
 
 /**
  *
@@ -214,13 +213,11 @@ public class Reflection {
 
     public static Object createInstance(Class klass) throws Throwable {
         try {
-            // 1. Probar instanciacion tradicional.
             Object instance = createInstanceSafe(klass);
             return instance;
         } catch (Throwable thr) {
-            // 2. Probar instanciacion insegura.
-            Object instance = createInstanceUnsafe(klass);
-            return instance;
+            Errors.dump(System.err, thr, "Ocurrio un error creando instancia de '%s'.", klass.getCanonicalName());
+            return null;
         }
     }
 
@@ -234,13 +231,6 @@ public class Reflection {
             // Metodo 2.
             return klass.newInstance();
         }
-    }
-
-    public static Object createInstanceUnsafe(Class klass) throws Throwable {
-        ReflectionFactory rf = ReflectionFactory.getReflectionFactory();
-        java.lang.reflect.Constructor ctor = Object.class.getDeclaredConstructor();
-        java.lang.reflect.Constructor intConstr = rf.newConstructorForSerialization(klass, ctor);
-        return klass.cast(intConstr.newInstance());
     }
 
 }
