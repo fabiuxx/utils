@@ -88,7 +88,7 @@ public abstract class AbstractApplicationWorker implements ApplicationWorker {
     public void onError(Throwable thr) {
         log.error()
                 .cause(thr)
-                .message("Ocurrio un error inesperado")
+                .message("Ocurrió un error inesperado")
                 .tag("on", "error")
                 .log();
     }

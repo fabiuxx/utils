@@ -43,7 +43,7 @@ public class ExcludeResourcesFilter implements Filter {
             String config0 = filterConfig.getInitParameter("config");
             this.config = JsonDeserializer.deserialize(config0, Config.class);
         } catch (Throwable thr) {
-            throw new ServletException("Ocurrio un error inicializando filtro.", thr);
+            throw new ServletException("Ocurrió un error inicializando filtro.", thr);
         }
     }
 

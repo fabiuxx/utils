@@ -102,7 +102,7 @@ public class Lookup {
         } catch (Throwable thr) {
             result = Results.ko()
                     .cause(thr)
-                    .message("Ocurrio un error resolviendo bean via cdi.")
+                    .message("Ocurrió un error resolviendo bean via cdi.")
                     .tag("bean.class", klass.getCanonicalName())
                     .build();
         }
@@ -134,7 +134,7 @@ public class Lookup {
         } catch (Throwable thr) {
             result = Results.ko()
                     .cause(thr)
-                    .message("Ocurrio un error resolviendo bean via BeanManager.")
+                    .message("Ocurrió un error resolviendo bean via BeanManager.")
                     .tag("bean.class", klass.getCanonicalName())
                     .build();
         }

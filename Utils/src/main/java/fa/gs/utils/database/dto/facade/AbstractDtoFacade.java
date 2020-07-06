@@ -80,7 +80,7 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
         } catch (Throwable thr) {
             result = Results.ko()
                     .cause(thr)
-                    .message("Ocurrio un error cargando datos.")
+                    .message("Ocurrió un error cargando datos.")
                     .tag("dto.classname", getDtoClass().getCanonicalName())
                     .build();
         }
@@ -100,7 +100,7 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
         } catch (Throwable thr) {
             result = Results.ko()
                     .cause(thr)
-                    .message("Ocurrio un error cargando datos.")
+                    .message("Ocurrió un error cargando datos.")
                     .tag("dto.classname", getDtoClass().getCanonicalName())
                     .build();
         }
@@ -130,7 +130,7 @@ public abstract class AbstractDtoFacade<T> implements DtoFacade<T> {
         } catch (Throwable thr) {
             result = Results.ko()
                     .cause(thr)
-                    .message("Ocurrio un error cargando datos.")
+                    .message("Ocurrió un error cargando datos.")
                     .tag("dto.classname", getDtoClass().getCanonicalName())
                     .build();
         }

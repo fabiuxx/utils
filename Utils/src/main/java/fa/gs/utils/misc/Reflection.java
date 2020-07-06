@@ -216,7 +216,7 @@ public class Reflection {
             Object instance = createInstanceSafe(klass);
             return instance;
         } catch (Throwable thr) {
-            Errors.dump(System.err, thr, "Ocurrio un error creando instancia de '%s'.", klass.getCanonicalName());
+            Errors.dump(System.err, thr, "Ocurrió un error creando instancia de '%s'.", klass.getCanonicalName());
             return null;
         }
     }

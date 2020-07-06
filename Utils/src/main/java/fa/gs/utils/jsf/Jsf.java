@@ -47,7 +47,7 @@ public class Jsf {
                 BeanManager beanManager0 = resInjection.value();
                 Jsf.beanManager = beanManager0;
             } catch (Throwable thr) {
-                Errors.dump(System.err, thr, "Ocurrio un error obteniendo bean manager.");
+                Errors.dump(System.err, thr, "Ocurrió un error obteniendo bean manager.");
                 Jsf.beanManager = null;
             }
         }
@@ -131,7 +131,7 @@ public class Jsf {
             }
             return Maps.get(params, name, fallback);
         } catch (Throwable thr) {
-            Errors.dump(System.err, thr, "Ocurrio un error obteniendo parametro de peticion: '%s'", name);
+            Errors.dump(System.err, thr, "Ocurrió un error obteniendo parametro de peticion: '%s'", name);
             return fallback;
         }
     }
@@ -195,7 +195,7 @@ public class Jsf {
             context.redirect(context.getRequestContextPath() + outcome);
             return true;
         } catch (Throwable thr) {
-            Errors.dump(System.err, thr, "Ocurrio un error redireccionando outcome: '%s'", outcome);
+            Errors.dump(System.err, thr, "Ocurrió un error redireccionando outcome: '%s'", outcome);
             return false;
         }
     }

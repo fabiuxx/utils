@@ -130,7 +130,7 @@ public abstract class ApplicationWorkerExecutor implements Serializable {
                 if (result.isFailure()) {
                     getLogger().error()
                             .cause(result.failure().cause())
-                            .message("Ocurrio un error instanciando trabajador")
+                            .message("Ocurrió un error instanciando trabajador")
                             .tag("worker.class", klass.getCanonicalName())
                             .log();
                 }

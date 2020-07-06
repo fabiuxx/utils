@@ -80,7 +80,7 @@ public class Jpa {
             } catch (Throwable thr) {
                 result = Results.ko()
                         .cause(thr)
-                        .message("Ocurrio un error ejecutando lote de sentencias.")
+                        .message("Ocurrió un error ejecutando lote de sentencias.")
                         .build();
             }
 
