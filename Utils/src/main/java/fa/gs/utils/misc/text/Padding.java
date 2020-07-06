@@ -12,6 +12,20 @@ package fa.gs.utils.misc.text;
 public class Padding {
 
     /**
+     * Genera una cadena de tamanho {@code len}, compuesta netamente de
+     * caracteres {@code c}.
+     *
+     * @param c Caracter de relleno.
+     * @param len Cantidad de caracteres a agregar.
+     * @return Cadena generada.
+     */
+    public static String repeat(Character c, int len) {
+        StringBuilder builder = new StringBuilder();
+        alloc(builder, c, len);
+        return builder.toString();
+    }
+
+    /**
      * Agrega una cadena de tamanho {@code len}, compuesta netamente de
      * caracteres {@code c}.
      *

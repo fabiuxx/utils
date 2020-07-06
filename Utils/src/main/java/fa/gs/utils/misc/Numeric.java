@@ -6,12 +6,12 @@
 package fa.gs.utils.misc;
 
 import fa.gs.utils.misc.errors.Errors;
+import fa.gs.utils.misc.text.Locales;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 
 /**
  *
@@ -21,17 +21,12 @@ public class Numeric {
 
     //<editor-fold defaultstate="collapsed" desc="Constantes">
     /**
-     * Configuracion regional.
-     */
-    private static final Locale locale = new Locale("es", "ES");
-
-    /**
      * Patron para formateo de valores numericos a cadenas de texto.
      * Correspondiente con los valores establecidos para
      * {@link Numeric#MAX_INTEGER_DIGITS MAX_INTEGER_DIGITS} y
      * {@link Numeric#MAX_FRACTION_DIGITS MAX_FRACTION_DIGITS}.
      */
-    public static final String pattern = "###,###,###,###,###.####################";
+    public static final String DEFAULT_NUMBER_PATTERN = "###,###,###,###,###.####################";
 
     /**
      * Divisor para calcular el monto total sin iva 5%.
@@ -383,7 +378,16 @@ public class Numeric {
      * @return Formato para valores numericos.
      */
     public static DecimalFormat getDecimalFormat() {
-        DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(locale);
+        return getDecimalFormat(Numeric.DEFAULT_NUMBER_PATTERN);
+    }
+
+    /**
+     * Obtiene el formato por defecto para valores numericos.
+     *
+     * @return Formato para valores numericos.
+     */
+    public static DecimalFormat getDecimalFormat(String pattern) {
+        DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(Locales.es_ES);
         DecimalFormat numberFormat = new DecimalFormat(pattern, formatSymbols);
         numberFormat.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
         numberFormat.setMaximumIntegerDigits(MAX_INTEGER_DIGITS);

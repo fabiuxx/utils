@@ -5,13 +5,24 @@
  */
 package fa.gs.utils.misc;
 
+import fa.gs.utils.misc.errors.Errors;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
  * @author Sergio D. Riveros Vazquez
  */
 public interface Codificable extends Serializable {
+
+    public static <T extends Codificable> T fromCodigo(String codigo, T[] values) {
+        for (T value : values) {
+            if (Objects.equals(codigo, value.codigo())) {
+                return value;
+            }
+        }
+        throw Errors.illegalArgument();
+    }
 
     String codigo();
 

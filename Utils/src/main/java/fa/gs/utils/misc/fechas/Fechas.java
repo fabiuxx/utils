@@ -6,11 +6,11 @@
 package fa.gs.utils.misc.fechas;
 
 import fa.gs.utils.misc.errors.Errors;
+import fa.gs.utils.misc.text.Locales;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import org.joda.time.DateTime;
@@ -40,11 +40,6 @@ public class Fechas {
         "Diciembre"
     };
 
-    /**
-     * Locale espanhol.
-     */
-    private static final Locale es_Es = new Locale("es", "ES");
-
     public static final Tiempos TIEMPOS = new Tiempos();
 
     public static final Formats FORMATS = new Formats();
@@ -69,7 +64,7 @@ public class Fechas {
      */
     public static Date parse(String text, String format) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat(format, es_Es);
+            SimpleDateFormat sdf = new SimpleDateFormat(format, Locales.es_ES);
             return sdf.parse(text);
         } catch (Throwable thr) {
             return null;
@@ -347,7 +342,7 @@ public class Fechas {
         if (date == null) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(format, es_Es);
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locales.es_ES);
         String txt = sdf.format(date).toUpperCase();
         return txt;
     }
@@ -365,7 +360,7 @@ public class Fechas {
         if (date == null) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(format, es_Es);
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locales.es_ES);
         sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
         String txt = sdf.format(date).toUpperCase();
         return txt;
