@@ -134,4 +134,22 @@ public class Lists {
         }
     }
 
+    /**
+     * Convierte una coleccion de colecciones en una sola.
+     *
+     * @param <T> Parametro de tipo.
+     * @param collections Coleccion de colecciones.
+     * @return Coleccion que contiene a todos los elementos individuales de las
+     * colecciones.
+     */
+    public static <T> Collection<T> flatten(Iterable<Collection<T>> collections) {
+        Collection<T> collection = Lists.empty();
+        for (Collection<T> collection0 : collections) {
+            if (!Assertions.isNullOrEmpty(collection0)) {
+                collection.addAll(collection0);
+            }
+        }
+        return collection;
+    }
+
 }

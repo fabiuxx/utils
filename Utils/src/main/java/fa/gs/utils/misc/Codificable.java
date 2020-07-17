@@ -24,6 +24,10 @@ public interface Codificable extends Serializable {
         throw Errors.illegalArgument();
     }
 
+    public static <T extends Enum<T> & Codificable> T fromCodigo(String codigo, Class<T> klass) {
+        return fromCodigo(codigo, klass.getEnumConstants());
+    }
+
     String codigo();
 
     String descripcion();

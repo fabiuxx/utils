@@ -25,6 +25,12 @@ public class CollectionGroupMap<K, V> {
         this.map = Maps.empty();
     }
 
+    public final void initialize(K[] keys) {
+        for (K key : keys) {
+            map.put(key, Sets.empty());
+        }
+    }
+
     public void put(K key, V value) {
         if (key == null) {
             return;

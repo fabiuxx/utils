@@ -5,18 +5,24 @@
  */
 package fa.gs.utils.misc.json;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import fa.gs.utils.collections.Lists;
+import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.Codificable;
 import fa.gs.utils.misc.Type;
+import fa.gs.utils.misc.Unit;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.fechas.Fechas;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Collection;
+import java.util.Date;
 
 /**
- * @deprecated Utilizar funcionalidades de paquete
- * {@link fa.gs.utils.misc.json.serialization}.
  * @author Fabio A. González Sosa
  */
-@Deprecated
 public class JsonResolver {
 
     /**
@@ -181,6 +187,142 @@ public class JsonResolver {
         } catch (Throwable thr) {
             throw new Exception(String.format("No se puede reducir el valor del elemento JSON (%s) al tipo '%s'", json.getClass().getSimpleName(), type.toString()), thr);
         }
+    }
+
+    public static JsonArray jArray(JsonObject json, String path) {
+        return jArray(json, path, null);
+    }
+
+    public static JsonArray jArray(JsonObject json, String path, JsonArray fallback) {
+        Object value = JsonResolver.opt(json, path, Type.JARRAY, fallback);
+        return JsonArray.class.cast(value);
+    }
+
+    public static Collection<JsonArray> jArrayCollection(JsonObject json, String path) {
+        return collection(json, path, Type.JARRAY, JsonArray.class);
+    }
+
+    public static JsonObject jObject(JsonObject json, String path) {
+        return jObject(json, path, null);
+    }
+
+    public static JsonObject jObject(JsonObject json, String path, JsonObject fallback) {
+        Object value = JsonResolver.opt(json, path, Type.JOBJECT, fallback);
+        return JsonObject.class.cast(value);
+    }
+
+    public static Collection<JsonObject> jObjectCollection(JsonObject json, String path) {
+        return collection(json, path, Type.JOBJECT, JsonObject.class);
+    }
+
+    public static Boolean bool(JsonObject json, String path) {
+        return bool(json, path, null);
+    }
+
+    public static Boolean bool(JsonObject json, String path, Boolean fallback) {
+        Object value = JsonResolver.opt(json, path, Type.BOOLEAN, fallback);
+        return Boolean.class.cast(value);
+    }
+
+    public static Collection<Boolean> boolCollection(JsonObject json, String path) {
+        return collection(json, path, Type.BOOLEAN, Boolean.class);
+    }
+
+    public static String string(JsonObject json, String path) {
+        return string(json, path, null);
+    }
+
+    public static String string(JsonObject json, String path, String fallback) {
+        Object value = JsonResolver.opt(json, path, Type.STRING, fallback);
+        return String.class.cast(value);
+    }
+
+    public static Collection<String> stringCollection(JsonObject json, String path) {
+        return collection(json, path, Type.STRING, String.class);
+    }
+
+    public static Integer integer(JsonObject json, String path) {
+        return integer(json, path, null);
+    }
+
+    public static Integer integer(JsonObject json, String path, String fallback) {
+        Object value = JsonResolver.opt(json, path, Type.INTEGER, fallback);
+        return Integer.class.cast(value);
+    }
+
+    public static Collection<Integer> integerCollection(JsonObject json, String path) {
+        return collection(json, path, Type.INTEGER, Integer.class);
+    }
+
+    public static BigInteger biginteger(JsonObject json, String path) {
+        return biginteger(json, path, null);
+    }
+
+    public static BigInteger biginteger(JsonObject json, String path, String fallback) {
+        Object value = JsonResolver.opt(json, path, Type.BIGINTEGER, fallback);
+        return BigInteger.class.cast(value);
+    }
+
+    public static Collection<BigInteger> bigintegerCollection(JsonObject json, String path) {
+        return collection(json, path, Type.BIGINTEGER, BigInteger.class);
+    }
+
+    public static BigDecimal bigdecimal(JsonObject json, String path) {
+        return bigdecimal(json, path, null);
+    }
+
+    public static BigDecimal bigdecimal(JsonObject json, String path, String fallback) {
+        Object value = JsonResolver.opt(json, path, Type.BIGDECIMAL, fallback);
+        return BigDecimal.class.cast(value);
+    }
+
+    public static Collection<BigDecimal> bigdecimalCollection(JsonObject json, String path) {
+        return collection(json, path, Type.BIGDECIMAL, BigDecimal.class);
+    }
+
+    public static Date date(JsonObject json, String path) {
+        return date(json, path, null);
+    }
+
+    public static Date date(JsonObject json, String path, String fallback) {
+        Object value = JsonResolver.opt(json, path, Type.EPOCH, fallback);
+        return Date.class.cast(value);
+    }
+
+    public static Collection<Date> dateCollection(JsonObject json, String path) {
+        return collection(json, path, Type.EPOCH, Date.class);
+    }
+
+    private static <T> Collection<T> collection(JsonObject json, String path, Type type, Class<T> klass) {
+        Collection<T> values = Lists.empty();
+        JsonArray array = jArray(json, path);
+        for (JsonElement element : array) {
+            Object value0 = Unit.execute(() -> reduceValue(element, type));
+            T value = klass.cast(value0);
+            values.add(value);
+        }
+        return values;
+    }
+
+    public static <T extends Enum<T> & Codificable> T codificable(JsonObject json, String path, Class<T> klass) {
+        /**
+         * En tiempo de ejecucion, {@code klass.getEnumConstants()} no coincide
+         * con el tipo requerido para el metodo {@code codificable} que espera
+         * un array de datos. Los tipos no coinciden, principalmente en entornos
+         * android.
+         */
+        String codigo = JsonResolver.string(json, path);
+        for (T value : klass.getEnumConstants()) {
+            if (Assertions.equals(value.codigo(), codigo)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    public static <T extends Codificable> T codificable(JsonObject json, String path, T[] values) {
+        String codigo = JsonResolver.string(json, path);
+        return Codificable.fromCodigo(codigo, values);
     }
 
 }

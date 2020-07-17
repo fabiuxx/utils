@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.database.dto.converters.impl;
 
-import fa.gs.utils.misc.Numeric;
+import fa.gs.utils.misc.numeric.Numeric;
 import java.math.BigDecimal;
 
 /**
