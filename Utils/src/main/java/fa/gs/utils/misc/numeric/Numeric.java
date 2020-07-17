@@ -3,15 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.misc;
+package fa.gs.utils.misc.numeric;
 
+import fa.gs.utils.collections.Lists;
+import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.errors.Errors;
+import fa.gs.utils.misc.text.Joiner;
 import fa.gs.utils.misc.text.Locales;
+import fa.gs.utils.misc.text.Padding;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Collection;
 
 /**
  *
@@ -26,17 +31,17 @@ public class Numeric {
      * {@link Numeric#MAX_INTEGER_DIGITS MAX_INTEGER_DIGITS} y
      * {@link Numeric#MAX_FRACTION_DIGITS MAX_FRACTION_DIGITS}.
      */
-    public static final String DEFAULT_NUMBER_PATTERN = "###,###,###,###,###.####################";
+    public static final String DEFAULT_NUMBER_PATTERN = "###,###,###,###,###,###,###,###,###,###.######";
 
     /**
-     * Divisor para calcular el monto total sin iva 5%.
+     * Cantidad maxima de digitos en la parte entera de un numero real.
      */
-    public static final String IVA_05_DIVISOR = "1.05";
+    public static final int DEFAULT_MAX_INTEGER_DIGITS = 30;
 
     /**
-     * Divisor para calcular el monto total sin iva 10%.
+     * Cantidad maxima de digitos en la parte decimal de un numero real.
      */
-    public static final String IVA_10_DIVISOR = "1.10";
+    public static final int DEFAULT_MAX_FRACTION_DIGITS = 6;
 
     /**
      * Constante que representa al valor 0.
@@ -71,17 +76,7 @@ public class Numeric {
     /**
      * Tipo de redondeo por defecto.
      */
-    public static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_EVEN;
-
-    /**
-     * Cantidad maxima de digitos en la parte entera de un numero real.
-     */
-    public static final int MAX_INTEGER_DIGITS = 15;
-
-    /**
-     * Cantidad maxima de digitos en la parte decimal de un numero real.
-     */
-    public static final int MAX_FRACTION_DIGITS = 20;
+    public static final RoundingMode DEFAULT_ROUNDING_MODE = Redondeo.MITAD_AL_PAR;
     //</editor-fold>
 
     /**
@@ -318,6 +313,22 @@ public class Numeric {
     }
 
     /**
+     * Verifica si un valor numerico es multiplo de otro.
+     *
+     * @param a Valor numerico comparado.
+     * @param b Valor numerico de multiplo.
+     * @return {@code true} si el valor {@code a} es multiplo del valor
+     * {@code b}.
+     */
+    public static boolean esMultiplo(BigDecimal a, BigDecimal b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        BigDecimal mod = a.remainder(b);
+        return Numeric.igual(mod, Numeric.CERO);
+    }
+
+    /**
      * Toma un valor de tipo {@code String} y retorna su equivalente en el tipo
      * de dato {@code BigDecimal}.
      *
@@ -373,69 +384,102 @@ public class Numeric {
     }
 
     /**
+     * Aplica un formateo por defecto a un valor arbitrario.
+     *
+     * @param value Valor.
+     * @return Representacion de texto.
+     */
+    public static String format(BigDecimal value) {
+        return Currency.formatCurrency(value);
+    }
+
+    /**
      * Obtiene el formato por defecto para valores numericos.
      *
      * @return Formato para valores numericos.
      */
     public static DecimalFormat getDecimalFormat() {
-        return getDecimalFormat(Numeric.DEFAULT_NUMBER_PATTERN);
-    }
-
-    /**
-     * Obtiene el formato por defecto para valores numericos.
-     *
-     * @return Formato para valores numericos.
-     */
-    public static DecimalFormat getDecimalFormat(String pattern) {
         DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(Locales.es_ES);
-        DecimalFormat numberFormat = new DecimalFormat(pattern, formatSymbols);
-        numberFormat.setMaximumFractionDigits(MAX_FRACTION_DIGITS);
-        numberFormat.setMaximumIntegerDigits(MAX_INTEGER_DIGITS);
+        DecimalFormat numberFormat = new DecimalFormat(DEFAULT_NUMBER_PATTERN, formatSymbols);
+        numberFormat.setMaximumFractionDigits(DEFAULT_MAX_FRACTION_DIGITS);
+        numberFormat.setMaximumIntegerDigits(DEFAULT_MAX_INTEGER_DIGITS);
         numberFormat.setRoundingMode(DEFAULT_ROUNDING_MODE);
         return numberFormat;
     }
 
     /**
-     * Toma un valor numerico y retorna una representacion en cadena del mismo
-     * como valor monetario.
+     * Obtiene el formato para valores numericos con una cantidad de digitos y
+     * decimales dado.
      *
-     * @param value Valor numerico que representa un monto.
-     * @return Cadena formateada.
+     * @param digitos Cantidad de digitos enteros.
+     * @param decimales Cantidad de digitos decimales.
+     * @return Formato para valores numericos.
      */
-    public static String formatCurrency(BigDecimal value) {
-        return formatCurrency(value, null);
+    public static DecimalFormat getDecimalFormat(int digitos, int decimales) {
+        return getDecimalFormat(digitos, decimales, DEFAULT_ROUNDING_MODE);
     }
 
     /**
-     * Toma un valor numerico y retorna una representacion en cadena del mismo
-     * como valor monetario.
+     * Obtiene el formato para valores numericos con una cantidad de digitos y
+     * decimales dado.
      *
-     * @param value Valor numerico que representa un monto.
-     * @param moneda Definicion de tipo de moneda.
-     * @return Cadena formateada.
+     * @param digitos Cantidad de digitos enteros.
+     * @param decimales Cantidad de digitos decimales.
+     * @param redondeo Tipo de redondeo.
+     * @return Formato para valores numericos.
      */
-    public static String formatCurrency(BigDecimal value, String moneda) {
-        String txt = getDecimalFormat().format(value);
-        if (!Assertions.stringNullOrEmpty(moneda)) {
-            txt = String.format("%s %s", moneda, txt);
+    public static DecimalFormat getDecimalFormat(int digitos, int decimales, RoundingMode redondeo) {
+        String pattern = buildFormatString(digitos, decimales);
+
+        DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(Locales.es_ES);
+        DecimalFormat numberFormat = new DecimalFormat(pattern, formatSymbols);
+        numberFormat.setMaximumIntegerDigits(digitos);
+        numberFormat.setMaximumFractionDigits(decimales);
+        numberFormat.setRoundingMode(redondeo);
+        return numberFormat;
+    }
+
+    public static String buildFormatString(int digitos, int decimales) {
+        String digitosPart = buildParteDigitosFormatString(digitos);
+        String decimalesPart = buildParteDecimalesFormatString(decimales);
+        if (Assertions.stringNullOrEmpty(digitosPart) == true && Assertions.stringNullOrEmpty(decimalesPart) == true) {
+            return "";
+        } else if (Assertions.stringNullOrEmpty(digitosPart) == true && Assertions.stringNullOrEmpty(decimalesPart) == false) {
+            return "." + decimalesPart;
+        } else if (Assertions.stringNullOrEmpty(digitosPart) == false && Assertions.stringNullOrEmpty(decimalesPart) == true) {
+            return digitosPart;
+        } else if (Assertions.stringNullOrEmpty(digitosPart) == false && Assertions.stringNullOrEmpty(decimalesPart) == false) {
+            return digitosPart + "." + decimalesPart;
+        } else {
+            throw Errors.illegalState();
         }
-        return txt.trim();
     }
 
-    /**
-     * Toma una representacion en cadena de un valor monetario y retorna el
-     * valor numerico correspondiente.
-     *
-     * @param value Cadena formateada.
-     * @return Valor numerico que representa un monto.
-     */
-    public static BigDecimal parseCurrency(String value) {
-        try {
-            DecimalFormat numberFormat = getDecimalFormat();
-            numberFormat.setParseBigDecimal(true);
-            return (BigDecimal) numberFormat.parse(value);
-        } catch (Exception e) {
-            return null;
+    private static String buildParteDigitosFormatString(int digitos) {
+        if (digitos > 0) {
+            Collection<String> parts = Lists.empty();
+            int rem = digitos % 3;
+            if (rem > 0) {
+                String part0 = Padding.repeat('#', rem);
+                parts.add(part0);
+            }
+            int nbl = (digitos - rem) / 3;
+            while (nbl > 0) {
+                String part1 = Padding.repeat('#', 3);
+                parts.add(part1);
+                nbl--;
+            }
+            return Joiner.of(parts).separator(",").join();
+        } else {
+            return "";
+        }
+    }
+
+    private static String buildParteDecimalesFormatString(int decimales) {
+        if (decimales > 0) {
+            return Padding.repeat('#', decimales);
+        } else {
+            return "";
         }
     }
 
@@ -509,14 +553,14 @@ public class Numeric {
         for (int i = 1; i < values.length; i++) {
             BigDecimal value = values[i];
             if (value != null) {
-                div = div.divide(value, MAX_FRACTION_DIGITS, DEFAULT_ROUNDING_MODE);
+                div = div.divide(value, DEFAULT_MAX_FRACTION_DIGITS, DEFAULT_ROUNDING_MODE);
             }
         }
         return div;
     }
 
     /**
-     * Redondea un valor numerico hasta dejaron sin parte decimal.
+     * Redondea un valor numerico hasta dejarlo sin parte decimal.
      *
      * @param value Valor a redondear.
      * @return Valor redondeado.
@@ -534,7 +578,117 @@ public class Numeric {
      * @return Valor redondeado.
      */
     public static BigDecimal round(BigDecimal value, int scale) {
-        BigDecimal rounded = value.setScale(scale, DEFAULT_ROUNDING_MODE);
+        return Numeric.round(value, scale, DEFAULT_ROUNDING_MODE);
+    }
+
+    /**
+     * Redondea un valor numerico hasta una cierta cantidad de digitos
+     * decimales.
+     *
+     * @param value Valor a redondear.
+     * @param scale Cantidad de digitos decimales a mantener.
+     * @param redondeo Tipo de redondeo a aplicar.
+     * @return Valor redondeado.
+     */
+    public static BigDecimal round(BigDecimal value, int scale, RoundingMode redondeo) {
+        BigDecimal rounded = value.setScale(scale, redondeo);
         return rounded;
     }
+
+    /**
+     * Obtiene el valor que representa el {@code porcentaje} del valor indicado.
+     * Se asume que:
+     * <p>
+     * {@code value -- 100%}
+     * <br/> {@code x -- porcentaje}
+     * </p>
+     * <br/>
+     * Por tanto {@code x = (value * porcentaje) / 100}.
+     *
+     * @param value Valor original que representa el 100%.
+     * @param porcentaje Porcentaje que se desea calcular.
+     * @return Valor.
+     */
+    public static BigDecimal montoDePorcentaje(BigDecimal value, BigDecimal porcentaje) {
+        return montoDePorcentaje(value, porcentaje, DEFAULT_MAX_FRACTION_DIGITS, DEFAULT_ROUNDING_MODE);
+    }
+
+    /**
+     * Obtiene el valor que representa el {@code porcentaje} del valor indicado,
+     * pero con la posibilidad de especificar la cantidad maxima de decimales y
+     * el tipo de redondeo. Util en contextos monetarios.
+     * <p>
+     * Se asume que:
+     * </p>
+     * <p>
+     * {@code value -- 100%}
+     * <br/> {@code x -- porcentaje}
+     * </p>
+     * <br/>
+     * Por tanto {@code x = (value * porcentaje) / 100}.
+     *
+     * @param value Valor original que representa el 100%.
+     * @param porcentaje Porcentaje que se desea calcular.
+     * @param cantidadDecimales Cantidad maxima de decimales para el resultado
+     * final.
+     * @param redondeo Tipo de redondeo.
+     * @return Valor.
+     */
+    public static BigDecimal montoDePorcentaje(BigDecimal value, BigDecimal porcentaje, int cantidadDecimales, RoundingMode redondeo) {
+        BigDecimal y = Numeric.mul(value, porcentaje);
+        BigDecimal x = y.divide(Numeric.CIEN, cantidadDecimales, redondeo);
+        return x;
+    }
+
+    /**
+     * Obtiene el porcentaje que representa la {@code parte} del valor indicado.
+     * <p>
+     * Se asume que:
+     * </p>
+     * <p>
+     * {@code value -- 100%}
+     * <br/> {@code parte -- x}
+     * </p>
+     * <br/>
+     * Por tanto {@code x = (parte * 100) / value}.
+     *
+     * @param value Valor original que representa el 100%.
+     * @param parte Parte del valor original.
+     * @return Valor porcentual.
+     */
+    public static BigDecimal porcentajeDeMonto(BigDecimal value, BigDecimal parte) {
+        return porcentajeDeMonto(value, parte, DEFAULT_MAX_FRACTION_DIGITS, DEFAULT_ROUNDING_MODE);
+    }
+
+    /**
+     * Obtiene el porcentaje que representa la {@code parte} del valor indicado,
+     * pero con la posibilidad de especificar la cantidad maxima de decimales y
+     * el tipo de redondeo.Util en contextos monetarios.<p>
+     * Se asume que:
+     * </p>
+     * <p>
+     * {@code value -- 100%}
+     * <br/> {@code parte -- x}
+     * </p>
+     * <br/>
+     * Por tanto {@code x = (parte * 100) / value}.
+     *
+     * @param value Valor original que representa el 100%.
+     * @param parte Parte del valor original.
+     * @param cantidadDecimales Cantidad maxima de decimales para el resultado
+     * final.
+     * @param redondeo Tipo de redondeo.
+     * @return Valor porcentual.
+     */
+    public static BigDecimal porcentajeDeMonto(BigDecimal value, BigDecimal parte, int cantidadDecimales, RoundingMode redondeo) {
+        // Control de seguridad para evitar division por cero.
+        if (Numeric.igual(value, Numeric.CERO)) {
+            return Numeric.CERO;
+        }
+
+        BigDecimal y = Numeric.mul(parte, Numeric.CIEN);
+        BigDecimal x = y.divide(value, cantidadDecimales, redondeo);
+        return x;
+    }
+
 }
