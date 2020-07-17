@@ -1,136 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <groupId>fa.gs.utils</groupId>
     <artifactId>utils</artifactId>
     <name>utils</name>
     <version>0.0.2</version>
     <packaging>jar</packaging>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <artifactory.url.base>http://181.40.81.34:9420/artifactory</artifactory.url.base>
     </properties>
-    
+
     <repositories>
         <repository>
             <id>librerias-java</id>
             <name>librerias-java</name>
             <url>${artifactory.url.base}/librerias-java</url>
         </repository>
-    </repositories>
-  
-    <distributionManagement>
         <repository>
-            <id>librerias-java</id>
-            <name>librerias-java</name>
-            <url>${artifactory.url.base}/librerias-java</url>
+            <id>librerias-android</id>
+            <name>librerias-android</name>
+            <url>${artifactory.url.base}/librerias-android</url>
         </repository>
-    </distributionManagement>
-    
-    <dependencies>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
-        </dependency>
+    </repositories>
 
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>5.1.16.Final</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.1.16.Final</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jdeferred</groupId>
-            <artifactId>jdeferred-core</artifactId>
-            <version>1.2.5</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.5</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.squareup</groupId>
-            <artifactId>javapoet</artifactId>
-            <version>1.9.0</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.10.1</version>
-        </dependency>
-        
-        <dependency> 
-            <groupId>com.lmax</groupId>
-            <artifactId>disruptor</artifactId>
-            <version>3.4.2</version>
-        </dependency>
-    
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.11.1</version>
-        </dependency> 
-        
-        <dependency>
-            <groupId>com.jwt4j</groupId>
-            <artifactId>jwt4j</artifactId>
-            <version>0.1.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.mindrot</groupId>
-            <artifactId>jbcrypt</artifactId>
-            <version>0.4</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.61</version>
-        </dependency>
-        
-        <dependency>
-            <groupId> org.projectlombok </groupId>
-            <artifactId> lombok </artifactId>
-            <version>1.18.12</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>5.2.0.RELEASE</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.omnifaces</groupId>
-            <artifactId>omnifaces</artifactId>
-            <version>2.7</version>
-        </dependency>
-    </dependencies>
-    
     <build>
         <plugins>
             <plugin>
@@ -140,7 +37,7 @@
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
-            </plugin>            
+            </plugin>
             <plugin>
                 <groupId>org.jfrog.buildinfo</groupId>
                 <artifactId>artifactory-maven-plugin</artifactId>
@@ -162,7 +59,7 @@
                                 <contextUrl>${artifactory.url.base}</contextUrl>
                                 <username>fgonzalez</username>
                                 <password>f_gonzalez</password>
-                                <repoKey>librerias-java</repoKey>
+                                <repoKey>${artifactory.repo.target}</repoKey>
                             </publisher>
                         </configuration>
                     </execution>
@@ -170,4 +67,302 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+
+        <!--
+        ** PERFIL POR DEFECTO PARA ENTORNOS DESKTOP
+        -->
+        <profile>
+            <id>java-desktop</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            
+            <!-- PARAMETRO QUE INDICA EL REPOSITORIO DONDE SE PUBLICA EL JAR -->
+            <properties>
+                <artifactory.repo.target>librerias-java</artifactory.repo.target>
+            </properties>
+    
+            <!-- CONFIGURACION DE REPOSITORIO DE DISTRIBUCION: librerias-java -->
+            <distributionManagement>
+                <repository>
+                    <id>librerias-java</id>
+                    <name>librerias-java</name>
+                    <url>${artifactory.url.base}/${artifactory.repo.target}</url>
+                </repository>
+            </distributionManagement>
+    
+            <!--
+             ** DEPENDENCIAS: TODAS LAS DEPENDENCIAS LISTADAS EN ESTE PERFIL CORRESPONDEN
+             ** A DEPDENDENCIAS EXPLICITAS NECESARIAS PARA ENTORNOS DESKTOP. PARA OTROS
+             ** PERFILES SE DEBE UTILIZA ESTA MISMA LISTA, PERO DESACTIVANDO DEPENDENCIAS
+             ** NO REQUERIDAS MEDIANTE EL SCOPE "provided".
+            -->
+            <dependencies>
+                <dependency>
+                    <groupId>javax</groupId>
+                    <artifactId>javaee-api</artifactId>
+                    <version>7.0</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>javax.ws.rs-api</artifactId>
+                    <version>2.1.1</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                    <version>5.1.16.Final</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                    <version>5.1.16.Final</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.jdeferred</groupId>
+                    <artifactId>jdeferred-core</artifactId>
+                    <version>1.2.6</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                    <version>2.8.6</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
+                    <version>2.10.6</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.lmax</groupId>
+                    <artifactId>disruptor</artifactId>
+                    <version>3.4.2</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-core</artifactId>
+                    <version>2.13.3</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.jwt4j</groupId>
+                    <artifactId>jwt4j</artifactId>
+                    <version>0.1.1</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.mindrot</groupId>
+                    <artifactId>jbcrypt</artifactId>
+                    <version>0.4</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                    <version>1.65.01</version>
+                </dependency>
+
+                <dependency>
+                    <groupId> org.projectlombok </groupId>
+                    <artifactId>lombok</artifactId>
+                    <version>1.18.12</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.springframework.security</groupId>
+                    <artifactId>spring-security-web</artifactId>
+                    <version>5.2.0.RELEASE</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.omnifaces</groupId>
+                    <artifactId>omnifaces</artifactId>
+                    <version>2.7</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!--
+         ** PERFIL PARA ENTORNOS ANDROID: SE REUTILIZA CODIGO COMPATIBLE PARA
+         ** MANTENER UNA MISMA BASE DE CODIGO, PERO SE ELIMINAN FUNCIONALIDADES
+         ** Y DEPENDENCIAS NO COMPATIBLES O NO REQUERIDAS.
+        -->
+        <profile>
+            <id>java-android</id>
+            
+            <!-- PARAMETRO QUE INDICA EL REPOSITORIO DONDE SE PUBLICA EL JAR -->
+            <properties>
+                <artifactory.repo.target>librerias-android</artifactory.repo.target>
+            </properties>
+            
+            <!-- CONFIGURACION DE REPOSITORIO DE DISTRIBUCION: librerias-android -->
+            <distributionManagement>
+                <repository>
+                    <id>librerias-android</id>
+                    <name>librerias-android</name>
+                    <url>${artifactory.url.base}/${artifactory.repo.target}</url>
+                </repository>
+            </distributionManagement>
+    
+            <!--
+             ** LISTA DE DEPENDENCIAS COPIADA DE PERFIL PRINCIPAL. LAS DEPENDENCIAS
+             ** NO UTILIZADAS SE MARCAN CON EL SCOPE "provided".
+            -->
+            <dependencies>
+                <dependency>
+                    <groupId>javax</groupId>
+                    <artifactId>javaee-api</artifactId>
+                    <version>7.0</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>javax.ws.rs-api</artifactId>
+                    <version>2.1.1</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                    <version>5.1.16.Final</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                    <version>5.1.16.Final</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.jdeferred</groupId>
+                    <artifactId>jdeferred-core</artifactId>
+                    <version>1.2.6</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                    <version>2.8.6</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
+                    <version>2.10.6</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.lmax</groupId>
+                    <artifactId>disruptor</artifactId>
+                    <version>3.4.2</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-core</artifactId>
+                    <version>2.13.3</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.jwt4j</groupId>
+                    <artifactId>jwt4j</artifactId>
+                    <version>0.1.1</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.mindrot</groupId>
+                    <artifactId>jbcrypt</artifactId>
+                    <version>0.4</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                    <version>1.65.01</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId> org.projectlombok </groupId>
+                    <artifactId>lombok</artifactId>
+                    <version>1.18.12</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.springframework.security</groupId>
+                    <artifactId>spring-security-web</artifactId>
+                    <version>5.2.0.RELEASE</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.omnifaces</groupId>
+                    <artifactId>omnifaces</artifactId>
+                    <version>2.7</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+    
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-install-plugin</artifactId>
+                        <version>3.0.0-M1</version>
+                        <configuration>
+                            <!-- DESHABILITA LA INSTALACION DE ESTE ARTIFACT EN EL REPOSITORIO LOCAL (PERJUDICA EN AMBIENTES DESKTOP) -->
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <executions>
+                            <execution>
+                                <id>default-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- SE EXCLUYEN PAQUETES CON FUNCIONALIDADES NO UTILIZADAS O NO COMPATIBLES CON ANDROID -->
+                                    <excludes>
+                                        <exclude>fa/gs/utils/authentication/**</exclude>
+                                        <exclude>fa/gs/utils/crypto/**</exclude>
+                                        <exclude>fa/gs/utils/database/**</exclude>
+                                        <exclude>fa/gs/utils/injection/**</exclude>
+                                        <exclude>fa/gs/utils/jsf/**</exclude>
+                                        <exclude>fa/gs/utils/logging/**</exclude>
+                                        <exclude>fa/gs/utils/rest/**</exclude>
+                                        <exclude>fa/gs/utils/workers/**</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

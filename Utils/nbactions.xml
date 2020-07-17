@@ -2,12 +2,22 @@
 <actions>
     <action>
         <actionName>CUSTOM-Publish</actionName>
-        <displayName>Publicar en Artifactory</displayName>
+        <displayName>Publicar en Artifactory (java desktop)</displayName>
         <goals>
             <goal>deploy</goal>
         </goals>
         <activatedProfiles>
-            <activatedProfile>release-profile</activatedProfile>
+            <activatedProfile>java-desktop</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-Publish</actionName>
+        <displayName>Publicar en Artifactory (java android)</displayName>
+        <goals>
+            <goal>deploy</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>java-android</activatedProfile>
         </activatedProfiles>
     </action>
 </actions>
