@@ -15,7 +15,6 @@ import fa.gs.utils.result.utils.Value;
  */
 public class BaseResult<S, F> implements Result<S, F> {
 
-    //<editor-fold defaultstate="collapsed" desc="Atributos">
     /**
      * Valor de exito que se obtiene al ejecutar de manera exitosa alguna
      * operacion.
@@ -27,7 +26,6 @@ public class BaseResult<S, F> implements Result<S, F> {
      * operacion.
      */
     protected Value<F> valueFailure;
-    //</editor-fold>
 
     /**
      * Constructor.

@@ -6,8 +6,7 @@
 package fa.gs.utils.result;
 
 import fa.gs.utils.result.utils.Value;
-import org.jdeferred.DoneCallback;
-import org.jdeferred.FailCallback;
+import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 
 /**
@@ -18,13 +17,11 @@ import org.jdeferred.impl.DeferredObject;
  */
 public class BaseDeferredResult<S, F> extends BaseResult<S, F> implements DeferredResult<S, F> {
 
-    //<editor-fold defaultstate="collapsed" desc="Atributos">
     /**
      * Objeto diferido que se utiliza para las notificaciones concretas de
      * resolucion de resultados.
      */
     private final DeferredObject<S, F, Void> deferred;
-    //</1editor-fold>
 
     /**
      * Constructor.
@@ -37,23 +34,22 @@ public class BaseDeferredResult<S, F> extends BaseResult<S, F> implements Deferr
     @Override
     public final void onSuccess(final DeferredResult.OnSuccessCallback<S> callback) {
         if (callback != null) {
-            deferred.done(new DoneCallback<S>() {
-                @Override
-                public void onDone(S value) {
-                    callback.onSuccess(value);
-                }
-            });
+            deferred.done(callback::onSuccess);
         }
     }
 
     @Override
     public final void onFailure(final DeferredResult.OnFailureCallback<F> callback) {
         if (callback != null) {
-            deferred.fail(new FailCallback<F>() {
-                @Override
-                public void onFail(F value) {
-                    callback.onFailure(value);
-                }
+            deferred.fail(callback::onFailure);
+        }
+    }
+
+    @Override
+    public void onFinally(final DeferredResult.OnFinallyCallback callback) {
+        if (callback != null) {
+            deferred.always((Promise.State state, S success, F failure) -> {
+                callback.onFinally(success, failure);
             });
         }
     }

@@ -6,6 +6,7 @@
 package fa.gs.utils.result.simple;
 
 import fa.gs.utils.misc.errors.Errno;
+import fa.gs.utils.result.BaseResult;
 import fa.gs.utils.result.utils.Failure;
 import fa.gs.utils.result.utils.Failure_Builder_Methods;
 import fa.gs.utils.result.utils.Value;
@@ -26,6 +27,22 @@ public class Results {
      */
     public static <S> DeferredResult<S> deferred() {
         return new SimpleDeferredResult<>();
+    }
+
+    /**
+     * Obtiene una instancia de resultado, con valores arbitrarios de exito y
+     * fallo respectivamente.
+     *
+     * @param <S> Parametro de tipo para valores de exito.
+     * @param <F> Parametro de tipo para valores de fallo.
+     * @param successValue Valor de exito.
+     * @param failureValue Valor de fallo.
+     * @return
+     */
+    public static <S, F> BaseResult<S, F> simple(S successValue, F failureValue) {
+        Value<S> s = Value.builder().value(successValue).build();
+        Value<F> f = Value.builder().value(failureValue).build();
+        return new BaseResult<>(s, f);
     }
 
     /**

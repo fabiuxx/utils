@@ -50,6 +50,14 @@ public interface DeferredResult<S, F> extends Result<S, F> {
     public void onFailure(DeferredResult.OnFailureCallback<F> callback);
 
     /**
+     * Establece el callback a invocar luego de finalizar la operacion diferida,
+     * indistintamente si la misma fue resulta como exitosa o fallida.
+     *
+     * @param callback Callback.
+     */
+    public void onFinally(DeferredResult.OnFinallyCallback callback);
+
+    /**
      * Callback simple.
      *
      * @param <S> Parametro de tipo para resultados de exito.
@@ -80,6 +88,21 @@ public interface DeferredResult<S, F> extends Result<S, F> {
          * @param result Valor de fallo resuelto.
          */
         void onFailure(final F result);
+
+    }
+
+    /**
+     * Callback simple.
+     */
+    interface OnFinallyCallback<S, F> {
+
+        /**
+         * Accion a realizar cuando finaliza la operacion diferida.
+         *
+         * @param s Valor resuelto en caso de exito, si hubiere.
+         * @param f Valor resuelto en caso de fallo, si hubiere.
+         */
+        void onFinally(S s, F f);
 
     }
 }
