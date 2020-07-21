@@ -90,4 +90,5 @@ public class JsonArrayBuilder {
     public JsonArray build() {
         return array;
     }
+
 }

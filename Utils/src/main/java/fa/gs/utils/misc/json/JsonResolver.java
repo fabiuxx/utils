@@ -82,7 +82,13 @@ public class JsonResolver {
      */
     public static <T> T opt(JsonObject json, String path, Type type, T fallback) {
         try {
-            return get(json, path, type);
+            JsonElement resolved = Json.resolvePath(json, path);
+            if (resolved == null) {
+                return fallback;
+            }
+
+            T value = reduceValue(resolved, type, true, fallback);
+            return value;
         } catch (Throwable thr) {
             return fallback;
         }
