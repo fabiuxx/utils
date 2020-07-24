@@ -5,13 +5,13 @@
  */
 package fa.gs.utils.database.utils;
 
-import fa.gs.utils.database.dto.DialectProvider;
 import fa.gs.utils.database.dto.facade.AbstractDtoFacade;
 import fa.gs.utils.database.dto.facade.DtoFacade;
 import fa.gs.utils.database.jpa.EntityManagerProvider;
 import fa.gs.utils.database.jpa.facade.AbstractEntityFacade;
 import fa.gs.utils.database.jpa.facade.EntityFacade;
 import fa.gs.utils.database.query.Dialect;
+import fa.gs.utils.database.query.DialectProvider;
 import fa.gs.utils.database.query.commands.CountQuery;
 import fa.gs.utils.database.query.commands.SelectQuery;
 import fa.gs.utils.result.simple.Result;

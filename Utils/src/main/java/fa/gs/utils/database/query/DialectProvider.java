@@ -3,9 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.database.dto;
-
-import fa.gs.utils.database.query.Dialect;
+package fa.gs.utils.database.query;
 
 /**
  *
