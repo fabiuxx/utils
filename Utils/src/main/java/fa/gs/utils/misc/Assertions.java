@@ -6,8 +6,11 @@
 package fa.gs.utils.misc;
 
 import fa.gs.utils.misc.errors.Errors;
+import fa.gs.utils.misc.text.Strings;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -205,6 +208,43 @@ public class Assertions {
     public static boolean isPositiveDecimal(Number value) {
         try {
             return value.doubleValue() > 0.0;
+        } catch (Throwable thr) {
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si las partes indicadas de una fecha corresponden a una fecha
+     * valida.
+     *
+     * @param anho Valor de anho. Desde 0 en adelante.
+     * @param mes Valor de mes. Entre 1 y 12.
+     * @param dia Valor de dia. Entre 1 y 31.
+     * @return Si la fecha es valida o no.
+     */
+    public static boolean isDate(int anho, int mes, int dia) {
+        String date = Strings.format("%04d/%02d/%02d", anho, mes, dia);
+        return isDate(date, "yyyy/MM/dd");
+    }
+
+    /**
+     * Verifica si una cadena de texto representa una fecha valida, dado un
+     * patron arbitrario.
+     *
+     * @param date Representacion de texto para una fecha.
+     * @param pattern Patron de validacion de fecha.
+     * @return Si la fecha es valida o no.
+     */
+    public static boolean isDate(String date, String pattern) {
+        try {
+            // Verificar si es posible parsear la fecha.
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+            sdf.setLenient(false);
+            Date date0 = sdf.parse(date);
+
+            // Ambas cadenas deben ser iguales.
+            String date2 = sdf.format(date0);
+            return Objects.equals(date, date2);
         } catch (Throwable thr) {
             return false;
         }
