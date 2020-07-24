@@ -331,4 +331,48 @@ public class JsonResolver {
         return Codificable.fromCodigo(codigo, values);
     }
 
+    public static <T> T object(JsonObject json, String path, JsonResolver.Mapper<T> mapper) {
+        JsonElement element = Json.resolvePath(json, path);
+        if (element == null) {
+            return null;
+        } else {
+            return mapper.map(element);
+        }
+    }
+
+    public static <T> Collection<T> objectCollection(JsonObject json, String path, JsonResolver.Mapper<T> mapper) {
+        Collection<T> instances = Lists.empty();
+
+        JsonElement element = Json.resolvePath(json, path);
+        if (element != null && element.isJsonArray()) {
+            JsonArray array = element.getAsJsonArray();
+            for (JsonElement arrayElement : array) {
+                T instance = mapper.map(arrayElement);
+                instances.add(instance);
+            }
+        }
+
+        return instances;
+    }
+
+    /**
+     * Interface generica para conversion simple de elementos JSON a objetos.
+     * Existe principalmente para que se pueda simplificar el codigo en entornos
+     * android mediante funciones lambda.
+     *
+     * @param <T> Parametro de tipo.
+     */
+    @FunctionalInterface
+    public static interface Mapper<T> {
+
+        /**
+         * Convierte una elemento JSON a un objeto Java.
+         *
+         * @param json Elemento JSON.
+         * @return
+         */
+        public T map(JsonElement json);
+
+    }
+
 }
