@@ -9,6 +9,7 @@ import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.collections.Maps;
 import fa.gs.utils.database.dto.annotations.FgConverter;
+import fa.gs.utils.database.dto.annotations.FgDto;
 import fa.gs.utils.database.dto.annotations.FgPostConstruct;
 import fa.gs.utils.database.dto.annotations.FgProjection;
 import fa.gs.utils.database.dto.annotations.FgQueryResultSetAdapter;
@@ -55,10 +56,11 @@ public class DtoMapper<T> implements Serializable {
     /**
      * Inicializador estatico.
      *
+     * @param <T> Parametro de tipo.
      * @param klass Clase que se desea mapear.
      * @return Instancia de esta misma clase.
      */
-    public static DtoMapper prepare(Class klass) {
+    public static <T> DtoMapper<T> prepare(Class<T> klass) {
         DtoMapper mapper = new DtoMapper();
         prepareInstance(mapper, klass);
         return mapper;
@@ -72,7 +74,7 @@ public class DtoMapper<T> implements Serializable {
      */
     private static void prepareInstance(final DtoMapper mapper, Class klass) {
         // Validar definicion.
-        DtoQuery.validate(klass);
+        validate(klass);
 
         // Inicializar datos.
         MappingContext ctx = new MappingContext(klass);
@@ -82,6 +84,14 @@ public class DtoMapper<T> implements Serializable {
         mapper.klass = ctx.klass;
         mapper.mappings = ctx.mappings;
         mapper.queryResultSetAdapter = ctx.queryResultSetAdapter;
+    }
+
+    private static void validate(Class klass) {
+        // Verificar que clase contenga anotacion DTO.
+        FgDto dtoAnnotation = Reflection.getAnnotation(klass, AnnotationTypes.FGDTO);
+        if (dtoAnnotation == null) {
+            throw Errors.illegalArgument("Clase '%s' no es un DTO.", klass.getCanonicalName());
+        }
     }
 
     /**
@@ -96,7 +106,7 @@ public class DtoMapper<T> implements Serializable {
             FgProjection projectionAnnotation = Reflection.getAnnotation(field, AnnotationTypes.FGPROJECTION);
             if (projectionAnnotation != null) {
                 // Mapeo de alias a campo concreto.
-                String alias0 = ctx.resolveAlias(projectionAnnotation);
+                String alias0 = ctx.resolveAlias(field, projectionAnnotation);
                 ctx.mappings.put(alias0, field);
             }
         }
@@ -129,9 +139,13 @@ public class DtoMapper<T> implements Serializable {
     }
 
     public T[] select(String sql, EntityManager em) throws Throwable {
+        final Collection<Map<String, Object>> rows = queryResultSetAdapter.select(sql, em);
+        return map(rows);
+    }
+
+    public T[] map(Collection<Map<String, Object>> rows) throws Throwable {
         Collection<T> instances = Lists.empty();
 
-        final Collection<Map<String, Object>> rows = queryResultSetAdapter.select(sql, em);
         for (Map<String, Object> row : rows) {
             // Crear instancia y aplicar operacion de postconstruccion.
             Object instance = mapInstance(klass, mappings, row);
@@ -239,11 +253,11 @@ public class DtoMapper<T> implements Serializable {
     static class MappingContext {
 
         private Long counter;
-        private final Class klass;
+        private final Class<?> klass;
         private final Map<String, Field> mappings;
         private QueryResultSetAdapter queryResultSetAdapter;
 
-        public MappingContext(Class klass) {
+        public MappingContext(Class<?> klass) {
             this.counter = 0L;
             this.klass = klass;
             this.mappings = Maps.empty();
@@ -253,7 +267,11 @@ public class DtoMapper<T> implements Serializable {
             return counter++;
         }
 
-        public String resolveAlias(FgProjection projectionAnnotation) {
+        public String resolveAlias(Field field, FgProjection projectionAnnotation) {
+            if (Assertions.stringNullOrEmpty(projectionAnnotation.value()) && Assertions.stringNullOrEmpty(projectionAnnotation.as())) {
+                return field.getName();
+            }
+
             if (Assertions.stringNullOrEmpty(projectionAnnotation.as())) {
                 return Strings.format("p%d", nextCount());
             } else {

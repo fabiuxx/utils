@@ -60,21 +60,44 @@ public class DtoQuery implements Serializable {
         return query.asCountQuery();
     }
 
-    static void validate(Class klass) {
+    private static void validate(Class klass) {
         // Verificar que clase contenga anotacion DTO.
         FgDto dtoAnnotation = Reflection.getAnnotation(klass, AnnotationTypes.FGDTO);
-        assertIsDtoAnnotated(dtoAnnotation, klass);
+        if (dtoAnnotation == null) {
+            throw Errors.illegalArgument("Clase '%s' no es un DTO.", klass.getCanonicalName());
+        }
 
         // Verificar que DTO tenga un nombre de tabla.
-        assertDtoAnnotationHasTable(dtoAnnotation, klass);
+        if (Assertions.stringNullOrEmpty(dtoAnnotation.table())) {
+            throw Errors.illegalArgument("Clase '%s' no posee un nombre de tabla.", klass.getCanonicalName());
+        }
 
         /**
          * Si existen clausulas JOIN, verificar que DTO principal posea un
          * alias.
          */
         FgJoin[] joinAnnotations = AnnotationTypes.getAllJoins(klass);
-        if (!Assertions.isNullOrEmpty(joinAnnotations)) {
-            assertDtoAnnotationHasAlias(dtoAnnotation, klass);
+        if (!Assertions.isNullOrEmpty(joinAnnotations) && Assertions.stringNullOrEmpty(dtoAnnotation.as())) {
+            throw Errors.illegalArgument("Clase '%s' no posee un alias.", klass.getCanonicalName());
+        }
+
+        /**
+         * Verificar que existan definiciones de proyeccion.
+         */
+        Collection<Field> declaredFields = Reflection.getAllFields(klass);
+        if (Assertions.isNullOrEmpty(declaredFields)) {
+            throw Errors.illegalArgument("Clase '%s' no posee proyecciones.", klass.getCanonicalName());
+        }
+
+        /**
+         * Si existen clausulas de proyeccion, verificar que las mismas tengan
+         * un "valor" de proyeccion.
+         */
+        for (Field field : declaredFields) {
+            FgProjection projectionAnnotation = Reflection.getAnnotation(field, AnnotationTypes.FGPROJECTION);
+            if (projectionAnnotation != null && Assertions.stringNullOrEmpty(projectionAnnotation.value())) {
+                throw Errors.illegalArgument("El campo '%s' no define ninguna proyeccion especifica.", field.getName());
+            }
         }
     }
 
@@ -86,15 +109,10 @@ public class DtoQuery implements Serializable {
             FgProjection projectionAnnotation = Reflection.getAnnotation(field, AnnotationTypes.FGPROJECTION);
             if (projectionAnnotation != null) {
                 // 1) Resolver proyeccion.
-                Object projection0;
-                if (projectionAnnotation.useRaw()) {
-                    projection0 = projectionAnnotation.value();
-                } else {
-                    projection0 = new Name(projectionAnnotation.value());
-                }
+                Object projection0 = ctx.resolveProjection(field, projectionAnnotation);
 
                 // 2) Resolver alias.
-                String alias0 = ctx.resolveAlias(projectionAnnotation);
+                String alias0 = ctx.resolveAlias(field, projectionAnnotation);
 
                 // 3) Expression de proyeccion.
                 Projection projection = Projections.build(projection0, alias0);
@@ -266,26 +284,6 @@ public class DtoQuery implements Serializable {
         return query;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Controles de validacion">
-    private static void assertIsDtoAnnotated(FgDto annotation, Class klass) {
-        if (annotation == null) {
-            throw Errors.illegalArgument("Clase '%s' no es un DTO.", klass.getCanonicalName());
-        }
-    }
-
-    private static void assertDtoAnnotationHasTable(FgDto annotation, Class klass) {
-        if (Assertions.stringNullOrEmpty(annotation.table())) {
-            throw Errors.illegalArgument("Clase '%s' no posee un nombre de tabla.", klass.getCanonicalName());
-        }
-    }
-
-    private static void assertDtoAnnotationHasAlias(FgDto annotation, Class klass) {
-        if (Assertions.stringNullOrEmpty(annotation.as())) {
-            throw Errors.illegalArgument("Clase '%s' no posee un alias.", klass.getCanonicalName());
-        }
-    }
-    //</editor-fold>
-
     //<editor-fold defaultstate="collapsed" desc="Clases Auxiliares">
     private static class PreparationContext<T> {
 
@@ -308,7 +306,21 @@ public class DtoQuery implements Serializable {
             return counter++;
         }
 
-        public String resolveAlias(FgProjection projectionAnnotation) {
+        public Object resolveProjection(Field field, FgProjection projectionAnnotation) {
+            Object projection0;
+            if (projectionAnnotation.useRaw()) {
+                projection0 = projectionAnnotation.value();
+            } else {
+                projection0 = new Name(projectionAnnotation.value());
+            }
+            return projection0;
+        }
+
+        public String resolveAlias(Field field, FgProjection projectionAnnotation) {
+            if (Assertions.stringNullOrEmpty(projectionAnnotation.value()) && Assertions.stringNullOrEmpty(projectionAnnotation.as())) {
+                return field.getName();
+            }
+
             if (Assertions.stringNullOrEmpty(projectionAnnotation.as())) {
                 return Strings.format("p%d", nextCount());
             } else {

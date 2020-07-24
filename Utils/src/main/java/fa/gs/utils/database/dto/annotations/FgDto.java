@@ -24,7 +24,7 @@ public @interface FgDto {
      *
      * @return Nombre de tabla.
      */
-    String table();
+    String table() default "";
 
     /**
      * Indica un alias a utilizar en lugar del nombre concreto de la tabla. Este
