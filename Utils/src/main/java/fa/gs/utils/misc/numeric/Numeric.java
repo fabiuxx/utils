@@ -560,6 +560,26 @@ public class Numeric {
     }
 
     /**
+     * Calcula la division entre dos valores arbitrarios, pero con la
+     * posibilidad de especificar la cantidad maxima de decimales y el tipo de
+     * redondeo. Util en contextos monetarios.
+     *
+     * @param a Divisor.
+     * @param b Dividendo.
+     * @param cantidadDecimales Cantidad maxima de decimales para el resultado
+     * final.
+     * @param redondeo Tipo de redondeo.
+     * @return Resultado de division.
+     */
+    public static BigDecimal div(BigDecimal a, BigDecimal b, int cantidadDecimales, RoundingMode redondeo) {
+        if (distinto(b, Numeric.CERO)) {
+            return a.divide(b, cantidadDecimales, redondeo);
+        } else {
+            return Numeric.CERO;
+        }
+    }
+
+    /**
      * Redondea un valor numerico hasta dejarlo sin parte decimal.
      *
      * @param value Valor a redondear.

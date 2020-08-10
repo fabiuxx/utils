@@ -82,6 +82,33 @@ public class Assertions {
     }
 
     /**
+     * Verifica si una cadena representa un valor de registro unico de
+     * contribuyente (RUC).
+     *
+     * @param ruc Cadena de texto.
+     * @return {@code true} si la cadena es un ruc, {@code false} caso
+     * contrario.
+     */
+    public static boolean isRuc(String ruc) {
+        Pattern pattern = Pattern.compile("[0-9]+\\-[0-9]$");
+        Matcher matcher = pattern.matcher((ruc));
+        return matcher.matches();
+    }
+
+    /**
+     * Verifica si una cadena representa una direccion de correo.
+     *
+     * @param email Cadena de texto.
+     * @return {@code true} si la cadena es una direccion de correo,
+     * {@code false} caso contrario.
+     */
+    public static boolean isEmail(String email) {
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9]+[.[a-zA-Z0-9_-]+]*@[a-z0-9][\\w\\.-]*[a-z0-9]\\.[a-z][a-z\\.]*[a-z]$");
+        Matcher matcher = pattern.matcher((email));
+        return matcher.matches();
+    }
+
+    /**
      * Verifica que un entero supere un valor minimo.
      *
      * @param value Entero a verificar.
@@ -104,19 +131,6 @@ public class Assertions {
      */
     public static boolean integerInRange(Integer value, Integer min, Integer max) {
         return (value >= min) && (value <= max);
-    }
-
-    /**
-     * Verifica si una cadena representa una direccion de correo.
-     *
-     * @param email Cadena de texto.
-     * @return {@code true} si la cadena es una direccion de correo,
-     * {@code false} caso contrario.
-     */
-    public static boolean isEmail(String email) {
-        Pattern pattern = Pattern.compile("[a-zA-Z0-9]+[.[a-zA-Z0-9_-]+]*@[a-z0-9][\\w\\.-]*[a-z0-9]\\.[a-z][a-z\\.]*[a-z]$");
-        Matcher matcher = pattern.matcher((email));
-        return matcher.matches();
     }
 
     /**
