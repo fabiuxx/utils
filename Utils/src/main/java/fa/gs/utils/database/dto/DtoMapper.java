@@ -145,15 +145,22 @@ public class DtoMapper<T> implements Serializable {
 
     public T[] map(Collection<Map<String, Object>> rows) throws Throwable {
         Collection<T> instances = Lists.empty();
-
         for (Map<String, Object> row : rows) {
-            // Crear instancia y aplicar operacion de postconstruccion.
-            Object instance = mapInstance(klass, mappings, row);
-            postConstruct(klass, instance);
-            instances.add(klass.cast(instance));
+            T instance = map(row);
+            instances.add(instance);
+        }
+        return Arrays.unwrap(instances, klass);
+    }
+
+    public T map(Map<String, Object> values) throws Throwable {
+        if (Assertions.isNullOrEmpty(values)) {
+            return null;
         }
 
-        return Arrays.unwrap(instances, klass);
+        // Crear instancia y aplicar operacion de postconstruccion.
+        Object instance = mapInstance(klass, mappings, values);
+        postConstruct(klass, instance);
+        return klass.cast(instance);
     }
 
     private Object mapInstance(Class klass, Map<String, Field> mappings, Map<String, Object> values) throws Throwable {
