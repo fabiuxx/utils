@@ -49,6 +49,12 @@ public class JsonSerializer {
             return resolveCollection(ctx, instance, sourceClass, field);
         }
 
+        // Procesamiento de array de objetos.
+        if (sourceClass.isArray()) {
+            sourceClass = sourceClass.getComponentType();
+            return resolveArray(ctx, instance, sourceClass, field);
+        }
+
         // Procesamiento de objeto.
         return resolveObject(ctx, instance, sourceClass);
     }
@@ -68,6 +74,20 @@ public class JsonSerializer {
 
         final JsonArrayBuilder builder = JsonArrayBuilder.instance();
         for (Object element : ((Collection) instance)) {
+            JsonElement json = resolveInstance(ctx, element, field);
+            builder.add(json);
+        }
+
+        return builder.build();
+    }
+
+    private static JsonElement resolveArray(final SerializationContext ctx, Object instance, Class<?> sourceClass, Field field) throws Throwable {
+        if (field == null) {
+            throw Errors.illegalArgument("Se esperaba una definición de atributo para resolver el array de objetos.");
+        }
+
+        final JsonArrayBuilder builder = JsonArrayBuilder.instance();
+        for (Object element : ((Object[]) instance)) {
             JsonElement json = resolveInstance(ctx, element, field);
             builder.add(json);
         }

@@ -8,6 +8,7 @@ package fa.gs.utils.misc.json.serialization;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Maps;
 import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.Errors;
@@ -52,7 +53,13 @@ public class JsonDeserializer {
 
         // Procesamiento de coleccion de objetos.
         if (element.isJsonArray()) {
-            return resolveCollection(ctx, element, targetClass, field);
+            if (Reflection.isCollection(targetClass)) {
+                return resolveCollection(ctx, element, targetClass, field);
+            } else if (Reflection.isArray(targetClass)) {
+                return resolveArray(ctx, element, targetClass, field);
+            } else {
+                throw Errors.illegalState("Tipo de elemento destino no procesable como array o coleccion de objetos.");
+            }
         }
 
         // Procesamiento de objeto.
@@ -112,6 +119,37 @@ public class JsonDeserializer {
         }
 
         return collection;
+    }
+
+    /**
+     * Reduce un elemento JSON a una coleccion de objetos.
+     *
+     * @param ctx Contexto de deserializacion.
+     * @param element Elemento JSON a reducir.
+     * @param targetClass Clase objetivo,
+     * @param field
+     * @return Coleccion de objetos encapsulados dentro de un
+     * {@link java.util.ArrayList ArrayList}.
+     * @throws Throwable
+     */
+    private static Object[] resolveArray(final DeserializationContext ctx, JsonElement element, Class<?> targetClass, Field field) throws Throwable {
+        if (!Reflection.isArray(targetClass)) {
+            throw Errors.illegalArgument("La clase '%s' debe ser un array.", targetClass.getCanonicalName());
+        }
+
+        if (field == null) {
+            throw Errors.illegalArgument("Se esperaba una definición de atributo para resolver el array de objetos json.");
+        }
+
+        final JsonArray array = element.getAsJsonArray();
+        final Collection collection = new ArrayList<>(array.size());
+        Class<?> arrayType = targetClass.getComponentType();
+        for (JsonElement arrayElement : array) {
+            Object instance = resolveElement(ctx, arrayElement, arrayType, field);
+            collection.add(instance);
+        }
+
+        return Arrays.unwrap(collection, arrayType);
     }
 
     /**

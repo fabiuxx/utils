@@ -183,6 +183,19 @@ public class Reflection {
         return Reflection.isInstanceOf(type0, Collection.class);
     }
 
+    public static boolean isArray(Class<?> type0) {
+        return type0.isArray();
+    }
+
+    public static boolean isArrayOf(Class<?> type0, Class<?> type1) {
+        if (isArray(type0)) {
+            Class<?> arrType = type0.getComponentType();
+            return isInstanceOf(type1, arrType);
+        } else {
+            return false;
+        }
+    }
+
     public static Class<?> getFirstActualGenericType(Type type) {
         try {
             if (type instanceof ParameterizedType) {
