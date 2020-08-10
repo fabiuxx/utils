@@ -90,6 +90,5 @@ public class Test_DatabaseQuery {
             Assertions.assertEquals(EnumTest.E1, instance.enumTest);
         }
     }
-    */
-
+     */
 }

@@ -6,6 +6,7 @@
 package fa.gs.utils.collections;
 
 import fa.gs.utils.collections.maps.CollectionGroupMap;
+import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Reflection;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,6 +23,18 @@ public class Maps {
 
     public static <K, V> Map<K, V> empty() {
         return new LinkedHashMap<>();
+    }
+
+    public static <K, V> void initialize(Map<K, V> map, K[] keys) {
+        initialize(map, null);
+    }
+
+    public static <K, V> void initialize(Map<K, V> map, K[] keys, V defaultValue) {
+        if (!Assertions.isNullOrEmpty(map) && !Assertions.isNullOrEmpty(keys)) {
+            for (K key : keys) {
+                map.put(key, defaultValue);
+            }
+        }
     }
 
     public static <K, V> Map<K, V> map(Collection<V> values, String attribute, Class<K> type) {

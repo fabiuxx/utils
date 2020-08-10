@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.stream.Stream;
+import java8.util.stream.Stream;
+import java8.util.stream.StreamSupport;
 
 /**
  *
@@ -71,7 +72,8 @@ public class Arrays {
      * @return Stream de elementos.
      */
     public static <T> Stream<T> stream(T[] elements) {
-        return Lists.wrap(elements).stream();
+        Collection<T> collection = Lists.wrap(elements);
+        return StreamSupport.stream(collection);
     }
 
     /**

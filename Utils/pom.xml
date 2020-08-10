@@ -79,7 +79,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             
-            <!-- PARAMETRO QUE INDICA EL REPOSITORIO DONDE SE PUBLICA EL JAR -->
             <properties>
                 <artifactory.repo.target>librerias-java</artifactory.repo.target>
             </properties>
@@ -136,6 +135,12 @@
                     <groupId>com.google.code.gson</groupId>
                     <artifactId>gson</artifactId>
                     <version>2.8.6</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.sourceforge.streamsupport</groupId>
+                    <artifactId>streamsupport</artifactId>
+                    <version>1.7.2</version>
                 </dependency>
 
                 <dependency>
@@ -208,7 +213,6 @@
         <profile>
             <id>java-android</id>
             
-            <!-- PARAMETRO QUE INDICA EL REPOSITORIO DONDE SE PUBLICA EL JAR -->
             <properties>
                 <artifactory.repo.target>librerias-android</artifactory.repo.target>
             </properties>
@@ -265,6 +269,12 @@
                     <groupId>com.google.code.gson</groupId>
                     <artifactId>gson</artifactId>
                     <version>2.8.6</version>
+                </dependency>
+                
+                <dependency>
+                    <groupId>net.sourceforge.streamsupport</groupId>
+                    <artifactId>streamsupport</artifactId>
+                    <version>1.7.2</version>
                 </dependency>
 
                 <dependency>

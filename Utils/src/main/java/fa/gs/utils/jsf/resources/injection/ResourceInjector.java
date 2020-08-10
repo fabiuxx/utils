@@ -14,7 +14,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
+import java8.util.stream.Collectors;
+import java8.util.stream.StreamSupport;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UIViewRoot;
@@ -175,7 +176,8 @@ public abstract class ResourceInjector implements SystemEventListener {
     }
 
     private boolean resourceAlreadyInHead(FacesContext context, UIViewRoot root, UIComponent component) {
-        Set<String> keys = getResourcesInHead(context, root).stream()
+        Collection<UIComponent> components = getResourcesInHead(context, root);
+        Set<String> keys = StreamSupport.stream(components)
                 .map(r -> computeResourceKey(r))
                 .collect(Collectors.toSet());
         String key = computeResourceKey(component);

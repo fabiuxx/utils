@@ -21,7 +21,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
+import java8.util.stream.Collectors;
+import java8.util.stream.StreamSupport;
 
 /**
  *
@@ -325,7 +326,7 @@ public abstract class ApplicationWorkerExecutor implements Serializable {
      * @return Informacion de instancias de trabajadores.
      */
     public Collection<ApplicationWorkerInfo> dump() {
-        return getInstancesInfo().stream()
+        return StreamSupport.stream(getInstancesInfo())
                 .map((i) -> new WorkerInfo(i.instance))
                 .collect(Collectors.toList());
     }

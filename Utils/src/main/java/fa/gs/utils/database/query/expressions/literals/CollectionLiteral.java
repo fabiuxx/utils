@@ -14,6 +14,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java8.util.stream.StreamSupport;
 
 /**
  *
@@ -29,40 +30,40 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
     }
 
     public static CollectionLiteral instance(Integer[] values) {
-        Literal[] literals = Lists.wrap(values)
-                .stream()
+        Collection<Integer> collection = Lists.wrap(values);
+        Literal[] literals = StreamSupport.stream(collection)
                 .map(v -> new NumberLiteral(v))
                 .toArray(Literal[]::new);
         return new CollectionLiteral(literals);
     }
 
     public static CollectionLiteral instance(Long[] values) {
-        Literal[] literals = Lists.wrap(values)
-                .stream()
+        Collection<Long> collection = Lists.wrap(values);
+        Literal[] literals = StreamSupport.stream(collection)
                 .map(v -> new NumberLiteral(v))
                 .toArray(Literal[]::new);
         return new CollectionLiteral(literals);
     }
 
     public static CollectionLiteral instance(BigInteger[] values) {
-        Literal[] literals = Lists.wrap(values)
-                .stream()
+        Collection<BigInteger> collection = Lists.wrap(values);
+        Literal[] literals = StreamSupport.stream(collection)
                 .map(v -> new NumberLiteral(v))
                 .toArray(Literal[]::new);
         return new CollectionLiteral(literals);
     }
 
     public static CollectionLiteral instance(BigDecimal[] values) {
-        Literal[] literals = Lists.wrap(values)
-                .stream()
+        Collection<BigDecimal> collection = Lists.wrap(values);
+        Literal[] literals = StreamSupport.stream(collection)
                 .map(v -> new NumberLiteral(v))
                 .toArray(Literal[]::new);
         return new CollectionLiteral(literals);
     }
 
     public static CollectionLiteral instance(String[] values) {
-        Literal[] literals = Lists.wrap(values)
-                .stream()
+        Collection<String> collection = Lists.wrap(values);
+        Literal[] literals = StreamSupport.stream(collection)
                 .map(v -> new StringLiteral(v))
                 .toArray(Literal[]::new);
         return new CollectionLiteral(literals);
@@ -73,8 +74,8 @@ public class CollectionLiteral implements Literal<Collection<Literal>> {
     }
 
     public static CollectionLiteral instance(Date[] values, DateLiteral.DateType dateType) {
-        Literal[] literals = Lists.wrap(values)
-                .stream()
+        Collection<Date> collection = Lists.wrap(values);
+        Literal[] literals = StreamSupport.stream(collection)
                 .map(v -> new DateLiteral(v, dateType))
                 .toArray(Literal[]::new);
         return new CollectionLiteral(literals);

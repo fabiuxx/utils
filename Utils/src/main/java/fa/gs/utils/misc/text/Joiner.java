@@ -8,7 +8,7 @@ package fa.gs.utils.misc.text;
 import fa.gs.utils.adapters.Adapter;
 import fa.gs.utils.collections.Lists;
 import java.util.Iterator;
-import java.util.function.Function;
+import java8.util.function.Function;
 
 /**
  *

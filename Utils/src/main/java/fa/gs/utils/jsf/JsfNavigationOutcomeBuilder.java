@@ -12,6 +12,7 @@ import fa.gs.utils.misc.text.Text;
 import fa.gs.utils.mixins.Self;
 import java.util.ArrayList;
 import java.util.Map;
+import java8.util.stream.StreamSupport;
 
 /**
  *
@@ -72,7 +73,7 @@ public class JsfNavigationOutcomeBuilder implements Self<JsfNavigationOutcomeBui
         String outcome = buildOutcome();
 
         if (!queryParams.isEmpty()) {
-            String[] args0 = queryParams.entrySet().stream()
+            String[] args0 = StreamSupport.stream(queryParams.entrySet())
                     .map(e -> String.format("%s=%s", e.getKey(), e.getValue()))
                     .toArray(String[]::new);
             String args = Joiner.of(args0).separator("&").join();

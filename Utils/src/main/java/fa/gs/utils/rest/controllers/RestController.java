@@ -14,7 +14,7 @@ import fa.gs.utils.rest.exceptions.ApiInternalErrorException;
 import fa.gs.utils.rest.exceptions.ApiRollbackException;
 import fa.gs.utils.rest.responses.ServiceResponse;
 import java.io.Serializable;
-import java.util.function.Supplier;
+import java8.util.function.Supplier;
 import javax.ws.rs.core.Response;
 
 /**

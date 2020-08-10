@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.misc.text;
 
-import java.util.function.Supplier;
+import java8.util.function.Supplier;
 
 /**
  *

@@ -17,6 +17,7 @@ import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.text.Joiner;
 import fa.gs.utils.misc.text.StringBuilder2;
 import java.util.Collection;
+import java8.util.stream.StreamSupport;
 
 /**
  *
@@ -28,7 +29,7 @@ public abstract class AbstractQuery implements QueryPart {
         if (Assertions.isNullOrEmpty(parts)) {
             return null;
         } else {
-            return parts.stream()
+            return StreamSupport.stream(parts)
                     .filter(e -> e != null)
                     .map(e -> e.stringify(dialect))
                     .filter(s -> !Assertions.stringNullOrEmpty(s))

@@ -27,7 +27,7 @@ public class CollectionGroupMap<K, V> {
 
     public final void initialize(K[] keys) {
         for (K key : keys) {
-            map.put(key, Sets.empty());
+            map.put(key, Sets.<V>empty());
         }
     }
 
@@ -36,13 +36,13 @@ public class CollectionGroupMap<K, V> {
             return;
         }
 
-        Set<V> set = Maps.get(map, key, Sets.empty());
+        Set<V> set = Maps.get(map, key, Sets.<V>empty());
         set.add(value);
         map.put(key, set);
     }
 
     public void put(K key, Collection<V> values) {
-        Set<V> set = Maps.get(map, key, Sets.empty());
+        Set<V> set = Maps.get(map, key, Sets.<V>empty());
         set.addAll(values);
         map.put(key, set);
     }

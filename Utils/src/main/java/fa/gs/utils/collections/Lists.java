@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java8.util.function.Function;
+import java8.util.stream.Collectors;
+import java8.util.stream.Stream;
+import java8.util.stream.StreamSupport;
 
 /**
  * Created by Fabio A. González Sosa on 20-nov-2018.
@@ -88,7 +90,8 @@ public class Lists {
      * @return Coleccion de objetos convertidos.
      */
     public static <TFrom, TTo> Collection<TTo> map(Collection<TFrom> objects, Function<TFrom, TTo> mapper) {
-        return objects.stream()
+        Stream<TFrom> stream = StreamSupport.stream(objects);
+        return stream
                 .map(mapper)
                 .collect(Collectors.toList());
     }
@@ -132,6 +135,36 @@ public class Lists {
                 throw Errors.illegalArgument("No se permiten elementos nulos.");
             }
         }
+    }
+
+    /**
+     * Agrega elementos a una coleccion del mismo tipo.
+     *
+     * @param <T> Parametro de tipo.
+     * @param collection Coleccion a la cual se agregan elementos.
+     * @param others Elementos a agregar.
+     */
+    public static <T> void add(Collection<T> collection, Collection<T> others) {
+        add(collection, others, false);
+    }
+
+    /**
+     * Agrega elementos a una coleccion del mismo tipo.
+     *
+     * @param <T> Parametro de tipo.
+     * @param collection Coleccion a la cual se agregan elementos.
+     * @param others Elementos a agregar.
+     * @param clearBefore Si la coleccion inicial debe ser limpiada previamente.
+     */
+    public static <T> void add(Collection<T> collection, Collection<T> others, boolean clearBefore) {
+        if (collection == null || others == null) {
+            return;
+        }
+
+        if (clearBefore) {
+            collection.clear();
+        }
+        collection.addAll(others);
     }
 
     /**
