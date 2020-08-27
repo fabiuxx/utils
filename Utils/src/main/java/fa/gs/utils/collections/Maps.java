@@ -26,7 +26,7 @@ public class Maps {
     }
 
     public static <K, V> void initialize(Map<K, V> map, K[] keys) {
-        initialize(map, null);
+        initialize(map, keys, null);
     }
 
     public static <K, V> void initialize(Map<K, V> map, K[] keys, V defaultValue) {

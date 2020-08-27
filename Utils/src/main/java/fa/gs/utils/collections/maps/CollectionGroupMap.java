@@ -26,9 +26,11 @@ public class CollectionGroupMap<K, V> {
     }
 
     public final void initialize(K[] keys) {
-        for (K key : keys) {
-            map.put(key, Sets.<V>empty());
-        }
+        Maps.initialize(map, keys);
+    }
+
+    public final void initialzie(K[] keys) {
+        Maps.initialize(map, keys, Sets.empty());
     }
 
     public void put(K key, V value) {
