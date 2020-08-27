@@ -3,11 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.authentication.tokens.jwt;
+package fa.gs.utils.authentication.tokens;
 
 import fa.gs.utils.authentication.user.BaseAuthenticationInfo;
+import fa.gs.utils.collections.Lists;
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.errors.Errors;
 import java.net.URLDecoder;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +21,7 @@ import javax.ws.rs.core.HttpHeaders;
  *
  * @author Fabio A. González Sosa
  */
-public class JwtTokenExtractor {
+public class TokenExtractor {
 
     public static final String HEADER_NAME = HttpHeaders.AUTHORIZATION;
 
@@ -30,6 +33,9 @@ public class JwtTokenExtractor {
         String value = fromHttpHeader(request);
         if (Assertions.stringNullOrEmpty(value)) {
             value = fromHttpCookie(request);
+            if (Assertions.stringNullOrEmpty(value)) {
+                value = fromHttpQueryParam(request);
+            }
         }
         return value;
     }
@@ -38,6 +44,9 @@ public class JwtTokenExtractor {
         String value = fromHttpHeader(request);
         if (Assertions.stringNullOrEmpty(value)) {
             value = fromHttpCookie(request);
+            if (Assertions.stringNullOrEmpty(value)) {
+                value = fromHttpQueryParam(request);
+            }
         }
         return value;
     }
@@ -92,6 +101,35 @@ public class JwtTokenExtractor {
         }
 
         return null;
+    }
+
+    public static String fromHttpQueryParam(ContainerRequestContext ctx) {
+        try {
+            List<String> values = ctx.getUriInfo().getQueryParameters().get("session_token");
+            String token = Lists.first(values);
+            if (Assertions.stringNullOrEmpty(token)) {
+                return null;
+            } else {
+                return sanitizeUrlEncodedString(token);
+            }
+        } catch (Throwable thr) {
+            Errors.dump(System.err, thr, "Ocurrio un error obteniendo token desde query");
+            return null;
+        }
+    }
+
+    public static String fromHttpQueryParam(HttpServletRequest request) {
+        try {
+            String token = request.getParameter("session_token");
+            if (Assertions.stringNullOrEmpty(token)) {
+                return null;
+            } else {
+                return sanitizeUrlEncodedString(token);
+            }
+        } catch (Throwable thr) {
+            Errors.dump(System.err, thr, "Ocurrio un error obteniendo token desde query");
+            return null;
+        }
     }
 
     private static String sanitizeUrlEncodedString(String value) {
