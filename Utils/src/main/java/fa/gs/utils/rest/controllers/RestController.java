@@ -10,7 +10,6 @@ import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.AppErrorException;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.rest.exceptions.ApiBadRequestException;
-import fa.gs.utils.rest.exceptions.ApiInternalErrorException;
 import fa.gs.utils.rest.exceptions.ApiRollbackException;
 import fa.gs.utils.rest.responses.ServiceResponse;
 import java.io.Serializable;
@@ -55,7 +54,9 @@ public abstract class RestController implements Serializable {
         if (cause instanceof IllegalArgumentException || cause instanceof IllegalStateException || cause instanceof ApiBadRequestException) {
             // Peticion incorrecta.
             logError(cause, "Error de formato para cuerpo de petición.");
-            response = ServiceResponse.badRequest().build();
+            response = ServiceResponse.badRequest()
+                    .cause(cause)
+                    .build();
         } else if (cause instanceof ApiRollbackException) {
             // Operacion marcada para rollback.
             logError(cause, "Rollback.");
@@ -137,7 +138,7 @@ public abstract class RestController implements Serializable {
             // Respuesta final.
             return response;
         } catch (Throwable thr) {
-            throw new ApiInternalErrorException(thr);
+            return deriveResponseFromError(thr);
         }
     }
 
