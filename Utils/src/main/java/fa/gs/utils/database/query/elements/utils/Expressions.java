@@ -13,6 +13,7 @@ import fa.gs.utils.database.query.elements.build.ExpressionBuilder;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.text.StringBuilder2;
 import java.util.Collection;
+import java8.util.function.Supplier;
 
 /**
  *
@@ -46,6 +47,15 @@ public class Expressions {
     }
 
     public static Expression joinWithAnd(Collection<Expression> expressions) {
+        return joinWithAnd(expressions, () -> Expressions.TRUE());
+    }
+
+    public static Expression joinWithAnd(Collection<Expression> expressions, Supplier<Expression> fallback) {
+        // Control de seguridad.
+        if (Assertions.isNullOrEmpty(expressions)) {
+            return fallback.get();
+        }
+
         ExpressionBuilder builder = ExpressionBuilder.instance();
         builder.TRUE();
         for (Expression expression : expressions) {
@@ -55,6 +65,15 @@ public class Expressions {
     }
 
     public static Expression joinWithOr(Collection<Expression> expressions) {
+        return joinWithOr(expressions, () -> Expressions.TRUE());
+    }
+
+    public static Expression joinWithOr(Collection<Expression> expressions, Supplier<Expression> fallback) {
+        // Control de seguridad.
+        if (Assertions.isNullOrEmpty(expressions)) {
+            return fallback.get();
+        }
+
         ExpressionBuilder builder = ExpressionBuilder.instance();
         builder.FALSE();
         for (Expression expression : expressions) {

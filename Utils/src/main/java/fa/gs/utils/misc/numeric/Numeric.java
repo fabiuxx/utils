@@ -261,7 +261,11 @@ public class Numeric {
      * {@code false}.
      */
     public static boolean igual(BigDecimal a, BigDecimal b) {
-        return a.compareTo(b) == 0;
+        if (a == null || b == null) {
+            return false;
+        } else {
+            return a.compareTo(b) == 0;
+        }
     }
 
     /**
@@ -273,7 +277,11 @@ public class Numeric {
      * {@code false}.
      */
     public static boolean mayor(BigDecimal a, BigDecimal b) {
-        return a.compareTo(b) > 0;
+        if (a == null || b == null) {
+            return false;
+        } else {
+            return a.compareTo(b) > 0;
+        }
     }
 
     /**
@@ -285,7 +293,11 @@ public class Numeric {
      * contrario {@code false}.
      */
     public static boolean mayorIgual(BigDecimal a, BigDecimal b) {
-        return a.compareTo(b) >= 0;
+        if (a == null || b == null) {
+            return false;
+        } else {
+            return a.compareTo(b) >= 0;
+        }
     }
 
     /**
@@ -297,7 +309,11 @@ public class Numeric {
      * {@code false}.
      */
     public static boolean menor(BigDecimal a, BigDecimal b) {
-        return a.compareTo(b) < 0;
+        if (a == null || b == null) {
+            return false;
+        } else {
+            return a.compareTo(b) < 0;
+        }
     }
 
     /**
@@ -309,7 +325,11 @@ public class Numeric {
      * contrario {@code false}.
      */
     public static boolean menorIgual(BigDecimal a, BigDecimal b) {
-        return a.compareTo(b) <= 0;
+        if (a == null || b == null) {
+            return false;
+        } else {
+            return a.compareTo(b) <= 0;
+        }
     }
 
     /**
@@ -323,9 +343,10 @@ public class Numeric {
     public static boolean esMultiplo(BigDecimal a, BigDecimal b) {
         if (a == null || b == null) {
             return false;
+        } else {
+            BigDecimal mod = a.remainder(b);
+            return Numeric.igual(mod, Numeric.CERO);
         }
-        BigDecimal mod = a.remainder(b);
-        return Numeric.igual(mod, Numeric.CERO);
     }
 
     /**
