@@ -13,10 +13,13 @@ import java.util.Properties;
  */
 public class PersistenceUnitProperties {
 
-    public static void enableHibernateForPostgresql94(Properties props) {
+    public static void enableSqlLogging(Properties props) {
         props.put("hibernate.show_sql", true);
-        props.put("hibernate.format_sql", true);
-        props.put("hibernate.generate_statistics", true);
+        props.put("hibernate.format_sql", false);
+        props.put("hibernate.generate_statistics", false);
+    }
+
+    public static void enableHibernateForPostgresql94(Properties props) {
         props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL9Dialect");
     }
 

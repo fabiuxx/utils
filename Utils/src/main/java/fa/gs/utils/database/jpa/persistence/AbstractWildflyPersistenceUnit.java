@@ -21,7 +21,7 @@ public abstract class AbstractWildflyPersistenceUnit extends AbstractPersistence
 
     @Override
     protected void fillProperties(Properties props) {
-        PersistenceUnitProperties.enableHibernateForPostgresql94(props);
+        PersistenceUnitProperties.enableSqlLogging(props);
         PersistenceUnitProperties.enableWildflyJTAManager(props);
     }
 

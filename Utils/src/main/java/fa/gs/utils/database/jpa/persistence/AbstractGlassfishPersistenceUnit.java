@@ -21,7 +21,7 @@ public abstract class AbstractGlassfishPersistenceUnit extends AbstractPersisten
 
     @Override
     protected void fillProperties(Properties props) {
-        PersistenceUnitProperties.enableHibernateForPostgresql94(props);
+        PersistenceUnitProperties.enableSqlLogging(props);
         PersistenceUnitProperties.enableGlassfishJTAManager(props);
     }
 
