@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java8.util.stream.Stream;
-import java8.util.stream.StreamSupport;
 
 /**
  *
@@ -73,7 +72,7 @@ public class Arrays {
      */
     public static <T> Stream<T> stream(T[] elements) {
         Collection<T> collection = Lists.wrap(elements);
-        return StreamSupport.stream(collection);
+        return Lists.stream(collection);
     }
 
     /**

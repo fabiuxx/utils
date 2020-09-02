@@ -168,6 +168,20 @@ public class Lists {
     }
 
     /**
+     * Obtiene un stream de procesamiento para colecciones.
+     *
+     * @param <T> Parametro de tipo.
+     * @param collection Coleccion inicial.
+     * @return Stream de datos.
+     */
+    public static <T> Stream<T> stream(Collection<T> collection) {
+        if (collection == null) {
+            collection = Lists.empty();
+        }
+        return StreamSupport.stream(collection);
+    }
+
+    /**
      * Convierte una coleccion de colecciones en una sola.
      *
      * @param <T> Parametro de tipo.
