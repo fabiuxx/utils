@@ -69,7 +69,7 @@ public class CountQuery extends AbstractQuery {
         withParameter(name, value);
         return this;
     }
-    
+
     public CountQuery cte(CTE cte) {
         Lists.add(ctes, cte);
         return this;

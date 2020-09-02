@@ -51,7 +51,9 @@ public class Join implements QueryPart {
         RIGHT("RIGHT JOIN"),
         LATERAL("JOIN LATERAL"),
         LEFT_LATERAL("LEFT JOIN LATERAL"),
-        RIGHT_LATERAL("RIGHT JOIN LATERAL");
+        RIGHT_LATERAL("RIGHT JOIN LATERAL"),
+        LEFT_OUTER("LEFT OUTER JOIN"),
+        RIGHT_OUTER("RIGHT OUTER JOIN");
         private final String keyword;
 
         Type(String keyword) {

@@ -145,7 +145,7 @@ public class DtoQuery implements Serializable {
                 ctes.add(cte);
             }
         }
-        
+
         ctx.ctes = ctes;
     }
 
