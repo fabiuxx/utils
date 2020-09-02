@@ -6,6 +6,8 @@
 package fa.gs.utils.database.dto;
 
 import fa.gs.utils.database.dto.annotations.FgConverter;
+import fa.gs.utils.database.dto.annotations.FgCte;
+import fa.gs.utils.database.dto.annotations.FgCtes;
 import fa.gs.utils.database.dto.annotations.FgDto;
 import fa.gs.utils.database.dto.annotations.FgGroupBy;
 import fa.gs.utils.database.dto.annotations.FgGroupBys;
@@ -30,6 +32,8 @@ public class AnnotationTypes {
 
     public static Class<FgDto> FGDTO = FgDto.class;
     public static Class<FgQueryResultSetAdapter> FGQUERYRSADAPTER = FgQueryResultSetAdapter.class;
+    public static Class<FgCtes> FGCTES = FgCtes.class;
+    public static Class<FgCte> FGCTE = FgCte.class;
     public static Class<FgProjection> FGPROJECTION = FgProjection.class;
     public static Class<FgConverter> FGCONVERTER = FgConverter.class;
     public static Class<FgJoin> FGJOIN = FgJoin.class;
@@ -42,6 +46,26 @@ public class AnnotationTypes {
     public static Class<FgOrderBys> FGORDERBYS = FgOrderBys.class;
     public static Class<FgGroupBy> FGGROUPBY = FgGroupBy.class;
     public static Class<FgGroupBys> FGGROUPBYS = FgGroupBys.class;
+
+    /**
+     * Obtiene todas las anotaciones {@link FgCte FgCte} en una clase dada.
+     *
+     * @param klass Clase.
+     * @return Array de anotaciones, si hubiere.
+     */
+    public static FgCte[] getAllCtes(Class klass) {
+        FgCtes collector = Reflection.getAnnotation(klass, FGCTES);
+        if (collector != null && Assertions.isNullOrEmpty(collector.value()) == false) {
+            return collector.value();
+        }
+
+        FgCte single = Reflection.getAnnotation(klass, FGCTE);
+        if (single != null) {
+            return new FgCte[]{single};
+        }
+
+        return null;
+    }
 
     /**
      * Obtiene todas las anotaciones {@link FgJoin FgJoin} en una clase dada.

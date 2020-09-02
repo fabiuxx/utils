@@ -8,6 +8,8 @@ package fa.gs.utils.database.query.commands;
 import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.database.query.Dialect;
+import fa.gs.utils.database.query.QueryPart;
+import fa.gs.utils.database.query.elements.CTE;
 import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.Join;
 import fa.gs.utils.database.query.elements.Name;
@@ -24,6 +26,7 @@ public class CountQuery extends AbstractQuery {
 
     public static final String COUNT_FIELD_NAME = "total_count";
 
+    final Collection<CTE> ctes;
     Table from;
     final Collection<Join> joins;
     final Collection<Expression> where;
@@ -34,6 +37,7 @@ public class CountQuery extends AbstractQuery {
      * Constructor.
      */
     public CountQuery() {
+        this.ctes = new ArrayList<>();
         this.from = null;
         this.joins = new ArrayList<>();
         this.where = new ArrayList<>();
@@ -43,17 +47,34 @@ public class CountQuery extends AbstractQuery {
 
     @Override
     public String stringify(Dialect dialect) {
+        // Generar query inicial.
         StringBuilder2 builder = new StringBuilder2();
+        withCtes(builder, ctes, dialect);
         builder.append(" SELECT COUNT(*) AS \"%s\"", CountQuery.COUNT_FIELD_NAME);
         withFrom(builder, from, dialect);
         withJoins(builder, joins, dialect);
         withWhere(builder, where, dialect);
         withGroupBy(builder, groupBy, dialect);
         withHaving(builder, having, dialect);
-        return builder.toString();
+        String query = builder.toString();
+
+        // Rellenar parametros.
+        query = fillParameters(query, dialect);
+
+        return query;
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getters y Setters">
+    public CountQuery param(String name, QueryPart value) {
+        withParameter(name, value);
+        return this;
+    }
+    
+    public CountQuery cte(CTE cte) {
+        Lists.add(ctes, cte);
+        return this;
+    }
+
     public CountQuery from(Table from) {
         if (from != null) {
             this.from = from;

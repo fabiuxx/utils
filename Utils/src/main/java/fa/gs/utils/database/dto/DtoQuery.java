@@ -6,6 +6,7 @@
 package fa.gs.utils.database.dto;
 
 import fa.gs.utils.collections.Lists;
+import fa.gs.utils.database.dto.annotations.FgCte;
 import fa.gs.utils.database.dto.annotations.FgDto;
 import fa.gs.utils.database.dto.annotations.FgGroupBy;
 import fa.gs.utils.database.dto.annotations.FgHaving;
@@ -13,8 +14,10 @@ import fa.gs.utils.database.dto.annotations.FgJoin;
 import fa.gs.utils.database.dto.annotations.FgOrderBy;
 import fa.gs.utils.database.dto.annotations.FgProjection;
 import fa.gs.utils.database.dto.annotations.FgWhere;
+import fa.gs.utils.database.query.QueryPart;
 import fa.gs.utils.database.query.commands.CountQuery;
 import fa.gs.utils.database.query.commands.SelectQuery;
+import fa.gs.utils.database.query.elements.CTE;
 import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.Join;
 import fa.gs.utils.database.query.elements.Name;
@@ -22,6 +25,7 @@ import fa.gs.utils.database.query.elements.Order;
 import fa.gs.utils.database.query.elements.Projection;
 import fa.gs.utils.database.query.elements.Table;
 import fa.gs.utils.database.query.elements.build.ExpressionBuilder;
+import fa.gs.utils.database.query.elements.utils.Ctes;
 import fa.gs.utils.database.query.elements.utils.Joins;
 import fa.gs.utils.database.query.elements.utils.Projections;
 import fa.gs.utils.database.query.elements.utils.Tables;
@@ -45,6 +49,7 @@ public class DtoQuery implements Serializable {
 
         // Inicializar datos.
         PreparationContext ctx = new PreparationContext(klass);
+        prepareCommonTableExpressions(ctx);
         prepareTableExpression(ctx);
         prepareTableJoinClauses(ctx);
         prepareProjectionExpressions(ctx);
@@ -121,6 +126,27 @@ public class DtoQuery implements Serializable {
         }
 
         ctx.projections = projections;
+    }
+
+    private static void prepareCommonTableExpressions(PreparationContext ctx) {
+        Collection<QueryPart> ctes = Lists.empty();
+
+        FgCte[] ctes0 = AnnotationTypes.getAllCtes(ctx.klass);
+        if (!Assertions.isNullOrEmpty(ctes0)) {
+            for (FgCte cte0 : ctes0) {
+                // 1) Resolver nombre.
+                String name = cte0.name();
+
+                // 2) Resolver cuerpo.
+                String body = cte0.body();
+
+                // 3) CTE.
+                CTE cte = Ctes.build(name, body);
+                ctes.add(cte);
+            }
+        }
+        
+        ctx.ctes = ctes;
     }
 
     private static void prepareTableExpression(PreparationContext ctx) {
@@ -252,6 +278,11 @@ public class DtoQuery implements Serializable {
     private static <T> SelectQuery buildSelectQuery(PreparationContext<T> ctx) {
         SelectQuery query = new SelectQuery();
 
+        // CTEs.
+        for (CTE cte : ctx.ctes) {
+            query.cte(cte);
+        }
+
         // From.
         query.from(ctx.table);
 
@@ -289,6 +320,7 @@ public class DtoQuery implements Serializable {
 
         private Long counter;
         private Class<T> klass;
+        private Collection<CTE> ctes;
         private Table table;
         private Collection<Projection> projections;
         private Collection<Join> joins;

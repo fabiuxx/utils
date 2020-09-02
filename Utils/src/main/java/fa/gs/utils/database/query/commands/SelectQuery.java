@@ -8,6 +8,8 @@ package fa.gs.utils.database.query.commands;
 import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.database.query.Dialect;
+import fa.gs.utils.database.query.QueryPart;
+import fa.gs.utils.database.query.elements.CTE;
 import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.Join;
 import fa.gs.utils.database.query.elements.Name;
@@ -24,6 +26,7 @@ import java.util.Collection;
  */
 public class SelectQuery extends AbstractQuery {
 
+    final Collection<CTE> ctes;
     Table from;
     final Collection<Projection> projections;
     final Collection<Join> joins;
@@ -38,6 +41,7 @@ public class SelectQuery extends AbstractQuery {
      * Constructor.
      */
     public SelectQuery() {
+        this.ctes = new ArrayList<>();
         this.from = null;
         this.projections = new ArrayList<>();
         this.joins = new ArrayList<>();
@@ -56,6 +60,8 @@ public class SelectQuery extends AbstractQuery {
      */
     public CountQuery asCountQuery() {
         CountQuery count = new CountQuery();
+        count.parameters.putAll(this.parameters);
+        count.ctes.addAll(this.ctes);
         count.from = this.from;
         count.joins.addAll(this.joins);
         count.where.addAll(this.where);
@@ -66,7 +72,9 @@ public class SelectQuery extends AbstractQuery {
 
     @Override
     public String stringify(final Dialect dialect) {
+        // Generar query inicial.
         StringBuilder2 builder = new StringBuilder2();
+        withCtes(builder, ctes, dialect);
         builder.append(" SELECT ");
         withProjections(builder, projections, dialect);
         withFrom(builder, from, dialect);
@@ -77,10 +85,25 @@ public class SelectQuery extends AbstractQuery {
         withOrderBy(builder, orderBy, dialect);
         withLimit(builder, limit);
         withOffset(builder, offset);
-        return builder.toString();
+        String query = builder.toString();
+
+        // Rellenar parametros.
+        query = fillParameters(query, dialect);
+
+        return query;
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getters y Setters">
+    public SelectQuery param(String name, QueryPart value) {
+        withParameter(name, value);
+        return this;
+    }
+
+    public SelectQuery cte(CTE cte) {
+        Lists.add(ctes, cte);
+        return this;
+    }
+
     public SelectQuery from(Table from) {
         if (from != null) {
             this.from = from;

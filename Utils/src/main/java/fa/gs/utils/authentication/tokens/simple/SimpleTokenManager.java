@@ -9,10 +9,10 @@ import com.google.gson.JsonObject;
 import fa.gs.utils.authentication.tokens.TokenDecoder;
 import fa.gs.utils.authentication.tokens.TokenEncoder;
 import fa.gs.utils.authentication.tokens.jwt.TokenClaim;
+import fa.gs.utils.crypto.Base64;
 import fa.gs.utils.crypto.Cipher;
 import fa.gs.utils.crypto.Cipher_AES;
 import fa.gs.utils.misc.json.Json;
-import fa.gs.utils.crypto.Base64;
 import fa.gs.utils.misc.text.Charsets;
 
 /**

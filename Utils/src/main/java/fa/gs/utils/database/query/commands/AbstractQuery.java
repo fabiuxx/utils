@@ -7,6 +7,7 @@ package fa.gs.utils.database.query.commands;
 
 import fa.gs.utils.database.query.Dialect;
 import fa.gs.utils.database.query.QueryPart;
+import fa.gs.utils.database.query.elements.CTE;
 import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.Join;
 import fa.gs.utils.database.query.elements.Name;
@@ -14,9 +15,14 @@ import fa.gs.utils.database.query.elements.Order;
 import fa.gs.utils.database.query.elements.Projection;
 import fa.gs.utils.database.query.elements.Table;
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.Unit;
 import fa.gs.utils.misc.text.Joiner;
 import fa.gs.utils.misc.text.StringBuilder2;
+import fa.gs.utils.misc.text.Strings;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 import java8.util.stream.StreamSupport;
 
 /**
@@ -24,6 +30,12 @@ import java8.util.stream.StreamSupport;
  * @author Fabio A. González Sosa
  */
 public abstract class AbstractQuery implements QueryPart {
+
+    protected Map<String, QueryPart> parameters;
+
+    protected AbstractQuery() {
+        this.parameters = new HashMap<>();
+    }
 
     protected <T extends QueryPart> String[] stringify(Collection<T> parts, Dialect dialect) {
         if (Assertions.isNullOrEmpty(parts)) {
@@ -34,6 +46,30 @@ public abstract class AbstractQuery implements QueryPart {
                     .map(e -> e.stringify(dialect))
                     .filter(s -> !Assertions.stringNullOrEmpty(s))
                     .toArray(String[]::new);
+        }
+    }
+
+    protected String fillParameters(String query, Dialect dialect) {
+        if (!Assertions.isNullOrEmpty(parameters)) {
+            for (Map.Entry<String, QueryPart> entry : parameters.entrySet()) {
+                String value = Unit.execute("", () -> entry.getValue().stringify(dialect));
+                query = query.replaceAll(Pattern.quote(entry.getKey()), value);
+            }
+        }
+        return query;
+    }
+
+    public void withParameter(String name, QueryPart value) {
+        String placeholder = Strings.format("{{%s}}", name);
+        this.parameters.put(placeholder, value);
+    }
+
+    protected void withCtes(StringBuilder2 builder, Collection<CTE> ctes, Dialect dialect) {
+        // CTEs.
+        String[] ctes0 = stringify(ctes, dialect);
+        if (!Assertions.isNullOrEmpty(ctes0)) {
+            builder.append(" WITH ");
+            builder.append(Joiner.of(ctes0).separator(", ").join());
         }
     }
 
