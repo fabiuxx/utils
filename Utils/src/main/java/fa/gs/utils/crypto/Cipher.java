@@ -16,13 +16,13 @@ public class Cipher {
     public static String encrypt(Cipher_AES aes, String text) throws Throwable {
         byte[] bytes = Strings.getBytes(text);
         byte[] ec = aes.encrypt(bytes);
-        return Base64.encodeBytes(ec);
+        return Strings.bytesToHexString(ec);
     }
 
     public static String decrypt(Cipher_AES aes, String text) throws Throwable {
-        byte[] b64 = Base64.decodeString(text);
-        byte[] text0 = aes.decrypt(b64);
-        return Strings.getString(text0).trim();
+        byte[] bytes = Strings.hexStringToBytes(text);
+        byte[] dc = aes.decrypt(bytes);
+        return Strings.getString(dc).trim();
     }
 
 }

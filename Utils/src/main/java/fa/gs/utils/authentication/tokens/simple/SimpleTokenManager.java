@@ -9,11 +9,11 @@ import com.google.gson.JsonObject;
 import fa.gs.utils.authentication.tokens.TokenDecoder;
 import fa.gs.utils.authentication.tokens.TokenEncoder;
 import fa.gs.utils.authentication.tokens.jwt.TokenClaim;
-import fa.gs.utils.crypto.Base64;
 import fa.gs.utils.crypto.Cipher;
 import fa.gs.utils.crypto.Cipher_AES;
 import fa.gs.utils.misc.json.Json;
 import fa.gs.utils.misc.text.Charsets;
+import fa.gs.utils.misc.text.Strings;
 
 /**
  *
@@ -40,7 +40,7 @@ public class SimpleTokenManager implements TokenEncoder<JsonObject>, TokenDecode
         try {
             JsonObject transformedPayload = encryptPayload(payload);
             String json = transformedPayload.toString();
-            return Base64.encodeString(json);
+            return Strings.bytesToHexString(json.getBytes(Charsets.UTF8));
         } catch (Throwable thr) {
             return "";
         }
@@ -49,8 +49,8 @@ public class SimpleTokenManager implements TokenEncoder<JsonObject>, TokenDecode
     @Override
     public JsonObject decodeToken(String token) {
         try {
-            byte[] b64 = Base64.decodeString(token);
-            String json = new String(b64, Charsets.UTF8);
+            byte[] bytes = Strings.hexStringToBytes(token);
+            String json = new String(bytes, Charsets.UTF8);
             JsonObject transformedPayload = Json.fromString(json).getAsJsonObject();
             return decryptPayload(transformedPayload);
         } catch (Throwable thr) {

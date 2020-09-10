@@ -8,6 +8,7 @@ package fa.gs.utils.tests;
 import com.google.gson.JsonObject;
 import fa.gs.utils.authentication.tokens.TokenDecoder;
 import fa.gs.utils.authentication.tokens.jwt.JwtTokenManager;
+import fa.gs.utils.authentication.tokens.simple.SimpleTokenManager;
 import fa.gs.utils.misc.json.JsonObjectBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,20 @@ public class Test_TokenManager {
 
         TokenDecoder<JsonObject> decoder = new JwtTokenManager();
         JsonObject json0 = decoder.decodeToken(TEST_TOKEN);
+        Assertions.assertTrue(json.equals(json0));
+    }
+    
+    @Test
+    public void test1() {
+        SimpleTokenManager manager = new SimpleTokenManager();
+        
+        JsonObjectBuilder builder = JsonObjectBuilder.instance();
+        builder.add("a", 1);
+        builder.add("b", 2);
+        JsonObject json = builder.build();
+        
+        String token = manager.encodeToken(json);
+        JsonObject json0 = manager.decodeToken(token);
         Assertions.assertTrue(json.equals(json0));
     }
 
