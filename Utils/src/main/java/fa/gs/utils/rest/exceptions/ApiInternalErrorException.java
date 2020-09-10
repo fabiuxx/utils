@@ -19,15 +19,15 @@ import javax.ws.rs.core.Response;
 public class ApiInternalErrorException extends WebApplicationException {
 
     public ApiInternalErrorException() {
-        super();
+        super("Error interno fatal.");
     }
 
     public ApiInternalErrorException(Throwable cause) {
-        super(cause);
+        super("Error interno fatal.", cause);
     }
 
     public ApiInternalErrorException(Response response) {
-        super(response);
+        super("Error interno fatal.", response);
     }
 
 }

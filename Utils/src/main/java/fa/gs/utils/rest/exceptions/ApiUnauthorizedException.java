@@ -19,15 +19,15 @@ import javax.ws.rs.core.Response;
 public class ApiUnauthorizedException extends WebApplicationException {
 
     public ApiUnauthorizedException() {
-        super();
+        super("Error de autenticación para petición.");
     }
 
     public ApiUnauthorizedException(Throwable cause) {
-        super(cause);
+        super("Error de autenticación para petición.", cause);
     }
 
     public ApiUnauthorizedException(Response response) {
-        super(response);
+        super("Error de autenticación para petición.", response);
     }
 
 }

@@ -11,6 +11,7 @@ import fa.gs.utils.misc.errors.AppErrorException;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.rest.exceptions.ApiBadRequestException;
 import fa.gs.utils.rest.exceptions.ApiRollbackException;
+import fa.gs.utils.rest.exceptions.ApiUnauthorizedException;
 import fa.gs.utils.rest.responses.ServiceResponse;
 import java.io.Serializable;
 import java8.util.function.Supplier;
@@ -55,6 +56,12 @@ public abstract class RestController implements Serializable {
             // Peticion incorrecta.
             logError(cause, "Error de formato para cuerpo de petición.");
             response = ServiceResponse.badRequest()
+                    .cause(cause)
+                    .build();
+        } else if (cause instanceof ApiUnauthorizedException) {
+            // Peticion no autorizada.
+            logError(cause, "Error de autenticación para petición.");
+            response = ServiceResponse.unauthorized()
                     .cause(cause)
                     .build();
         } else if (cause instanceof ApiRollbackException) {

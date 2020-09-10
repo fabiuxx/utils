@@ -19,15 +19,15 @@ import javax.ws.rs.core.Response;
 public class ApiBadRequestException extends WebApplicationException {
 
     public ApiBadRequestException() {
-        super();
+        super("Error de formato para cuerpo de petición.");
     }
 
     public ApiBadRequestException(Throwable cause) {
-        super(cause);
+        super("Error de formato para cuerpo de petición.", cause);
     }
 
     public ApiBadRequestException(Response response) {
-        super(response);
+        super("Error de formato para cuerpo de petición.", response);
     }
 
 }
