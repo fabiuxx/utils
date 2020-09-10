@@ -27,6 +27,21 @@ public class Lists {
     }
 
     /**
+     * Obtiene la cantidad de elementos en una coleccion.
+     *
+     * @param <T> Parametro de tipo.
+     * @param items Coleccion de objetos.
+     * @return Cantidad de elementos en la coleccion.
+     */
+    public static <T> int size(Collection<T> items) {
+        if (Assertions.isNullOrEmpty(items)) {
+            return 0;
+        } else {
+            return items.size();
+        }
+    }
+
+    /**
      * Obtiene el primer elemento de una coleccion.
      *
      * @param <T> Parametro de tipo.

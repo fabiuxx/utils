@@ -88,6 +88,14 @@ public class Maps {
         }
     }
 
+    public static <K, V> Boolean bool(Map<K, V> map, K key) {
+        return bool(map, key, null);
+    }
+
+    public static <K, V> Boolean bool(Map<K, V> map, K key, Boolean fallback) {
+        return get(map, key, fallback, Boolean.class);
+    }
+
     public static <K, V> String string(Map<K, V> map, K key) {
         return string(map, key, null);
     }
