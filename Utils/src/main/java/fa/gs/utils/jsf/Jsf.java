@@ -89,13 +89,23 @@ public class Jsf {
     }
 
     /**
-     * Obtiene el contexto de facelets del entorno JSF. Fuente:
-     * https://github.com/primefaces/primefaces/blob/7.0/src/main/java/org/primefaces/behavior/base/AbstractBehaviorHandler.java#L170.
+     * Obtiene el contexto de facelets del entorno JSF
      *
      * @return Contexto de facelets.
      */
     public static FaceletContext getFaceletContext() {
         FacesContext context = getFacesContext();
+        return getFaceletContext(context);
+    }
+
+    /**
+     * Obtiene el contexto de facelets del entorno JSF.Fuente:
+     * https://github.com/primefaces/primefaces/blob/7.0/src/main/java/org/primefaces/behavior/base/AbstractBehaviorHandler.java#L170.
+     *
+     * @param context Contexto JSF.
+     * @return Contexto de facelets.
+     */
+    public static FaceletContext getFaceletContext(FacesContext context) {
         Object faceletContext = context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
         if (faceletContext == null) {
             faceletContext = context.getAttributes().get("com.sun.faces.facelets.FACELET_CONTEXT");
