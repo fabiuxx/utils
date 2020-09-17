@@ -6,6 +6,7 @@
 package fa.gs.utils.misc;
 
 import fa.gs.utils.crypto.SHA256;
+import fa.gs.utils.misc.text.Charsets;
 import fa.gs.utils.misc.text.StringBuilder2;
 import fa.gs.utils.misc.text.Strings;
 import java.io.BufferedReader;
@@ -15,6 +16,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 
 /**
@@ -68,10 +72,15 @@ public class Files {
     }
 
     public static String readAll(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
-        return readAll(is);
+        return readAll(file, Charsets.UTF8);
     }
 
+    public static String readAll(File file, Charset charset) throws IOException {
+        byte[] bytes = java.nio.file.Files.readAllBytes(file.toPath());
+        return new String(bytes, charset);
+    }
+
+    @Deprecated
     public static String readAll(InputStream is) throws IOException {
         StringBuilder2 sb = new StringBuilder2();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -80,6 +89,22 @@ public class Files {
             sb.appendln(line);
         }
         return sb.toString();
+    }
+
+    public static BufferedReader getReader(File file) throws IOException {
+        return getReader(file, Charsets.UTF8);
+    }
+
+    public static BufferedReader getReader(File file, Charset charset) throws IOException {
+        return new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
+    }
+
+    public static PrintWriter getWriter(File file) throws IOException {
+        return getWriter(file, Charsets.UTF8);
+    }
+
+    public static PrintWriter getWriter(File file, Charset charset) throws IOException {
+        return new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), charset));
     }
 
 }

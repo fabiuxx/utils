@@ -96,12 +96,11 @@ public class Jsf {
      */
     public static FaceletContext getFaceletContext() {
         FacesContext context = getFacesContext();
-        FaceletContext faceletContext = (FaceletContext) context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
+        Object faceletContext = context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
         if (faceletContext == null) {
-            faceletContext = (FaceletContext) context.getAttributes().get("com.sun.faces.facelets.FACELET_CONTEXT");
+            faceletContext = context.getAttributes().get("com.sun.faces.facelets.FACELET_CONTEXT");
         }
-
-        return faceletContext;
+        return FaceletContext.class.cast(faceletContext);
     }
 
     public static String getRequestParameter(String name) {

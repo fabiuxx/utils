@@ -6,6 +6,11 @@
 package fa.gs.utils.misc.text;
 
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.errors.Errors;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -184,6 +189,39 @@ public class Text {
      */
     public static String normalizeSlashes(String text) {
         return Text.replaceAll(text, "//", "/");
+    }
+
+    /**
+     * Separa una cadena de texto
+     * <code>nombre=valor&nombre=valor&...&nombre=valor</code> en sus
+     * correspondientes partes.
+     *
+     * @param query Cadena de texto en formato
+     * <code>nombre=valor&nombre=valor&...&nombre=valor</code>.
+     * @return Coleccion de parametros agrupados por <code>nombre</code>.
+     */
+    public static Map<String, String> parseQuerystring(String query) {
+        Map<String, String> params = new LinkedHashMap<>();
+
+        // Control de seguridad.
+        if (query == null || query.isEmpty()) {
+            return params;
+        }
+
+        // Parsear elementos de parametro.
+        String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            try {
+                int pos = pair.indexOf("=");
+                String name = URLDecoder.decode(pair.substring(0, pos), Charsets.UTF8.name());
+                String value = URLDecoder.decode(pair.substring(pos + 1), Charsets.UTF8.name());
+                params.put(name, value);
+            } catch (UnsupportedEncodingException thr) {
+                Errors.dump(System.err, thr, "Ocurrió un error procesando elemento de parámetro '%s'", pair);
+            }
+        }
+
+        return params;
     }
 
     /**

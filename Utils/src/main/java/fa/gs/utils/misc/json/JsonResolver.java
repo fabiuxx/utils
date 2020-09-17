@@ -251,7 +251,7 @@ public class JsonResolver {
         return integer(json, path, null);
     }
 
-    public static Integer integer(JsonObject json, String path, String fallback) {
+    public static Integer integer(JsonObject json, String path, Integer fallback) {
         Object value = JsonResolver.opt(json, path, Type.INTEGER, fallback);
         return Integer.class.cast(value);
     }
@@ -264,7 +264,7 @@ public class JsonResolver {
         return biginteger(json, path, null);
     }
 
-    public static BigInteger biginteger(JsonObject json, String path, String fallback) {
+    public static BigInteger biginteger(JsonObject json, String path, BigInteger fallback) {
         Object value = JsonResolver.opt(json, path, Type.BIGINTEGER, fallback);
         return BigInteger.class.cast(value);
     }
@@ -277,7 +277,7 @@ public class JsonResolver {
         return bigdecimal(json, path, null);
     }
 
-    public static BigDecimal bigdecimal(JsonObject json, String path, String fallback) {
+    public static BigDecimal bigdecimal(JsonObject json, String path, BigDecimal fallback) {
         Object value = JsonResolver.opt(json, path, Type.BIGDECIMAL, fallback);
         return BigDecimal.class.cast(value);
     }
@@ -290,7 +290,7 @@ public class JsonResolver {
         return date(json, path, null);
     }
 
-    public static Date date(JsonObject json, String path, String fallback) {
+    public static Date date(JsonObject json, String path, Date fallback) {
         Object value = JsonResolver.opt(json, path, Type.EPOCH, fallback);
         return Date.class.cast(value);
     }

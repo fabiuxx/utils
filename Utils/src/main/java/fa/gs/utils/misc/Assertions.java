@@ -85,13 +85,26 @@ public class Assertions {
      * Verifica si una cadena representa un valor de registro unico de
      * contribuyente (RUC).
      *
-     * @param ruc Cadena de texto.
+     * @param value Cadena de texto.
      * @return {@code true} si la cadena es un ruc, {@code false} caso
      * contrario.
      */
-    public static boolean isRuc(String ruc) {
+    public static boolean isRuc(String value) {
         Pattern pattern = Pattern.compile("[0-9]+\\-[0-9]$");
-        Matcher matcher = pattern.matcher((ruc));
+        Matcher matcher = pattern.matcher((value));
+        return matcher.matches();
+    }
+
+    /**
+     * Verifica si una cadena representa un valor de numero de factura.
+     *
+     * @param value Cadena de texto.
+     * @return {@code true} si la cadena es un numero de factura, {@code false}
+     * caso contrario.
+     */
+    public static boolean isNumeroFactura(String value) {
+        Pattern pattern = Pattern.compile("\\d\\d\\d-\\d\\d\\d-\\d\\d\\d\\d\\d\\d\\d");
+        Matcher matcher = pattern.matcher(value);
         return matcher.matches();
     }
 

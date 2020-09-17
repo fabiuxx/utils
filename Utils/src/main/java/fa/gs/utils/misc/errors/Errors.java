@@ -10,6 +10,7 @@ import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.utils.Failure;
+import java.io.IOException;
 import java.io.PrintStream;
 
 /**
@@ -72,6 +73,19 @@ public class Errors {
     public static IllegalStateException illegalState(Throwable cause, String fmt, Object... args) {
         String msg = Strings.format(fmt, args);
         return new IllegalStateException(msg, cause);
+    }
+
+    public static IOException io() {
+        return io("I/O");
+    }
+
+    public static IOException io(String fmt, Object... args) {
+        return io(null, fmt, args);
+    }
+
+    public static IOException io(Throwable cause, String fmt, Object... args) {
+        String msg = Strings.format(fmt, args);
+        return new IOException(msg, cause);
     }
 
     public static AppErrorException.Builder builder() {
