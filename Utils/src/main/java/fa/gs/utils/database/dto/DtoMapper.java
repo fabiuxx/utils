@@ -15,9 +15,11 @@ import fa.gs.utils.database.dto.annotations.FgProjection;
 import fa.gs.utils.database.dto.annotations.FgQueryResultSetAdapter;
 import fa.gs.utils.database.dto.converters.DtoValueConverter;
 import fa.gs.utils.database.dto.converters.DtoValueConverterTarget;
+import fa.gs.utils.database.dto.converters.impl.JdbcScalarToCodificableConverter;
 import fa.gs.utils.database.dto.mapping.HibernateOrmResultSetAdapter;
 import fa.gs.utils.database.dto.mapping.QueryResultSetAdapter;
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.Codificable;
 import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Strings;
@@ -200,7 +202,25 @@ public class DtoMapper<T> implements Serializable {
                     value = converter.convert(values);
                 } else if (conversionTarget == DtoValueConverterTarget.PROJECTION) {
                     // Convertir proyeccion.
-                    value = converter.convert(value);
+                    if (converter instanceof JdbcScalarToCodificableConverter) {
+                        /**
+                         * Caso especial de conversion de valores escalares a
+                         * valores codificables.
+                         */
+                        Class<?> fieldType = entry.getValue().getType();
+                        if (Reflection.isInstanceOf(fieldType, Enum.class) && Reflection.isInstanceOf(fieldType, Codificable.class)) {
+                            JdbcScalarToCodificableConverter jdbcConverter = (JdbcScalarToCodificableConverter) converter;
+                            jdbcConverter.setEnumCodificableClass(fieldType);
+                            value = jdbcConverter.convert(value);
+                        } else {
+                            throw Errors.unsupported("Conversion no soportada.");
+                        }
+                    } else {
+                        /**
+                         * Caso normal de conversion de valores escalares.
+                         */
+                        value = converter.convert(value);
+                    }
                 } else {
                     // No deberia ocurrir.
                     throw Errors.illegalState();
