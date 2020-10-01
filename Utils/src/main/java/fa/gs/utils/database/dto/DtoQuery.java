@@ -29,6 +29,7 @@ import fa.gs.utils.database.query.elements.utils.Ctes;
 import fa.gs.utils.database.query.elements.utils.Joins;
 import fa.gs.utils.database.query.elements.utils.Projections;
 import fa.gs.utils.database.query.elements.utils.Tables;
+import fa.gs.utils.database.query.expressions.literals.NumberLiteral;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.Errors;
@@ -266,11 +267,19 @@ public class DtoQuery implements Serializable {
                 // 1) Resolver tipo de ordenacion.
                 Order.Type type0 = orderBy.type();
 
+                // 2) Resolver si criterio de ordenacion es por nombre o posicion.
+                boolean positional0 = orderBy.positional();
+
                 // 2) Resolver criterio de ordenacion.
-                Name name0 = new Name(orderBy.value());
+                QueryPart value0;
+                if (positional0) {
+                    value0 = new NumberLiteral(Integer.parseInt(orderBy.value()));
+                } else {
+                    value0 = new Name(orderBy.value());
+                }
 
                 // 3) Clausula de ordenacion
-                Order order = new Order(name0, type0);
+                Order order = new Order(value0, type0);
                 orders.add(order);
             }
         }

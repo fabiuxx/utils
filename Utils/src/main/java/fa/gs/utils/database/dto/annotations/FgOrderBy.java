@@ -25,4 +25,10 @@ public @interface FgOrderBy {
 
     String value();
 
+    /**
+     * Indica si se hace referencia a una posicion de columna de la fila en
+     * lugar de un nombre concreto de columna.
+     */
+    boolean positional() default false;
+
 }

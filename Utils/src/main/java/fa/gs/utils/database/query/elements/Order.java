@@ -17,10 +17,10 @@ import lombok.Data;
 @Data
 public class Order implements QueryPart {
 
-    private Name value;
+    private QueryPart value;
     private Order.Type type;
 
-    public Order(Name value, Type type) {
+    public Order(QueryPart value, Type type) {
         this.value = value;
         this.type = type;
     }
