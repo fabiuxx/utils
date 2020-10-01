@@ -14,9 +14,14 @@ import fa.gs.utils.database.query.elements.CTE;
 public class Ctes {
 
     public static CTE build(String name, String body) {
+        return build(name, body, false);
+    }
+
+    public static CTE build(String name, String body, boolean recursive) {
         CTE instance = new CTE();
         instance.setName(name);
         instance.setBody(body);
+        instance.setRecursive(recursive);
         return instance;
     }
 

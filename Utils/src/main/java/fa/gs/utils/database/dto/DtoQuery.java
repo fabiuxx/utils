@@ -140,8 +140,11 @@ public class DtoQuery implements Serializable {
                 // 2) Resolver cuerpo.
                 String body = cte0.body();
 
+                // 3) Resolver recursividad.
+                boolean recursive = cte0.recursive();
+
                 // 3) CTE.
-                CTE cte = Ctes.build(name, body);
+                CTE cte = Ctes.build(name, body, recursive);
                 ctes.add(cte);
             }
         }

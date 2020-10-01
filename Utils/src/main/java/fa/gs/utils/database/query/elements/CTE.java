@@ -20,16 +20,20 @@ public class CTE implements QueryPart {
 
     private String name;
     private String body;
+    private Boolean recursive;
 
     public CTE() {
         this.name = "";
         this.body = "";
+        this.recursive = false;
     }
 
     @Override
     public String stringify(Dialect dialect) {
         if (!Assertions.stringNullOrEmpty(name) && !Assertions.stringNullOrEmpty(body)) {
-            return Strings.format(" %s as (%s) ", name, body);
+            String kw = (recursive) ? "RECURSIVE" : "";
+            String ql = Strings.format(" %s %s as (%s) ", kw, name, body);
+            return ql.trim();
         } else {
             return "";
         }

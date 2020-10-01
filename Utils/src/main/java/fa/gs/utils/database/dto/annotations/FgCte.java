@@ -32,4 +32,9 @@ public @interface FgCte {
      */
     String body() default "";
 
+    /**
+     * Indica si la CTE es de tipo recursiva.
+     */
+    boolean recursive() default false;
+
 }
