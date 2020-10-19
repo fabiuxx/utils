@@ -193,12 +193,12 @@ public class Text {
 
     /**
      * Separa una cadena de texto
-     * <code>nombre=valor&nombre=valor&...&nombre=valor</code> en sus
+     * {@code nombre=valor&nombre=valor&...&nombre=valor} en sus
      * correspondientes partes.
      *
      * @param query Cadena de texto en formato
-     * <code>nombre=valor&nombre=valor&...&nombre=valor</code>.
-     * @return Coleccion de parametros agrupados por <code>nombre</code>.
+     * {@code nombre=valor&nombre=valor&...&nombre=valor}.
+     * @return Coleccion de parametros agrupados por {@code nombre}.
      */
     public static Map<String, String> parseQuerystring(String query) {
         Map<String, String> params = new LinkedHashMap<>();

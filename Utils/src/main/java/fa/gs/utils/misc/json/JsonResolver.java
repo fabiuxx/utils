@@ -35,9 +35,9 @@ public class JsonResolver {
      * @param path Camino hasta la propiedad deseada.
      * @param type Enumeracion de tipo a intentar convertir.
      * @return Valor de propiedad, si hubiere.
-     * @throws IllegalArgumentException Si el <code>path</code> no representa
+     * @throws IllegalArgumentException Si el {@code path} no representa
      * una propiedad valida o si el valor encontrado no puede convertirse al
-     * tipo especificado por <code>type</code>.
+     * tipo especificado por {@code type}.
      */
     public static <T> T get(JsonObject json, String path, Type type) {
         JsonElement resolved = Json.resolvePath(json, path);

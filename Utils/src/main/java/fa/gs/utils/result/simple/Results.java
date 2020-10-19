@@ -221,7 +221,7 @@ public class Results {
 
     /**
      * Interface para constructor de respuestas simples, donde se espera algun
-     * valor de exito de tipo <code>S</code> o bien un valor de fallo de tipo
+     * valor de exito de tipo {@code S} o bien un valor de fallo de tipo
      * {@link fa.gs.utils.result.utils.Failure failure}.
      *
      * @param <S> Parámetro de tipo para valor de exito.
