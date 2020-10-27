@@ -174,6 +174,10 @@ public class DtoMapper<T> implements Serializable {
         }
 
         for (Map.Entry<String, Field> entry : mappings.entrySet()) {
+            // Obtener nombre de mapeo y el campo concreto al cual se debe asignar el valor.
+            String mappingName = entry.getKey();
+            Object value = Maps.get(values, mappingName);
+
             // Crear instancia de convertidor, si hubiere.
             DtoValueConverter converter = null;
             FgConverter converterAnnotation = Reflection.getAnnotation(entry.getValue(), AnnotationTypes.FGCONVERTER);
@@ -189,10 +193,6 @@ public class DtoMapper<T> implements Serializable {
                     }
                 }
             }
-
-            // Obtener nombre de mapeo y el campo concreto al cual se debe asignar el valor.
-            String mappingName = entry.getKey();
-            Object value = Maps.get(values, mappingName);
 
             // Utilizar convertidor de valores, si hubiere.
             if (converter != null) {

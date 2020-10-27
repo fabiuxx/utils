@@ -19,11 +19,11 @@ public class Eliminar {
 
     public static final String META_ELIMINADO_FIELD_NAME = "meta__eliminado";
 
-    public Long softDelete(EntityManager em, String schema, String table, BigInteger[] ids) {
+    public static Long softDelete(EntityManager em, String schema, String table, BigInteger[] ids) {
         return softDelete(em, schema, table, META_ELIMINADO_FIELD_NAME, ids);
     }
 
-    public Long softDelete(EntityManager em, String schema, String table, String campo, BigInteger[] ids) {
+    public static Long softDelete(EntityManager em, String schema, String table, String campo, BigInteger[] ids) {
         if (Assertions.isNullOrEmpty(ids)) {
             return 0L;
         }
@@ -32,7 +32,7 @@ public class Eliminar {
         return Jpa.executeUpdate(sql, em);
     }
 
-    public Long hardDelete(EntityManager em, String schema, String table, BigInteger[] ids) {
+    public static Long hardDelete(EntityManager em, String schema, String table, BigInteger[] ids) {
         if (Assertions.isNullOrEmpty(ids)) {
             return 0L;
         }

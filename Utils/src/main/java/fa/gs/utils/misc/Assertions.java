@@ -23,6 +23,40 @@ import java.util.regex.Pattern;
 public class Assertions {
 
     /**
+     * Verifica que al menos una de las condiciones sea verdadera.
+     *
+     * @param values Valores condicionales.
+     * @return Si al menos una condicion es verdadera.
+     */
+    public static boolean any(Boolean... values) {
+        if (!Assertions.isNullOrEmpty(values)) {
+            for (Boolean value : values) {
+                if (value == true) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Verifica que todas las condiciones sean verdaderas.
+     *
+     * @param values Valores condicionales.
+     * @return Si todas las condiciones son verdaderas.
+     */
+    public static boolean all(Boolean... values) {
+        if (!Assertions.isNullOrEmpty(values)) {
+            for (Boolean value : values) {
+                if (value == false) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * Verifica que dos objetos sean iguales.
      *
      * @param a Objeto a.

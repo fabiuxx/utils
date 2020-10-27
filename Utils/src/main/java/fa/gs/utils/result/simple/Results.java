@@ -6,6 +6,7 @@
 package fa.gs.utils.result.simple;
 
 import fa.gs.utils.misc.errors.Errno;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.result.BaseResult;
 import fa.gs.utils.result.utils.Failure;
 import fa.gs.utils.result.utils.Failure_Builder_Methods;
@@ -77,6 +78,9 @@ public class Results {
      * @throws Throwable Excepcion si el resultado representa un caso de fallo.
      */
     public static <S> S valueOrRaise(Result<S> result) throws Throwable {
+        if (result.isFailure()) {
+            Errors.dump(System.err, result.failure().cause(), result.failure().message());
+        }
         result.raise();
         return result.value();
     }
@@ -91,6 +95,9 @@ public class Results {
      * @throws Throwable Excepcion si el resultado representa un caso de fallo.
      */
     public static <S> S valueNotEmptyOrRaise(Result<S> result) throws Throwable {
+        if (result.isFailure()) {
+            Errors.dump(System.err, result.failure().cause(), result.failure().message());
+        }
         result.raise(true);
         return result.value();
     }

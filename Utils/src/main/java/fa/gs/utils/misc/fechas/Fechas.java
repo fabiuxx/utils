@@ -40,9 +40,20 @@ public class Fechas {
         "Diciembre"
     };
 
-    public static final Tiempos TIEMPOS = new Tiempos();
+    /**
+     * Dias en un mes.
+     */
+    public static final int[] dias_mes = {
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        11, 12, 13, 14, 15, 16, 17, 18,
+        19, 20, 21, 22, 23, 24, 25, 26,
+        27, 28, 29, 30, 31
+    };
 
-    public static final Formats FORMATS = new Formats();
+    /**
+     * Diez anhos incluyendo el actual.
+     */
+    public static final int[] anhos = Fechas.diezAnhos();
     //</editor-fold>
 
     /**
@@ -85,6 +96,20 @@ public class Fechas {
     }
 
     /**
+     * Genera un array con los siguientes diez anhos incluyendo el actual.
+     *
+     * @return Array de anhos.
+     */
+    public static final int[] diezAnhos() {
+        int[] anhos = new int[10];
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        for (int i = 0; i < 10; i++) {
+            anhos[i] = year + i;
+        }
+        return anhos;
+    }
+
+    /**
      * Combina dos objetos de tipo Date para formar uno solo. Este metodo es
      * complementario a separarFechaHora.
      *
@@ -110,6 +135,7 @@ public class Fechas {
         cFechaHora.set(Calendar.HOUR_OF_DAY, cHora.get(Calendar.HOUR_OF_DAY));
         cFechaHora.set(Calendar.MINUTE, cHora.get(Calendar.MINUTE));
         cFechaHora.set(Calendar.SECOND, cHora.get(Calendar.SECOND));
+        cFechaHora.set(Calendar.MILLISECOND, cHora.get(Calendar.MILLISECOND));
         return cFechaHora.getTime();
     }
 
@@ -137,6 +163,7 @@ public class Fechas {
         cHora.set(Calendar.HOUR_OF_DAY, cFechaHora.get(Calendar.HOUR_OF_DAY));
         cHora.set(Calendar.MINUTE, cFechaHora.get(Calendar.MINUTE));
         cHora.set(Calendar.SECOND, cFechaHora.get(Calendar.SECOND));
+        cHora.set(Calendar.MILLISECOND, cFechaHora.get(Calendar.MILLISECOND));
 
         Date[] fechaHora = new Date[]{cFecha.getTime(), cHora.getTime()};
         return fechaHora;
@@ -177,6 +204,21 @@ public class Fechas {
      * @return Fecha con valores establecidos.
      */
     public static Date setHora(Date input, int hora, int minuto, int segundo) {
+        return setHora(input, hora, minuto, segundo, 0);
+    }
+
+    /**
+     * Toma un objeto fecha como referencia y modifica el mismo para establecer
+     * los valores de hora, minuto y segundos indicados.
+     *
+     * @param input Fecha de referencia.
+     * @param hora Hora (0-23).
+     * @param minuto Minuto (0-59).
+     * @param segundo Segundo (0-59).
+     * @param milisegundo Milisegundo (0-999).
+     * @return Fecha con valores establecidos.
+     */
+    public static Date setHora(Date input, int hora, int minuto, int segundo, int milisegundo) {
         if (input == null) {
             return null;
         }
@@ -187,6 +229,7 @@ public class Fechas {
         cal.set(Calendar.HOUR_OF_DAY, hora);
         cal.set(Calendar.MINUTE, minuto);
         cal.set(Calendar.SECOND, segundo);
+        cal.set(Calendar.MILLISECOND, milisegundo);
         return cal.getTime();
     }
 
