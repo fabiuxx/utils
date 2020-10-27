@@ -15,7 +15,7 @@ import fa.gs.utils.database.query.elements.Order;
 import fa.gs.utils.database.query.elements.Projection;
 import fa.gs.utils.database.query.elements.Table;
 import fa.gs.utils.misc.Assertions;
-import fa.gs.utils.misc.Unit;
+import fa.gs.utils.misc.Units;
 import fa.gs.utils.misc.text.Joiner;
 import fa.gs.utils.misc.text.StringBuilder2;
 import fa.gs.utils.misc.text.Strings;
@@ -52,7 +52,7 @@ public abstract class AbstractQuery implements QueryPart {
     protected String fillParameters(String query, Dialect dialect) {
         if (!Assertions.isNullOrEmpty(parameters)) {
             for (Map.Entry<String, QueryPart> entry : parameters.entrySet()) {
-                String value = Unit.execute("", () -> entry.getValue().stringify(dialect));
+                String value = Units.execute("", () -> entry.getValue().stringify(dialect));
                 query = query.replaceAll(Pattern.quote(entry.getKey()), value);
             }
         }

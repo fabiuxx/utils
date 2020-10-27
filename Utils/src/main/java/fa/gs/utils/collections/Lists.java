@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java8.util.function.Function;
+import java.util.function.Function;
 import java8.util.stream.Collectors;
 import java8.util.stream.Stream;
 import java8.util.stream.StreamSupport;
@@ -107,7 +107,7 @@ public class Lists {
     public static <TFrom, TTo> Collection<TTo> map(Collection<TFrom> objects, Function<TFrom, TTo> mapper) {
         Stream<TFrom> stream = StreamSupport.stream(objects);
         return stream
-                .map(mapper)
+                .map(mapper::apply)
                 .collect(Collectors.toList());
     }
 

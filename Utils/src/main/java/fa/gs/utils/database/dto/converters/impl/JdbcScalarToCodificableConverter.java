@@ -6,6 +6,7 @@
 package fa.gs.utils.database.dto.converters.impl;
 
 import fa.gs.utils.misc.Codificable;
+import fa.gs.utils.misc.Codificables;
 import fa.gs.utils.misc.errors.Errors;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +28,7 @@ public class JdbcScalarToCodificableConverter extends AbstractJdbcScalarConverte
         }
 
         if (value instanceof String) {
-            return Codificable.fromCodigo((String) value, (Codificable[]) enumCodificableClass.getEnumConstants());
+            return Codificables.fromCodigo((String) value, (Codificable[]) enumCodificableClass.getEnumConstants());
         }
 
         throw unsupportedType(value);

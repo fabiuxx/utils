@@ -185,5 +185,10 @@ public class Errors {
             return codigo;
         }
 
+        @Override
+        public String getErrnoString() {
+            return Strings.format("%s%s", getDescriptor(), getCode());
+        }
+
     }
 }

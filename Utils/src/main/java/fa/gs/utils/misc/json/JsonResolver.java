@@ -11,8 +11,9 @@ import com.google.gson.JsonObject;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Codificable;
+import fa.gs.utils.misc.Codificables;
 import fa.gs.utils.misc.Type;
-import fa.gs.utils.misc.Unit;
+import fa.gs.utils.misc.Units;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.fechas.Fechas;
 import java.math.BigDecimal;
@@ -35,9 +36,9 @@ public class JsonResolver {
      * @param path Camino hasta la propiedad deseada.
      * @param type Enumeracion de tipo a intentar convertir.
      * @return Valor de propiedad, si hubiere.
-     * @throws IllegalArgumentException Si el {@code path} no representa
-     * una propiedad valida o si el valor encontrado no puede convertirse al
-     * tipo especificado por {@code type}.
+     * @throws IllegalArgumentException Si el {@code path} no representa una
+     * propiedad valida o si el valor encontrado no puede convertirse al tipo
+     * especificado por {@code type}.
      */
     public static <T> T get(JsonObject json, String path, Type type) {
         JsonElement resolved = Json.resolvePath(json, path);
@@ -303,7 +304,7 @@ public class JsonResolver {
         Collection<T> values = Lists.empty();
         JsonArray array = jArray(json, path);
         for (JsonElement element : array) {
-            Object value0 = Unit.execute(() -> reduceValue(element, type));
+            Object value0 = Units.execute(null, () -> reduceValue(element, type));
             T value = klass.cast(value0);
             values.add(value);
         }
@@ -328,7 +329,7 @@ public class JsonResolver {
 
     public static <T extends Codificable> T codificable(JsonObject json, String path, T[] values) {
         String codigo = JsonResolver.string(json, path);
-        return Codificable.fromCodigo(codigo, values);
+        return Codificables.fromCodigo(codigo, values);
     }
 
     public static <T> T object(JsonObject json, String path, JsonResolver.Mapper<T> mapper) {

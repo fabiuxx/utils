@@ -6,6 +6,7 @@
 package fa.gs.utils.database.dto.converters.impl;
 
 import fa.gs.utils.misc.Codificable;
+import fa.gs.utils.misc.Codificables;
 
 /**
  *
@@ -22,7 +23,7 @@ public class CodificableEnumProjectionConverter<T extends Enum<T> & Codificable>
 
     @Override
     protected T convertCodificable(String codigo) {
-        return Codificable.fromCodigo(codigo, enumClass.getEnumConstants());
+        return Codificables.fromCodigo(codigo, enumClass.getEnumConstants());
     }
 
 }

@@ -13,27 +13,6 @@ package fa.gs.utils.misc;
 @FunctionalInterface
 public interface Unit<T> {
 
-    static <T> T execute(Unit<T> unit) {
-        return execute(null, unit);
-    }
-
-    static <T> T execute(T fallback, Unit<T> unit) {
-        try {
-            T value = unit.execute();
-            return (value != null) ? value : fallback;
-        } catch (Throwable thr) {
-            return fallback;
-        }
-    }
-
-    static void execute(Runnable runnable) {
-        try {
-            runnable.run();
-        } catch (Throwable thr) {
-            ;
-        }
-    }
-
     T execute() throws Throwable;
 
 }
