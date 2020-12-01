@@ -68,8 +68,8 @@ public class Lists {
      * @param iterable Iteracion de objetos.
      * @return Coleccion.
      */
-    public static <T> Collection<T> wrap(Iterable<T> iterable) {
-        Collection<T> items = Lists.empty();
+    public static <T> List<T> wrap(Iterable<T> iterable) {
+        List<T> items = Lists.empty();
         if (iterable != null) {
             for (T item0 : iterable) {
                 items.add(item0);

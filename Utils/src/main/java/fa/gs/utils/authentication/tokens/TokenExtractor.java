@@ -113,7 +113,7 @@ public class TokenExtractor {
                 return sanitizeUrlEncodedString(token);
             }
         } catch (Throwable thr) {
-            Errors.dump(System.err, thr, "Ocurrio un error obteniendo token desde query");
+            Errors.dump(System.err, thr, "Ocurrió un error obteniendo token desde query");
             return null;
         }
     }
@@ -127,7 +127,7 @@ public class TokenExtractor {
                 return sanitizeUrlEncodedString(token);
             }
         } catch (Throwable thr) {
-            Errors.dump(System.err, thr, "Ocurrio un error obteniendo token desde query");
+            Errors.dump(System.err, thr, "Ocurrió un error obteniendo token desde query");
             return null;
         }
     }

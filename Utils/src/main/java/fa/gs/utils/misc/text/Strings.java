@@ -12,7 +12,8 @@ package fa.gs.utils.misc.text;
 public class Strings {
 
     public static final char[] HEX_DIGITS = {
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+        '0', '1', '2', '3', '4', '5', '6', '7',
+        '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
     };
 
     /**
@@ -59,11 +60,14 @@ public class Strings {
         }
     }
 
-    public static String bytesToHexString(byte[] ba) {
-        int length = ba.length;
-        char[] buf = new char[length * 2];
-        for (int i = 0, j = 0, k; i < length;) {
-            k = ba[i++];
+    public static String bytesToHexString(byte[] bytes) {
+        return bytesToHexString(bytes, 0, bytes.length);
+    }
+
+    public static String bytesToHexString(byte[] bytes, int offset, int len) {
+        char[] buf = new char[len * 2];
+        for (int i = offset, j = 0, k; i < len + offset;) {
+            k = bytes[i++];
             buf[j++] = HEX_DIGITS[(k >>> 4) & 0x0F];
             buf[j++] = HEX_DIGITS[k & 0x0F];
         }

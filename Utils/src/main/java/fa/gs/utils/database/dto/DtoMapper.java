@@ -15,6 +15,7 @@ import fa.gs.utils.database.dto.annotations.FgProjection;
 import fa.gs.utils.database.dto.annotations.FgQueryResultSetAdapter;
 import fa.gs.utils.database.dto.converters.DtoValueConverter;
 import fa.gs.utils.database.dto.converters.DtoValueConverterTarget;
+import fa.gs.utils.database.dto.converters.impl.CodificableEnumProjectionConverter;
 import fa.gs.utils.database.dto.converters.impl.JdbcScalarToCodificableConverter;
 import fa.gs.utils.database.dto.mapping.HibernateOrmResultSetAdapter;
 import fa.gs.utils.database.dto.mapping.QueryResultSetAdapter;
@@ -212,6 +213,19 @@ public class DtoMapper<T> implements Serializable {
                             JdbcScalarToCodificableConverter jdbcConverter = (JdbcScalarToCodificableConverter) converter;
                             jdbcConverter.setEnumCodificableClass(fieldType);
                             value = jdbcConverter.convert(value);
+                        } else {
+                            throw Errors.unsupported("Conversion no soportada.");
+                        }
+                    } else if (converter instanceof CodificableEnumProjectionConverter) {
+                        /**
+                         * Caso especial de conversion de valores escalares a
+                         * valores codificables.
+                         */
+                        Class<?> fieldType = entry.getValue().getType();
+                        if (Reflection.isInstanceOf(fieldType, Enum.class) && Reflection.isInstanceOf(fieldType, Codificable.class)) {
+                            CodificableEnumProjectionConverter enumConverter = (CodificableEnumProjectionConverter) converter;
+                            enumConverter.setEnumCodificableClass(fieldType);
+                            value = enumConverter.convert(value);
                         } else {
                             throw Errors.unsupported("Conversion no soportada.");
                         }

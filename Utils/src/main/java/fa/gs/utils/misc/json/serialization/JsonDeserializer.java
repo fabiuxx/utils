@@ -14,6 +14,7 @@ import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.json.Json;
 import fa.gs.utils.misc.json.adapter.JsonAdapterFromJson;
+import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -27,17 +28,27 @@ import java.util.Map;
  */
 public class JsonDeserializer {
 
+    public static Boolean DEBUG = false;
+
+    private static void debug(String fmt, Object... args) {
+        if (DEBUG) {
+            System.out.println(Strings.format(fmt, args));
+        }
+    }
+
     public static <T> T deserialize(String json0, Class<T> targetClass) throws Throwable {
-        //Utils.checkIsJsonProcessable(targetClass);
         JsonElement json = Json.fromString(json0);
-        return deserialize(json, targetClass);
+        T value = deserialize(json, targetClass);
+        return value;
     }
 
     public static <T> T deserialize(JsonElement json, Class<T> targetClass) throws Throwable {
-        //Utils.checkIsJsonProcessable(targetClass);
+        debug("[DESERIALIZE START] target=%s", targetClass.getCanonicalName());
         final DeserializationContext ctx = new DeserializationContext();
         Object instance0 = resolveElement(ctx, json, targetClass, null);
-        return targetClass.cast(instance0);
+        T value = targetClass.cast(instance0);
+        debug("[DESERIALIZE END]");
+        return value;
     }
 
     private static Object resolveElement(final DeserializationContext ctx, JsonElement element, Class<?> targetClass, Field field) throws Throwable {
@@ -83,11 +94,15 @@ public class JsonDeserializer {
      * objetivo no representa un tipo primitivo de Java.
      */
     private static Object resolvePrimitive(final DeserializationContext ctx, JsonElement element, Class<?> targetClass) throws Throwable {
+        debug("PRIMITIVE isPrimitive=%s target=%s", element.isJsonPrimitive(), targetClass.getCanonicalName());
+
         if (!element.isJsonPrimitive()) {
             throw Errors.illegalArgument("La clase '%s' no acepta valores json no primitivos.", targetClass.getCanonicalName());
         }
 
-        return ctx.gson.fromJson(element, targetClass);
+        Object value = ctx.gson.fromJson(element, targetClass);
+        debug("OK");
+        return value;
     }
 
     /**
@@ -110,9 +125,11 @@ public class JsonDeserializer {
             throw Errors.illegalArgument("Se esperaba una definición de atributo para resolver el array de objetos json.");
         }
 
+        debug("COLLECTION target=%s field=%s", targetClass.getCanonicalName(), field.getName());
         final JsonArray array = element.getAsJsonArray();
         final Collection collection = new ArrayList<>(array.size());
         Class<?> genericType = Reflection.getFirstActualGenericType(field.getGenericType());
+        debug("    genericType=%s", genericType.getCanonicalName());
         for (JsonElement arrayElement : array) {
             Object instance = resolveElement(ctx, arrayElement, genericType, field);
             collection.add(instance);
@@ -141,9 +158,11 @@ public class JsonDeserializer {
             throw Errors.illegalArgument("Se esperaba una definición de atributo para resolver el array de objetos json.");
         }
 
+        debug("ARRAY target=%s field=%s", targetClass.getCanonicalName(), field.getName());
         final JsonArray array = element.getAsJsonArray();
         final Collection collection = new ArrayList<>(array.size());
         Class<?> arrayType = targetClass.getComponentType();
+        debug("    arrayType=%s", arrayType.getCanonicalName());
         for (JsonElement arrayElement : array) {
             Object instance = resolveElement(ctx, arrayElement, arrayType, field);
             collection.add(instance);
@@ -176,6 +195,8 @@ public class JsonDeserializer {
         if (element.isJsonPrimitive()) {
             throw Errors.illegalArgument("La clase '%s' no acepta valores json primitivos.", targetClass.getCanonicalName());
         }
+
+        debug("OBJECT target=%s", targetClass.getCanonicalName());
 
         // Instanciar nuevo objeto.
         Object instance = Reflection.createInstance(targetClass);
@@ -228,14 +249,19 @@ public class JsonDeserializer {
         String propertyName = Text.select(annotation.name(), field.getName());
         JsonElement property = Json.resolvePath(element.getAsJsonObject(), propertyName);
 
+        debug("OBJECT PROPERTY property=%s field=%s", propertyName, field.getName());
+
         // Control de tipo de resolucion.
         JsonResolution resolution = annotation.resolution();
+        debug("    resolution=%s", String.valueOf(resolution));
         if (resolution == JsonResolution.MANDATORY && property == null) {
             throw Errors.illegalArgument("La propiedad json '%s' es obligatoria para la clase '%s'.", propertyName, field.getDeclaringClass().getCanonicalName());
         }
         if (resolution == JsonResolution.OPTIONAL && property == null) {
             return null;
         }
+
+        debug("    json=%s", Json.toString(element));
 
         try {
             // Utilizar adaptador, si hubiere. Los adaptadores tienen preferencia.

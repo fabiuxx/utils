@@ -7,6 +7,8 @@ package fa.gs.utils.database.dto.converters.impl;
 
 import fa.gs.utils.misc.Codificable;
 import fa.gs.utils.misc.Codificables;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -15,15 +17,13 @@ import fa.gs.utils.misc.Codificables;
  */
 public class CodificableEnumProjectionConverter<T extends Enum<T> & Codificable> extends AbstractCodificableProjectionConverter<T> {
 
-    private final Class<T> enumClass;
-
-    protected CodificableEnumProjectionConverter(Class<T> enumClass) {
-        this.enumClass = enumClass;
-    }
+    @Getter
+    @Setter
+    private Class<T> enumCodificableClass;
 
     @Override
     protected T convertCodificable(String codigo) {
-        return Codificables.fromCodigo(codigo, enumClass.getEnumConstants());
+        return Codificables.fromCodigo(codigo, enumCodificableClass.getEnumConstants());
     }
 
 }
