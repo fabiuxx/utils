@@ -80,6 +80,18 @@ public class Numeric {
     //</editor-fold>
 
     /**
+     * Determina si el valor representado puede considerarse como un entero. Es
+     * decir, si los decimales que contiene son todos iguales a 0.
+     *
+     * @param value Valor numerico.
+     * @return Si el valor contiene decimales distintos de cero.
+     */
+    public static boolean puedeConsiderarseEntero(BigDecimal value) {
+        https://stackoverflow.com/a/12748321
+        return value.signum() == 0 || value.scale() <= 0 || value.stripTrailingZeros().scale() <= 0;
+    }
+
+    /**
      * Adapta un valor numerico de tipo indeterminado a un valor concreto de
      * tipo {@link java.lang.Integer Integer}.
      *
@@ -411,7 +423,13 @@ public class Numeric {
      * @return Representacion de texto.
      */
     public static String format(BigDecimal value) {
-        return Currency.formatCurrency(value);
+        if (puedeConsiderarseEntero(value)) {
+            BigInteger value0 = value.toBigInteger();
+            return String.valueOf(value0);
+        } else {
+            BigDecimal value0 = value.stripTrailingZeros();
+            return String.valueOf(value0);
+        }
     }
 
     /**

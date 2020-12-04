@@ -197,6 +197,17 @@ public class Lists {
     }
 
     /**
+     * Obtiene un stream de procesamiento para un array de elementos.
+     *
+     * @param <T> Parametro de tipo.
+     * @param array Array de elementos.
+     * @return Stream de datos.
+     */
+    public static <T> Stream<T> stream(T[] array) {
+        return stream(wrap(array));
+    }
+
+    /**
      * Convierte una coleccion de colecciones en una sola.
      *
      * @param <T> Parametro de tipo.

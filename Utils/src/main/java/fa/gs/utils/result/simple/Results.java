@@ -78,10 +78,15 @@ public class Results {
      * @throws Throwable Excepcion si el resultado representa un caso de fallo.
      */
     public static <S> S valueOrRaise(Result<S> result) throws Throwable {
-        if (result.isFailure()) {
+        // Lanzar excepcion si el resultado no es de exito.
+        try {
+            result.raise();
+        } catch (Throwable thr) {
             Errors.dump(System.err, result.failure().cause(), result.failure().message());
+            throw thr;
         }
-        result.raise();
+
+        // Obtener valor.
         return result.value();
     }
 
@@ -95,10 +100,15 @@ public class Results {
      * @throws Throwable Excepcion si el resultado representa un caso de fallo.
      */
     public static <S> S valueNotEmptyOrRaise(Result<S> result) throws Throwable {
-        if (result.isFailure()) {
+        // Lanzar excepcion si valor es vacio o si el resultado no es de exito.
+        try {
+            result.raise(true);
+        } catch (Throwable thr) {
             Errors.dump(System.err, result.failure().cause(), result.failure().message());
+            throw thr;
         }
-        result.raise(true);
+
+        // Obtener valor no vacio.
         return result.value();
     }
 
