@@ -50,18 +50,42 @@ public class SQLStringLiterals {
     }
 
     public static String fecha(Date fecha) {
-        String txt = Fechas.toString(fecha, "yyyy-MM-dd");
-        return Text.safeQuoteSingle(txt);
+        return fecha(fecha, true);
     }
 
     public static String hora(Date fecha) {
-        String txt = Fechas.toString(fecha, "HH:mm:ss");
-        return Text.safeQuoteSingle(txt);
+        return hora(fecha, true);
     }
 
     public static String fechaHora(Date fecha) {
+        return fechaHora(fecha, true);
+    }
+
+    public static String fecha(Date fecha, boolean quoted) {
+        String txt = Fechas.toString(fecha, "yyyy-MM-dd");
+        if (quoted) {
+            return Text.safeQuoteSingle(txt);
+        } else {
+            return txt;
+        }
+    }
+
+    public static String hora(Date fecha, boolean quoted) {
+        String txt = Fechas.toString(fecha, "HH:mm:ss");
+        if (quoted) {
+            return Text.safeQuoteSingle(txt);
+        } else {
+            return txt;
+        }
+    }
+
+    public static String fechaHora(Date fecha, boolean quoted) {
         String txt = Fechas.toString(fecha, "yyyy-MM-dd HH:mm:ss");
-        return Text.safeQuoteSingle(txt);
+        if (quoted) {
+            return Text.safeQuoteSingle(txt);
+        } else {
+            return txt;
+        }
     }
 
 }

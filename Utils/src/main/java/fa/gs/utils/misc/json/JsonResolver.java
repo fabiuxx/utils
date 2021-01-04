@@ -256,6 +256,15 @@ public class JsonResolver {
         Object value = JsonResolver.opt(json, path, Type.INTEGER, fallback);
         return Integer.class.cast(value);
     }
+    
+    public static Long long0(JsonObject json, String path) {
+        return long0(json, path, null);
+    }
+
+    public static Long long0(JsonObject json, String path, Long fallback) {
+        Object value = JsonResolver.opt(json, path, Type.LONG, fallback);
+        return Long.class.cast(value);
+    }
 
     public static Collection<Integer> integerCollection(JsonObject json, String path) {
         return collection(json, path, Type.INTEGER, Integer.class);

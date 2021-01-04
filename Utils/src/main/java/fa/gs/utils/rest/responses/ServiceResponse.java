@@ -120,6 +120,16 @@ public class ServiceResponse {
     }
 
     /**
+     * Obtiene un constructor de respuestas para operaciones donde el recurso no
+     * pudo ser encontrado.
+     *
+     * @return Constructor de respuestas.
+     */
+    public static KO notFound() {
+        return new NOT_FOUND();
+    }
+
+    /**
      * Construye una respuesta segun el formato base definido por el servicio
      * del API REST.
      *
@@ -132,7 +142,9 @@ public class ServiceResponse {
                 .status(status)
                 .entity(payload)
                 .type(MediaType.APPLICATION_JSON);
-        return builder.build();
+
+        Response response = builder.build();
+        return response;
     }
 
     /**
@@ -348,6 +360,23 @@ public class ServiceResponse {
             super();
             this.cause = "UNAUTHORIZED";
             this.status = HTTP_UNAUTHORIZED;
+        }
+    }
+
+    /**
+     * Permite construir una respuesta apropiada para casos donde se ha
+     * producido un fallo por una peticion donde el recurso solicitado no
+     * existe.
+     */
+    public static class NOT_FOUND extends KO {
+
+        /**
+         * Constructor.
+         */
+        public NOT_FOUND() {
+            super();
+            this.cause = "NOT_FOUND";
+            this.status = HTTP_NOT_FOUND;
         }
     }
 

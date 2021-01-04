@@ -8,7 +8,9 @@ package fa.gs.utils.misc.json;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.fechas.Fechas;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -89,6 +91,17 @@ public class JsonObjectBuilder {
         } else {
             json.add(property, JsonNull.INSTANCE);
         }
+        return this;
+    }
+    
+    public JsonObjectBuilder add(String property, Collection<JsonElement> values) {
+        JsonArrayBuilder builder = JsonArrayBuilder.instance();
+        if(! Assertions.isNullOrEmpty(values)) {
+            for(JsonElement value : values) {
+                builder.add(value);
+            }
+        }
+        json.add(property, builder.build());
         return this;
     }
 

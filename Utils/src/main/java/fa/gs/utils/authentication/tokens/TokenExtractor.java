@@ -23,11 +23,11 @@ import javax.ws.rs.core.HttpHeaders;
  */
 public class TokenExtractor {
 
-    public static final String HEADER_NAME = HttpHeaders.AUTHORIZATION;
+    public static String HEADER_NAME = HttpHeaders.AUTHORIZATION;
 
-    public static final String HEADER_AUTHENTICATION_SCHEME = BaseAuthenticationInfo.AUTHENTICATION_SCHEME;
+    public static String HEADER_AUTHENTICATION_SCHEME = BaseAuthenticationInfo.AUTHENTICATION_SCHEME;
 
-    public static final String COOKIE_NAME = "APP_SESSION_TOKEN";
+    public static String COOKIE_NAME = "APP_SESSION_TOKEN";
 
     public static String fromHttpRequest(ContainerRequestContext request) {
         String value = fromHttpHeader(request);

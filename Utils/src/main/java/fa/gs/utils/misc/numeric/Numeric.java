@@ -104,7 +104,7 @@ public class Numeric {
         }
 
         if (obj instanceof Short) {
-            return (Integer) obj;
+            return ((Short) obj).intValue();
         }
 
         if (obj instanceof Integer) {
@@ -123,6 +123,10 @@ public class Numeric {
             return ((BigDecimal) obj).intValue();
         }
 
+        if (obj instanceof String) {
+            return Integer.valueOf((String) obj);
+        }
+
         throw Errors.illegalArgument("No se puede convertir '%s' a Integer.", obj.getClass().getCanonicalName());
     }
 
@@ -139,11 +143,11 @@ public class Numeric {
         }
 
         if (obj instanceof Short) {
-            return (Long) obj;
+            return ((Short) obj).longValue();
         }
 
         if (obj instanceof Integer) {
-            return (Long) obj;
+            return ((Integer) obj).longValue();
         }
 
         if (obj instanceof Long) {
@@ -156,6 +160,10 @@ public class Numeric {
 
         if (obj instanceof BigDecimal) {
             return ((BigDecimal) obj).longValue();
+        }
+
+        if (obj instanceof String) {
+            return Long.valueOf((String) obj);
         }
 
         throw Errors.illegalArgument("No se puede convertir '%s' a Long.", obj.getClass().getCanonicalName());
@@ -193,6 +201,10 @@ public class Numeric {
 
         if (obj instanceof BigDecimal) {
             return ((BigDecimal) obj).toBigInteger();
+        }
+
+        if (obj instanceof String) {
+            return new BigInteger((String) obj);
         }
 
         throw Errors.illegalArgument("No se puede convertir '%s' a BigInteger.", obj.getClass().getCanonicalName());
@@ -236,6 +248,10 @@ public class Numeric {
 
         if (obj instanceof BigDecimal) {
             return (BigDecimal) obj;
+        }
+
+        if (obj instanceof String) {
+            return new BigDecimal((String) obj);
         }
 
         throw Errors.illegalArgument("No se puede convertir '%s' a BigDecimal.", obj.getClass().getCanonicalName());

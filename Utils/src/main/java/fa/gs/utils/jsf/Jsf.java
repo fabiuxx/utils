@@ -29,6 +29,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.FaceletContext;
 import org.omnifaces.util.Ajax;
+import org.omnifaces.util.Components;
 import org.omnifaces.util.Faces;
 
 /**
@@ -272,7 +273,12 @@ public class Jsf {
      */
     public static void eval(String fmt, Object... args) {
         String code = Strings.format(fmt, args);
-        Ajax.oncomplete(code);
+        if (Faces.isAjaxRequestWithPartialRendering()) {
+            Ajax.oncomplete(code);
+        } else {
+            String script = Strings.format("$(document).ready(function(){%s;});", code);
+            Components.addScript(script);
+        }
     }
 
     public static void clearMessages() {
