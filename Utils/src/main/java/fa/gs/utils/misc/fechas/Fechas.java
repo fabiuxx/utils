@@ -7,6 +7,8 @@ package fa.gs.utils.misc.fechas;
 
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Locales;
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,6 +42,16 @@ public class Fechas {
         "Diciembre"
     };
 
+    private static final String[] eraNames = {"DC", "AC"};
+
+    private static final String[] monthNames = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+
+    private static final String[] monthNamesShort = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
+
+    private static final String[] dayNames = {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"};
+
+    private static final String[] dayNamesShort = {"Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"};
+
     /**
      * Dias en un mes.
      */
@@ -67,6 +79,33 @@ public class Fechas {
     }
 
     /**
+     * Unifica los simbolos de meses y dias de la semana acorde al locale 'es'.
+     *
+     * @return Formato de simbolos para meses y dias de la semana.
+     */
+    private static DateFormatSymbols getLocalizedDateFormatSymbols() {
+        DateFormatSymbols dfs = new DateFormatSymbols(Locales.es_ES);
+        dfs.setEras(eraNames);
+        dfs.setMonths(monthNames);
+        dfs.setShortMonths(monthNamesShort);
+        dfs.setWeekdays(dayNames);
+        dfs.setShortWeekdays(dayNamesShort);
+        return dfs;
+    }
+
+    /**
+     * Obtiene el formateador por defecto de fechas, para el locale 'es'.
+     *
+     * @param pattern Patron de formateo.
+     * @return Formateador de fechas.
+     */
+    private static DateFormat getLocalizedDateFormat(String pattern) {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locales.es_ES);
+        sdf.setDateFormatSymbols(getLocalizedDateFormatSymbols());
+        return sdf;
+    }
+
+    /**
      * Obtiene un objeto de tipo Date a partir de una representacion de texto.
      *
      * @param text Representacion de texto.
@@ -75,7 +114,7 @@ public class Fechas {
      */
     public static Date parse(String text, String format) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat(format, Locales.es_ES);
+            DateFormat sdf = getLocalizedDateFormat(format);
             return sdf.parse(text);
         } catch (Throwable thr) {
             return null;
@@ -385,8 +424,8 @@ public class Fechas {
         if (date == null) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(format, Locales.es_ES);
-        String txt = sdf.format(date).toUpperCase();
+        DateFormat sdf = getLocalizedDateFormat(format);
+        String txt = sdf.format(date);
         return txt;
     }
 
@@ -403,7 +442,7 @@ public class Fechas {
         if (date == null) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(format, Locales.es_ES);
+        DateFormat sdf = getLocalizedDateFormat(format);
         sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
         String txt = sdf.format(date).toUpperCase();
         return txt;
