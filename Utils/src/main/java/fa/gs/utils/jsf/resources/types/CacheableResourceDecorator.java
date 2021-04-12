@@ -6,6 +6,7 @@
 package fa.gs.utils.jsf.resources.types;
 
 import fa.gs.utils.collections.Maps;
+import fa.gs.utils.misc.text.Strings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -108,7 +109,7 @@ public class CacheableResourceDecorator extends Resource {
         headers.putAll(wrapped.getResponseHeaders());
 
         // Agregar cabeceras de control de cache.
-        headers.put("Cache-Control", String.format("private; max-age=%d", secondsToExpire));
+        headers.put("Cache-Control", Strings.format("private; max-age=%d", secondsToExpire));
         headers.put("Expires", dateToExpire);
         headers.put("Pragma", "cache");
         return headers;

@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.crypto;
 
+import fa.gs.utils.misc.text.Strings;
 import java.math.BigInteger;
 
 /**
@@ -82,7 +83,7 @@ public class Cipher_TEA1 {
     public static String long2string(long value) {
         String pad = "0000000000000000";
         String txt = Long.toHexString(value);
-        return String.format("%s%s", pad.substring(txt.length()), txt);
+        return Strings.format("%s%s", pad.substring(txt.length()), txt);
     }
 
     public static long string2long(String value) {

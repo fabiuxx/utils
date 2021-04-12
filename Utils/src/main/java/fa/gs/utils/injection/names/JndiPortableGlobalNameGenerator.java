@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.injection.names;
 
+import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
 
 /**
@@ -32,7 +33,7 @@ public class JndiPortableGlobalNameGenerator extends AbstractJndiEnterpriseModul
     @Override
     public String getJndiName(Class<?> klass) {
         String simpleName = klass.getSimpleName();
-        String globalName = String.format("%s/%s/%s/%s", getNamespace(), getEarModuleName(), getEjbModuleName(), simpleName);
+        String globalName = Strings.format("%s/%s/%s/%s", getNamespace(), getEarModuleName(), getEjbModuleName(), simpleName);
         if (useQualifiedName) {
             globalName = globalName + "!" + klass.getCanonicalName();
         }

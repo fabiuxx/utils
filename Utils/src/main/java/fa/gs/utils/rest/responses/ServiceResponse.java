@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fa.gs.utils.misc.errors.Errno;
 import fa.gs.utils.misc.errors.Errors;
+import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.rest.exceptions.ApiRollbackException;
 import fa.gs.utils.result.simple.Result;
 import javax.ws.rs.core.MediaType;
@@ -212,7 +213,7 @@ public class ServiceResponse {
         }
 
         public OK payload(String fmt, Object... args) {
-            String msg = String.format(fmt, args);
+            String msg = Strings.format(fmt, args);
             return payload(new JsonPrimitive(msg));
         }
 
@@ -280,7 +281,7 @@ public class ServiceResponse {
         }
 
         public KO cause(String fmt, Object... args) {
-            this.cause = String.format(fmt, args);
+            this.cause = Strings.format(fmt, args);
             return this;
         }
 

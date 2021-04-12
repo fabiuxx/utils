@@ -7,6 +7,7 @@ package fa.gs.utils.misc;
 
 import fa.gs.utils.misc.fechas.Fechas;
 import fa.gs.utils.misc.text.Joiner;
+import fa.gs.utils.misc.text.Strings;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -38,7 +39,7 @@ public class Ids {
         if (Assertions.stringNullOrEmpty(prefix)) {
             return uuid;
         } else {
-            return String.format("%s__%s", prefix, uuid);
+            return Strings.format("%s__%s", prefix, uuid);
         }
     }
 

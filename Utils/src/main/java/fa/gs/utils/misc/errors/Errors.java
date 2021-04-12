@@ -32,12 +32,22 @@ public class Errors {
     public static Errno errno(String descripcion, int codigo) {
         codigo = Math.abs(codigo);
         codigo = Math.min(codigo, 999999);
-        String codigo0 = String.format("%06d", codigo);
+        String codigo0 = Strings.format("%06d", codigo);
         return errno(descripcion, codigo0);
     }
 
     public static Errno errno(String descripcion, String codigo) {
         return new ErrnoImpl(descripcion, codigo);
+    }
+
+    public static boolean inRange(Errno errno, int min, int max) {
+        try {
+            int code = Integer.parseInt(errno.getCode());
+            return (code >= min && code <= max);
+        } catch (Throwable thr) {
+            Errors.dump(System.err, thr);
+            return false;
+        }
     }
 
     public static UnsupportedOperationException unsupported() {

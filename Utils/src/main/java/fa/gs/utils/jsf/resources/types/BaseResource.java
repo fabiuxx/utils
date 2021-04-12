@@ -6,6 +6,7 @@
 package fa.gs.utils.jsf.resources.types;
 
 import fa.gs.utils.collections.Maps;
+import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
 import java.net.URL;
 import java.util.Map;
@@ -57,7 +58,7 @@ public abstract class BaseResource extends Resource {
     public String getRequestPath() {
         FacesContext ctx = FacesContext.getCurrentInstance();
         ViewHandler viewHandler = ctx.getApplication().getViewHandler();
-        String path = String.format("%s/%s.xhtml?ln=%s", ResourceHandler.RESOURCE_IDENTIFIER, getResourceName(), getLibraryName());
+        String path = Strings.format("%s/%s.xhtml?ln=%s", ResourceHandler.RESOURCE_IDENTIFIER, getResourceName(), getLibraryName());
         return viewHandler.getResourceURL(ctx, Text.normalizeSlashes(path));
     }
 

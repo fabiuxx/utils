@@ -8,6 +8,7 @@ package fa.gs.utils.result.utils;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.errors.AppErrorException;
 import fa.gs.utils.misc.errors.Errno;
+import fa.gs.utils.misc.text.Strings;
 import java.util.Map;
 
 /**
@@ -26,7 +27,7 @@ class Failure_Builder extends Failure_Attributes implements Failure.Builder {
     @Override
     public Failure.Builder message(String fmt, Object... args) {
         if (overrideMessage) {
-            this.message = String.format(fmt, args);
+            this.message = Strings.format(fmt, args);
         }
         return this;
     }

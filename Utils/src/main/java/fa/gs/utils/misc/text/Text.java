@@ -146,7 +146,7 @@ public class Text {
      * @return Cadena acomillada.
      */
     public static String quote(Object obj, Character quotation) {
-        return String.format("%c%s%c", quotation, String.valueOf(obj), quotation);
+        return Strings.format("%c%s%c", quotation, String.valueOf(obj), quotation);
     }
 
     /**

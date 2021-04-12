@@ -5,6 +5,8 @@
  */
 package fa.gs.utils.misc.text;
 
+import fa.gs.utils.misc.Assertions;
+
 /**
  *
  * @author Acer
@@ -25,6 +27,10 @@ public class Strings {
      * @return Cadena formateada.
      */
     public static String format(String fmt, Object... args) {
+        if (Assertions.stringNullOrEmpty(fmt)) {
+            return "";
+        }
+
         if (args == null || args.length == 0) {
             return fmt;
         } else {

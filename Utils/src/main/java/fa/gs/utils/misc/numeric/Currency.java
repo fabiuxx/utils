@@ -6,6 +6,7 @@
 package fa.gs.utils.misc.numeric;
 
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.text.Strings;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -38,7 +39,7 @@ public class Currency {
     public static String formatCurrency(BigDecimal value, String moneda) {
         String txt = Numeric.getDecimalFormat().format(value);
         if (!Assertions.stringNullOrEmpty(moneda)) {
-            txt = String.format("%s %s", moneda, txt);
+            txt = Strings.format("%s %s", moneda, txt);
         }
         return txt.trim();
     }

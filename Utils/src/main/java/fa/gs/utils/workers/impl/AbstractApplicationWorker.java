@@ -6,6 +6,7 @@
 package fa.gs.utils.workers.impl;
 
 import fa.gs.utils.logging.app.AppLogger;
+import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.workers.ApplicationWorker;
 import fa.gs.utils.workers.ApplicationWorkerExecutor;
 import java.util.Collections;
@@ -184,7 +185,8 @@ public abstract class AbstractApplicationWorker implements ApplicationWorker {
     @Override
     public final void run() {
         // Cambiar dinamicamente el nombre del thread para fines de monitoreo externo.
-        Thread.currentThread().setName(String.format("worker-%s[%s]", getWorkerId(), getWorkerName()));
+        String tname = Strings.format("worker-%s[%s]", getWorkerId(), getWorkerName());
+        Thread.currentThread().setName(tname);
 
         log.getContext().push("traza", getWorkerId());
         log.debug()

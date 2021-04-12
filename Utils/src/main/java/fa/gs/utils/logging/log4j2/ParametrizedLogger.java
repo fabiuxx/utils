@@ -6,6 +6,7 @@
 package fa.gs.utils.logging.log4j2;
 
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.text.Strings;
 import java.util.Map;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.message.MapMessage;
@@ -270,7 +271,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
          * @return Esta misma instancia.
          */
         public T cause(String fmt, Object... args) {
-            String mensaje = String.format(fmt, args);
+            String mensaje = Strings.format(fmt, args);
             return cause(new Exception(mensaje));
         }
 
@@ -294,7 +295,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
          * @return Esta misma instancia.
          */
         public T message(String fmt, Object... args) {
-            String mensaje = String.format(fmt, args);
+            String mensaje = Strings.format(fmt, args);
             return tag("mensaje", mensaje);
         }
 

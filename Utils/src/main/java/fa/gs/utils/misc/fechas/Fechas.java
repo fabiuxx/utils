@@ -7,6 +7,7 @@ package fa.gs.utils.misc.fechas;
 
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Locales;
+import fa.gs.utils.misc.text.Strings;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -387,16 +388,16 @@ public class Fechas {
         // Conversion a texto.
         StringBuilder builder = new StringBuilder();
         if (d > 0) {
-            builder.append(String.format("%d d ", d));
+            builder.append(Strings.format("%d d ", d));
         }
         if (h > 0) {
-            builder.append(String.format("%02d h ", h));
+            builder.append(Strings.format("%02d h ", h));
         }
         if (m > 0) {
-            builder.append(String.format("%02d m ", m));
+            builder.append(Strings.format("%02d m ", m));
         }
         if (s > 0) {
-            builder.append(String.format("%02d s ", s));
+            builder.append(Strings.format("%02d s ", s));
         }
         return builder.toString().trim();
     }

@@ -8,6 +8,7 @@ package fa.gs.utils.jsf;
 import fa.gs.utils.collections.Maps;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.text.Joiner;
+import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
 import fa.gs.utils.mixins.Self;
 import java.util.ArrayList;
@@ -22,11 +23,13 @@ public class JsfNavigationOutcomeBuilder implements Self<JsfNavigationOutcomeBui
 
     private ArrayList<String> pathParts;
     private Map<String, String> queryParams;
+    private String shebang;
 
     private JsfNavigationOutcomeBuilder() {
         this.pathParts = new ArrayList<>();
         this.queryParams = Maps.empty();
         this.queryParams.put("faces-redirect", "true");
+        this.shebang = "";
     }
 
     public static JsfNavigationOutcomeBuilder instance() {
@@ -49,6 +52,11 @@ public class JsfNavigationOutcomeBuilder implements Self<JsfNavigationOutcomeBui
         return self();
     }
 
+    public JsfNavigationOutcomeBuilder shebang(String shebang) {
+        this.shebang = shebang;
+        return self();
+    }
+
     private String buildOutcome() {
         if (Assertions.isNullOrEmpty(pathParts)) {
             return "";
@@ -66,6 +74,7 @@ public class JsfNavigationOutcomeBuilder implements Self<JsfNavigationOutcomeBui
 
         String outcome = Joiner.of(pathParts).separator("/").join();
         Text.normalizeSlashes(outcome);
+
         return outcome.trim();
     }
 
@@ -74,10 +83,14 @@ public class JsfNavigationOutcomeBuilder implements Self<JsfNavigationOutcomeBui
 
         if (!queryParams.isEmpty()) {
             String[] args0 = StreamSupport.stream(queryParams.entrySet())
-                    .map(e -> String.format("%s=%s", e.getKey(), e.getValue()))
+                    .map(e -> Strings.format("%s=%s", e.getKey(), e.getValue()))
                     .toArray(String[]::new);
             String args = Joiner.of(args0).separator("&").join();
-            outcome = String.format("%s?%s", outcome, args);
+            outcome = Strings.format("%s?%s", outcome, args);
+        }
+
+        if (!Assertions.stringNullOrEmpty(shebang)) {
+            outcome = outcome + "#" + shebang;
         }
 
         return outcome;

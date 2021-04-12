@@ -16,6 +16,7 @@ import fa.gs.utils.misc.Type;
 import fa.gs.utils.misc.Units;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.fechas.Fechas;
+import fa.gs.utils.misc.text.Strings;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -192,7 +193,8 @@ public class JsonResolver {
                 throw new Exception("No es posible realizar la operacion");
             }
         } catch (Throwable thr) {
-            throw new Exception(String.format("No se puede reducir el valor del elemento JSON (%s) al tipo '%s'", json.getClass().getSimpleName(), type.toString()), thr);
+            String msg = Strings.format("No se puede reducir el valor del elemento JSON (%s) al tipo '%s'", json.getClass().getSimpleName(), type.toString());
+            throw new Exception(msg, thr);
         }
     }
 
@@ -256,7 +258,7 @@ public class JsonResolver {
         Object value = JsonResolver.opt(json, path, Type.INTEGER, fallback);
         return Integer.class.cast(value);
     }
-    
+
     public static Long long0(JsonObject json, String path) {
         return long0(json, path, null);
     }
