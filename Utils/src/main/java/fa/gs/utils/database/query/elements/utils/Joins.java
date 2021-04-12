@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.database.query.elements.utils;
 
+import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.Join;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.build.JoinBuilder;
@@ -22,9 +23,14 @@ public class Joins {
     }
 
     public static Join build(Join.Type type, Name table, String alias, String fmt, Object... args) {
+        Expression exp = Expressions.build(table);
+        return build(type, exp, alias, fmt, args);
+    }
+
+    public static Join build(Join.Type type, Expression table, String alias, String fmt, Object... args) {
         JoinBuilder builder = JoinBuilder.instance();
         builder.type(type);
-        builder.table().table().name(table);
+        builder.table().table().wrap(table);
         builder.table().as(alias);
         builder.on().wrap(Strings.format(fmt, args));
         return builder.build();

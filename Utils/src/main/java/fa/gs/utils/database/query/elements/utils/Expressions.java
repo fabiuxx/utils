@@ -82,6 +82,12 @@ public class Expressions {
         return builder.build();
     }
 
+    public static Expression build(QueryPart part) {
+        ExpressionImpl exp = new ExpressionImpl();
+        exp.add(part);
+        return exp;
+    }
+
     public static Expression build(Collection<QueryPart> parts) {
         ExpressionImpl exp = new ExpressionImpl();
         exp.add(parts);

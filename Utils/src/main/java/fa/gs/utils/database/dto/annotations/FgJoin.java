@@ -21,12 +21,41 @@ import java.lang.annotation.Target;
 @Repeatable(FgJoins.class)
 public @interface FgJoin {
 
+    /**
+     * Tipo de join.
+     *
+     * @return
+     */
     Join.Type type() default Join.Type.NORMAL;
 
+    /**
+     * Nombre de tabla.
+     *
+     * @return
+     */
     String table();
 
+    /**
+     * Cuando este flag es <code>true</code>, el valor de tabla es interpretado
+     * como una expresion y no como un nombre de tabla. Esto permite especificar
+     * subquerys como tablas.
+     *
+     * @return
+     */
+    boolean useRawTableDefinition() default false;
+
+    /**
+     * Alias para nombre o expresion de tabla.
+     *
+     * @return
+     */
     String as();
 
+    /**
+     * Condicion de join.
+     *
+     * @return
+     */
     String on();
 
 }

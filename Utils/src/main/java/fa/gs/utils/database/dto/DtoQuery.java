@@ -26,6 +26,7 @@ import fa.gs.utils.database.query.elements.Projection;
 import fa.gs.utils.database.query.elements.Table;
 import fa.gs.utils.database.query.elements.build.ExpressionBuilder;
 import fa.gs.utils.database.query.elements.utils.Ctes;
+import fa.gs.utils.database.query.elements.utils.Expressions;
 import fa.gs.utils.database.query.elements.utils.Joins;
 import fa.gs.utils.database.query.elements.utils.Projections;
 import fa.gs.utils.database.query.elements.utils.Tables;
@@ -176,8 +177,14 @@ public class DtoQuery implements Serializable {
                 // 1) Resolver tipo de join.
                 Join.Type type0 = join.type();
 
-                // 2) Resolver tabla de join.
-                Name name0 = new Name(join.table());
+                // 2) Resolver expresion de tabla para join.
+                Expression table0;
+                if (join.useRawTableDefinition()) {
+                    table0 = Expressions.build(join.table());
+                } else {
+                    Name name0 = new Name(join.table());
+                    table0 = Expressions.build(name0);
+                }
 
                 // 3) Resolver alias.
                 String alias0 = join.as();
@@ -186,7 +193,7 @@ public class DtoQuery implements Serializable {
                 String on0 = join.on();
 
                 // 5) Expresion de join.
-                Join join0 = Joins.build(type0, name0, alias0, on0);
+                Join join0 = Joins.build(type0, table0, alias0, on0);
                 expressions.add(join0);
             }
         }

@@ -93,11 +93,11 @@ public class JsonObjectBuilder {
         }
         return this;
     }
-    
+
     public JsonObjectBuilder add(String property, Collection<JsonElement> values) {
         JsonArrayBuilder builder = JsonArrayBuilder.instance();
-        if(! Assertions.isNullOrEmpty(values)) {
-            for(JsonElement value : values) {
+        if (!Assertions.isNullOrEmpty(values)) {
+            for (JsonElement value : values) {
                 builder.add(value);
             }
         }

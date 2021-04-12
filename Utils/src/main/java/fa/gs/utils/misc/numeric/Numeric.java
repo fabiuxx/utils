@@ -766,4 +766,68 @@ public class Numeric {
         return x;
     }
 
+    public static int digits(int num) {
+        Integer x = num;
+        return digits(x.longValue());
+    }
+
+    public static int digits(long num) {
+        return digits(BigInteger.valueOf(num));
+    }
+
+    // Fuente: https://stackoverflow.com/a/27665291
+    public static int digits(BigInteger num) {
+        if (num.equals(BigInteger.ZERO)) {
+            return 1;
+        }
+
+        if (num.compareTo(BigInteger.ZERO) < 0) {
+            num = num.multiply(BigInteger.valueOf(-1));
+        }
+
+        return log(BigInteger.valueOf(10), num).intValue() + 1;
+    }
+
+    // Fuente: https://stackoverflow.com/a/27665291
+    private static BigInteger log(BigInteger base, BigInteger num) {
+        /**
+         * The technique tries to get the products among the squares of base
+         * close to the actual value as much as possible without exceeding it.
+         */
+        BigInteger resultSet = BigInteger.ZERO;
+        BigInteger actMult = BigInteger.ONE;
+        BigInteger lastMult = BigInteger.ONE;
+        BigInteger actor = base;
+        BigInteger incrementor = BigInteger.ONE;
+        while (actMult.multiply(base).compareTo(num) < 1) {
+            int count = 0;
+            while (actMult.multiply(actor).compareTo(num) < 1) {
+                lastMult = actor; //Keep the old squares
+                actor = actor.multiply(actor); //Square the base repeatedly until the value exceeds 
+                if (count > 0) {
+                    incrementor = incrementor.multiply(BigInteger.valueOf(2));
+                }
+                //Update the current exponent of the base
+                count++;
+            }
+            if (count == 0) {
+                break;
+            }
+
+            /* If there is no way to multiply the "actMult"
+         * with squares of the base (including the base itself)
+         * without keeping it below the actual value, 
+         * it is the end of the computation 
+             */
+            actMult = actMult.multiply(lastMult);
+            resultSet = resultSet.add(incrementor);
+            /* Update the product and the exponent
+         * */
+            actor = base;
+            incrementor = BigInteger.ONE;
+            //Reset the values for another iteration
+        }
+        return resultSet;
+    }
+
 }
