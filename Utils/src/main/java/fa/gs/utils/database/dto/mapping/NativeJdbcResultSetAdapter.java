@@ -10,6 +10,7 @@ import fa.gs.utils.collections.Maps;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Text;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -26,10 +27,11 @@ import org.hibernate.Session;
  *
  * @author Fabio A. González Sosa
  */
+@Deprecated
 public class NativeJdbcResultSetAdapter implements QueryResultSetAdapter {
 
     @Override
-    public Collection<Map<String, Object>> select(String sql, EntityManager em) throws Throwable {
+    public Collection<Map<String, Object>> select(String sql, EntityManager em, Map<String, Field> mappings) throws Throwable {
         Collection<Map<String, Object>> rows = Lists.empty();
 
         /**

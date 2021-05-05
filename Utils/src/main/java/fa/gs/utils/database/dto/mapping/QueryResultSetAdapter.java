@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.database.dto.mapping;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -15,6 +16,6 @@ import javax.persistence.EntityManager;
  */
 public interface QueryResultSetAdapter {
 
-    Collection<Map<String, Object>> select(String sql, EntityManager em) throws Throwable;
+    Collection<Map<String, Object>> select(String sql, EntityManager em, Map<String, Field> mappings) throws Throwable;
 
 }

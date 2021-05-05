@@ -142,7 +142,7 @@ public class DtoMapper<T> implements Serializable {
     }
 
     public T[] select(String sql, EntityManager em) throws Throwable {
-        final Collection<Map<String, Object>> rows = queryResultSetAdapter.select(sql, em);
+        final Collection<Map<String, Object>> rows = queryResultSetAdapter.select(sql, em, mappings);
         return map(rows);
     }
 

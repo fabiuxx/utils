@@ -19,7 +19,7 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
 
 /**
  *
@@ -39,9 +39,8 @@ public class Jpa {
 
     public static Collection<Map<String, Object>> select(String sql, EntityManager em) throws Throwable {
         // Ejecutar la query e indicar que necesitamos mapear el resultset a un mapa, valga la redundancia.
-        org.hibernate.Query hibernateQuery = em.createNativeQuery(sql)
-                .unwrap(org.hibernate.Query.class)
-                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        org.hibernate.Query hibernateQuery = em.createNativeQuery(sql).unwrap(org.hibernate.Query.class);
+        hibernateQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
         return (Collection<Map<String, Object>>) hibernateQuery.list();
     }
 

@@ -92,6 +92,29 @@ public class Results {
 
     /**
      * Obtiene el valor encapsulado dentro de un resultado o lanza una excepcion
+     * si el resultado representa un fallo.
+     *
+     * @param <S> Parametro de tipo.
+     * @param result Resultado de una operacion.
+     * @param fallback Valor alternativo.
+     * @return Valor de resultado en caso de extio.
+     * @throws Throwable Excepcion si el resultado representa un caso de fallo.
+     */
+    public static <S> S valueOrRaise(Result<S> result, S fallback) throws Throwable {
+        // Lanzar excepcion si el resultado no es de exito.
+        try {
+            result.raise();
+        } catch (Throwable thr) {
+            Errors.dump(System.err, result.failure().cause(), result.failure().message());
+            throw thr;
+        }
+
+        // Obtener valor.
+        return result.value(fallback);
+    }
+
+    /**
+     * Obtiene el valor encapsulado dentro de un resultado o lanza una excepcion
      * si el resultado es nulo o si el resultado en general representa un fallo.
      *
      * @param <S> Parametro de tipo.
