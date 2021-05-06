@@ -19,6 +19,8 @@ import org.hibernate.engine.spi.SessionImplementor;
  */
 public class PgTimestampType extends PgScalarType<Date> {
 
+    public static final String QNAME = "fa.gs.utils.database.jpa.types.pg.PgTimestampType";
+
     public PgTimestampType() {
         super(Date.class, java.sql.Types.TIMESTAMP);
     }

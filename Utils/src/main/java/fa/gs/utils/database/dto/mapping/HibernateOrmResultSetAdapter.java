@@ -5,7 +5,10 @@
  */
 package fa.gs.utils.database.dto.mapping;
 
+import fa.gs.utils.database.jpa.types.pg.PgCodifcableEnumType;
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.Codificable;
+import fa.gs.utils.misc.Reflection;
 import fa.gs.utils.misc.errors.Errors;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -38,12 +41,13 @@ public class HibernateOrmResultSetAdapter implements QueryResultSetAdapter {
             Annotation hibernateTypeAnnotation = entry.getValue().getAnnotation(Type.class);
             if (hibernateTypeAnnotation != null) {
                 // Obtener convertidor de tipo via anotacion @Type.
-                Class typeClass = adaptUserTypeClass((Type) hibernateTypeAnnotation);
-                Properties typeParameters = adaptUserTypeParameters((Type) hibernateTypeAnnotation);
+                Class typeClass = adaptUserTypeClass(entry.getValue(), (Type) hibernateTypeAnnotation);
+                Properties typeParameters = adaptUserTypeParameters(entry.getValue(), (Type) hibernateTypeAnnotation);
                 hibernateTypeDef = hibernateSession.getTypeHelper().custom(typeClass, typeParameters);
             } else {
-                // Obtener convertidor de tipo en base a tipo de atributo.
-                String typeName = entry.getValue().getType().getCanonicalName();
+                // Obtener convertidor de tipo en base a tipo de atributo, exceptuando atributos codificables.
+                Class typeClass = entry.getValue().getType();
+                String typeName = typeClass.getCanonicalName();
                 hibernateTypeDef = hibernateSession.getTypeHelper().heuristicType(typeName);
             }
 
@@ -59,19 +63,27 @@ public class HibernateOrmResultSetAdapter implements QueryResultSetAdapter {
         return (Collection<Map<String, Object>>) hibernateQuery.list();
     }
 
-    private Class adaptUserTypeClass(Type typeAnnotation) throws ClassNotFoundException {
+    private Class adaptUserTypeClass(Field field, Type typeAnnotation) throws ClassNotFoundException {
         String typename = typeAnnotation.type();
         return Class.forName(typename);
     }
 
-    private Properties adaptUserTypeParameters(Type typeAnnotation) {
+    private Properties adaptUserTypeParameters(Field field, Type typeAnnotation) {
         Properties properties = new Properties();
+
+        // Parametros base, definidos a nivel de anotacion.
         Parameter[] params = typeAnnotation.parameters();
         if (!Assertions.isNullOrEmpty(params)) {
             for (Parameter param : params) {
                 properties.put(param.name(), param.value());
             }
         }
+
+        // Parametros especiales para campos Codificables.
+        if (Reflection.isInstanceOf(field.getType(), Codificable.class)) {
+            properties.put(PgCodifcableEnumType.PARAM_CODIFICABLE_QNAME, field.getType().getCanonicalName());
+        }
+
         return properties;
     }
 

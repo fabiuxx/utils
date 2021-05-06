@@ -16,6 +16,8 @@ import org.hibernate.HibernateException;
  */
 public class PgBigIntegerArrayType extends PgArrayType<BigInteger> {
 
+    public static final String QNAME = "fa.gs.utils.database.jpa.types.pg.PgBigIntegerArrayType";
+
     public PgBigIntegerArrayType() {
         super(BigInteger.class, "int8");
     }
