@@ -20,13 +20,13 @@ import org.hibernate.engine.spi.SessionImplementor;
  *
  * @author Fabio A. González Sosa
  */
-public class PgCodifcableEnumType extends PgScalarType<Codificable> {
+public class PgCodificableEnumType extends PgScalarType<Codificable> {
 
-    public static final String QNAME = "fa.gs.utils.database.jpa.types.pg.PgCodifcableEnumType";
+    public static final String QNAME = "fa.gs.utils.database.jpa.types.pg.PgCodificableEnumType";
 
-    public static final String PARAM_CODIFICABLE_QNAME = "PgCodifcableEnumType.codificableQname";
+    public static final String PARAM_CODIFICABLE_QNAME = "PgCodificableEnumType.codificableQname";
 
-    public PgCodifcableEnumType() {
+    public PgCodificableEnumType() {
         super(Codificable.class, java.sql.Types.VARCHAR);
     }
 

@@ -5,7 +5,7 @@
  */
 package fa.gs.utils.database.dto.mapping;
 
-import fa.gs.utils.database.jpa.types.pg.PgCodifcableEnumType;
+import fa.gs.utils.database.jpa.types.pg.PgCodificableEnumType;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Codificable;
 import fa.gs.utils.misc.Reflection;
@@ -21,6 +21,7 @@ import org.hibernate.Session;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
+import org.hibernate.usertype.UserType;
 
 /**
  *
@@ -42,8 +43,12 @@ public class HibernateOrmResultSetAdapter implements QueryResultSetAdapter {
             if (hibernateTypeAnnotation != null) {
                 // Obtener convertidor de tipo via anotacion @Type.
                 Class typeClass = adaptUserTypeClass(entry.getValue(), (Type) hibernateTypeAnnotation);
-                Properties typeParameters = adaptUserTypeParameters(entry.getValue(), (Type) hibernateTypeAnnotation);
-                hibernateTypeDef = hibernateSession.getTypeHelper().custom(typeClass, typeParameters);
+                if (Reflection.isInstanceOf(typeClass, UserType.class)) {
+                    Properties typeParameters = adaptUserTypeParameters(entry.getValue(), (Type) hibernateTypeAnnotation);
+                    hibernateTypeDef = hibernateSession.getTypeHelper().custom(typeClass, typeParameters);
+                } else {
+                    hibernateTypeDef = hibernateSession.getTypeHelper().heuristicType(((Type) hibernateTypeAnnotation).type());
+                }
             } else {
                 // Obtener convertidor de tipo en base a tipo de atributo, exceptuando atributos codificables.
                 Class typeClass = entry.getValue().getType();
@@ -81,7 +86,7 @@ public class HibernateOrmResultSetAdapter implements QueryResultSetAdapter {
 
         // Parametros especiales para campos Codificables.
         if (Reflection.isInstanceOf(field.getType(), Codificable.class)) {
-            properties.put(PgCodifcableEnumType.PARAM_CODIFICABLE_QNAME, field.getType().getCanonicalName());
+            properties.put(PgCodificableEnumType.PARAM_CODIFICABLE_QNAME, field.getType().getCanonicalName());
         }
 
         return properties;

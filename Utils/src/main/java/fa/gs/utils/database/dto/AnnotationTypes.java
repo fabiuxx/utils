@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.database.dto;
 
-import fa.gs.utils.database.dto.annotations.FgConverter;
 import fa.gs.utils.database.dto.annotations.FgCte;
 import fa.gs.utils.database.dto.annotations.FgCtes;
 import fa.gs.utils.database.dto.annotations.FgDto;
@@ -18,7 +17,6 @@ import fa.gs.utils.database.dto.annotations.FgJoins;
 import fa.gs.utils.database.dto.annotations.FgOrderBy;
 import fa.gs.utils.database.dto.annotations.FgOrderBys;
 import fa.gs.utils.database.dto.annotations.FgProjection;
-import fa.gs.utils.database.dto.annotations.FgQueryResultSetAdapter;
 import fa.gs.utils.database.dto.annotations.FgWhere;
 import fa.gs.utils.database.dto.annotations.FgWheres;
 import fa.gs.utils.misc.Assertions;
@@ -31,11 +29,9 @@ import fa.gs.utils.misc.Reflection;
 public class AnnotationTypes {
 
     public static Class<FgDto> FGDTO = FgDto.class;
-    public static Class<FgQueryResultSetAdapter> FGQUERYRSADAPTER = FgQueryResultSetAdapter.class;
     public static Class<FgCtes> FGCTES = FgCtes.class;
     public static Class<FgCte> FGCTE = FgCte.class;
     public static Class<FgProjection> FGPROJECTION = FgProjection.class;
-    public static Class<FgConverter> FGCONVERTER = FgConverter.class;
     public static Class<FgJoin> FGJOIN = FgJoin.class;
     public static Class<FgJoins> FGJOINS = FgJoins.class;
     public static Class<FgWhere> FGWHERE = FgWhere.class;

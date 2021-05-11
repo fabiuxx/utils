@@ -21,6 +21,20 @@ import java8.util.stream.Stream;
 public class Arrays {
 
     /**
+     * Obtiene el primer elemento de un array de elementos.
+     *
+     * @param <T> Parametro de tipo.
+     * @param items Array de objetos.
+     * @return Primer objeto del array, si hubiere. Caso contrario {@code null}.
+     */
+    public static <T> T first(T[] values) {
+        if (Assertions.isNullOrEmpty(values)) {
+            return null;
+        }
+        return values[0];
+    }
+
+    /**
      * Aplica una conversion de tipo a los elementos dentro de un array
      * generico.
      *
