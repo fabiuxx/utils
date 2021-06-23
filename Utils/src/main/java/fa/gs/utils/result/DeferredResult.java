@@ -63,7 +63,7 @@ public interface DeferredResult<S, F> extends Result<S, F> {
      *
      * @param callback Callback.
      */
-    public void onFinally(DeferredResult.OnFinallyCallback2 callback);
+    public void onFinally(DeferredResult.OnFinallyCallback2<S, F> callback);
 
     /**
      * Callback simple.

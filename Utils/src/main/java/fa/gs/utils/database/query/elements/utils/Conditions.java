@@ -106,4 +106,13 @@ public class Conditions {
                 .build();
     }
 
+    public static Expression build(String leftOperand, Operator op, Expression part) {
+        ExpressionBuilder builder = ExpressionBuilder.instance();
+        return builder
+                .wrap(leftOperand)
+                .operator(op)
+                .wrap(part)
+                .build();
+    }
+
 }

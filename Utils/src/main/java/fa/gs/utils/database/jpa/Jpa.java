@@ -9,6 +9,7 @@ import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.collections.Maps;
 import fa.gs.utils.misc.Holder;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.numeric.Numeric;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.simple.Results;
@@ -65,9 +66,10 @@ public class Jpa {
                 for (String statement : statements) {
                     try {
                         Statement stmt = conn.createStatement();
-                        stmt.execute(statement);
-                        retcodes.add(Boolean.TRUE);
+                        boolean ok = stmt.execute(statement);
+                        retcodes.add(ok);
                     } catch (Throwable thr) {
+                        Errors.dump(System.err, thr);
                         retcodes.add(Boolean.FALSE);
                     }
                 }

@@ -8,6 +8,7 @@ package fa.gs.utils.database.jpa.types.pg;
 import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.Units;
 import fa.gs.utils.misc.errors.Errors;
 import java.sql.Array;
 import java.sql.Connection;
@@ -47,7 +48,11 @@ public abstract class PgArrayType<T> extends PgType {
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        Array array = rs.getArray(names[0]);
+        Array array = Units.execute(() -> rs.getArray(names[0]));
+        if (array == null) {
+            return null;
+        }
+
         Object[] javaArray = (Object[]) array.getArray();
         List<T> javaList = Lists.empty();
         if (!Assertions.isNullOrEmpty(javaArray)) {

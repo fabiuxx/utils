@@ -7,6 +7,7 @@ package fa.gs.utils.misc;
 
 import fa.gs.utils.collections.Lists;
 import java.io.Closeable;
+import java.sql.Connection;
 import java.util.Collection;
 
 /**
@@ -17,28 +18,31 @@ public class Closer {
 
     private final Collection<Closeable> closeables;
     private final Collection<AutoCloseable> autoCloseables;
+    private final Collection<Connection> connections;
 
     private Closer() {
         this.closeables = Lists.empty();
         this.autoCloseables = Lists.empty();
+        this.connections = Lists.empty();
     }
 
     public static Closer instance() {
         return new Closer();
     }
 
-    public <T extends Closeable> T add(Closeable closeable) {
-        if (closeable != null) {
-            closeables.add(closeable);
-        }
-        return (T) closeable;
+    public <T extends Closeable> T add(Closeable object) {
+        Lists.add(closeables, false, object);
+        return (T) object;
     }
 
-    public <T extends AutoCloseable> T add(AutoCloseable closeable) {
-        if (closeable != null) {
-            autoCloseables.add(closeable);
-        }
-        return (T) closeable;
+    public <T extends AutoCloseable> T add(AutoCloseable object) {
+        Lists.add(autoCloseables, false, object);
+        return (T) object;
+    }
+
+    public Connection add(Connection object) {
+        Lists.add(connections, false, object);
+        return object;
     }
 
     public void close() {
@@ -49,19 +53,31 @@ public class Closer {
         for (AutoCloseable closeable : autoCloseables) {
             close(closeable);
         }
+
+        for (Connection connection : connections) {
+            close(connection);
+        }
     }
 
-    private void close(Closeable closeable) {
+    private void close(Closeable object) {
         try {
-            closeable.close();
+            object.close();
         } catch (Throwable thr) {
             ;
         }
     }
 
-    private void close(AutoCloseable closeable) {
+    private void close(AutoCloseable object) {
         try {
-            closeable.close();
+            object.close();
+        } catch (Throwable thr) {
+            ;
+        }
+    }
+
+    private void close(Connection object) {
+        try {
+            object.close();
         } catch (Throwable thr) {
             ;
         }

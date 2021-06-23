@@ -46,6 +46,12 @@ public class Expressions {
         return joinWithAnd(expressions);
     }
 
+    public static Expression joinWithAnd(Expression... expressions) {
+        Collection<Expression> expressions0 = Lists.empty();
+        Lists.add(expressions0, expressions);
+        return joinWithAnd(expressions0);
+    }
+
     public static Expression joinWithAnd(Collection<Expression> expressions) {
         return joinWithAnd(expressions, () -> Expressions.TRUE());
     }
@@ -62,6 +68,12 @@ public class Expressions {
             builder.and().lpar().wrap(expression).rpar();
         }
         return builder.build();
+    }
+
+    public static Expression joinWithOr(Expression... expressions) {
+        Collection<Expression> expressions0 = Lists.empty();
+        Lists.add(expressions0, expressions);
+        return joinWithOr(expressions0);
     }
 
     public static Expression joinWithOr(Collection<Expression> expressions) {

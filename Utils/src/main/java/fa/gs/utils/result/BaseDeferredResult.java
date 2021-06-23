@@ -55,7 +55,7 @@ public class BaseDeferredResult<S, F> extends BaseResult<S, F> implements Deferr
     }
 
     @Override
-    public void onFinally(final DeferredResult.OnFinallyCallback2 callback) {
+    public void onFinally(final DeferredResult.OnFinallyCallback2<S, F> callback) {
         if (callback != null) {
             deferred.always((Promise.State state, S success, F failure) -> {
                 callback.onFinally(success, failure);
