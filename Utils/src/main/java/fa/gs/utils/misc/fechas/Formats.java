@@ -34,6 +34,11 @@ public class Formats {
     /**
      * Formato generico para la presentacion de fechas en forma de texto.
      */
+    public static final String DD_MMM_HH_MM_SS = "dd/MMM HH:mm:ss";
+
+    /**
+     * Formato generico para la presentacion de fechas en forma de texto.
+     */
     public static final String DD_MMM_YYYY_HH_MM_SS = "dd/MMM/yyyy HH:mm:ss";
 
     /**

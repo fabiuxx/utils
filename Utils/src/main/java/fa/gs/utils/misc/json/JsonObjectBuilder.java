@@ -8,10 +8,12 @@ package fa.gs.utils.misc.json;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.fechas.Fechas;
 import java.util.Collection;
 import java.util.Date;
+import java8.util.function.Function;
 
 /**
  *
@@ -82,6 +84,22 @@ public class JsonObjectBuilder {
             json.add(property, JsonNull.INSTANCE);
         }
 
+        return this;
+    }
+
+    public JsonObjectBuilder add0(String property, Collection<?> values) {
+        return add0(property, values, o -> new JsonPrimitive(String.valueOf(o)));
+    }
+
+    public <T> JsonObjectBuilder add0(String property, Collection<T> values, Function<T, JsonElement> mapper) {
+        JsonArrayBuilder builder = JsonArrayBuilder.instance();
+        if (!Assertions.isNullOrEmpty(values)) {
+            for (T value : values) {
+                JsonElement element = mapper.apply(value);
+                builder.add(element);
+            }
+        }
+        json.add(property, builder.build());
         return this;
     }
 

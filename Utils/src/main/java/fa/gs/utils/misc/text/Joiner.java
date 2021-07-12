@@ -14,13 +14,13 @@ import java8.util.function.Function;
  *
  * @author Fabio A. González Sosa
  */
-public class Joiner {
+public class Joiner<T> {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     /**
      * Objetos a unir.
      */
-    private Iterable<Object> objects;
+    private Iterable<T> objects;
 
     /**
      * Prefijo para cada objeto.
@@ -40,7 +40,7 @@ public class Joiner {
     /**
      * Adaptador de objetos.
      */
-    private Adapter<Object, String> adapter;
+    private Adapter<T, String> adapter;
     //</editor-fold>
 
     /**
@@ -60,7 +60,7 @@ public class Joiner {
      * @param objects Cantidad arbitraria de objetos a unir.
      * @return Instancia de esta clase.
      */
-    public static <T> Joiner of(T... objects) {
+    public static <T> Joiner<T> of(T... objects) {
         Iterable<T> iterables = Lists.wrap(objects);
         return Joiner.of(iterables);
     }
@@ -71,7 +71,7 @@ public class Joiner {
      * @param objects Cantidad arbitraria de objetos a unir.
      * @return Instancia de esta clase.
      */
-    public static Joiner of(Iterable objects) {
+    public static <T> Joiner<T> of(Iterable<T> objects) {
         Joiner joiner = new Joiner();
         joiner.objects = objects;
         return joiner;
@@ -83,7 +83,7 @@ public class Joiner {
      * @param prefix Prefijo a utilizar.
      * @return Misma instancia de esta clase.
      */
-    public Joiner prefix(String prefix) {
+    public Joiner<T> prefix(String prefix) {
         this.prefix = prefix;
         return this;
     }
@@ -94,7 +94,7 @@ public class Joiner {
      * @param posfix Posfijo a utilizar.
      * @return Misma instancia de esta clase.
      */
-    public Joiner posfix(String posfix) {
+    public Joiner<T> posfix(String posfix) {
         this.posfix = posfix;
         return this;
     }
@@ -105,7 +105,7 @@ public class Joiner {
      * @param separator Separador entre elementos.
      * @return Misma instancia de esta clase.
      */
-    public Joiner separator(String separator) {
+    public Joiner<T> separator(String separator) {
         this.separator = separator;
         return this;
     }
@@ -115,7 +115,7 @@ public class Joiner {
      *
      * @return Misma instancia de esta clase.
      */
-    public Joiner quoted() {
+    public Joiner<T> quoted() {
         return this.prefix("'").posfix("'");
     }
 
@@ -126,7 +126,7 @@ public class Joiner {
      * @param adapter Adaptador.
      * @return Misma instancia de esta clase.
      */
-    public Joiner adapter(Adapter<Object, String> adapter) {
+    public Joiner<T> adapter(Adapter<T, String> adapter) {
         this.adapter = adapter;
         return this;
     }
@@ -138,14 +138,8 @@ public class Joiner {
      * @param mapper Funcion de mapeo.
      * @return Misma instancia de esta clase.
      */
-    public Joiner adapter(Function<Object, String> mapper) {
-        Adapter<Object, String> adapter = new Adapter<Object, String>() {
-            @Override
-            public String adapt(Object obj, Object... args) {
-                return mapper.apply(obj);
-            }
-        };
-        return adapter(adapter);
+    public Joiner<T> adapter(Function<T, String> mapper) {
+        return adapter((T obj, Object... args) -> mapper.apply(obj));
     }
 
     /**
@@ -156,9 +150,9 @@ public class Joiner {
      */
     public String join() {
         StringBuilder builder = new StringBuilder();
-        Iterator it = objects.iterator();
+        Iterator<T> it = objects.iterator();
         while (it.hasNext()) {
-            Object object = it.next();
+            T object = it.next();
             if (object != null) {
                 builder.append(prefix);
                 if (adapter != null) {

@@ -7,6 +7,8 @@ package fa.gs.utils.collections;
 
 import fa.gs.utils.collections.maps.CollectionGroupMap;
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.Codificable;
+import fa.gs.utils.misc.Codificables;
 import fa.gs.utils.misc.Reflection;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -150,6 +152,16 @@ public class Maps {
 
     public static <K, V> Date date(Map<K, V> map, K key, Date fallback) {
         return get(map, key, fallback, Date.class);
+    }
+
+    public static <K, V, T extends Enum<T> & Codificable> T codificable(Map<K, V> map, K key, Class<T> klass) {
+        String value = string(map, key);
+        return Codificables.fromCodigo(value, klass);
+    }
+
+    public static <K, V, T extends Codificable> T codificable(Map<K, V> map, K key, T[] values) {
+        String value = string(map, key);
+        return Codificables.fromCodigo(value, values);
     }
 
 }

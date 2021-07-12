@@ -29,7 +29,7 @@ public class Results {
     public static <S> DeferredResult<S> deferred() {
         return new SimpleDeferredResult<>();
     }
-    
+
     /**
      * Obtiene una instancia de resultado, con valores arbitrarios de exito y
      * fallo respectivamente.

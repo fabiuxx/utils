@@ -18,7 +18,7 @@ public class StringBuilder2 {
      * Ya que no se puede hererdar de la clase StringBuilder, se realiza una
      * composicion utilizando una instancia de dicha clase.
      */
-    private final StringBuilder builder;
+    private StringBuilder builder;
     //</editor-fold>
 
     /**
@@ -103,6 +103,16 @@ public class StringBuilder2 {
         return this;
     }
     //</editor-fold>
+
+    /**
+     * Elimina texto anteriormente agregado.
+     *
+     * @return Esta misma instancia.
+     */
+    public StringBuilder2 clear() {
+        builder = new StringBuilder();
+        return this;
+    }
 
     /**
      * Permite agregar un texto formateado.

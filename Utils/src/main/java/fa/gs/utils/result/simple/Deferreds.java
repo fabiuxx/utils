@@ -26,14 +26,14 @@ public class Deferreds {
         return result;
     }
 
-    public static final DeferredResult resolve(DeferredResult result, Object value) {
+    public static final <S> DeferredResult<S> resolve(DeferredResult<S> result, S value) {
         if (result.isPending()) {
             result.resolve(value);
         }
         return result;
     }
 
-    public static final DeferredResult reject(DeferredResult result, String fmt, Object... args) {
+    public static final <S> DeferredResult<S> reject(DeferredResult<S> result, String fmt, Object... args) {
         if (result.isPending()) {
             Failure failure = Failure.builder().message(fmt, args).build();
             Errors.dump(System.err, new Exception(failure.message(), failure.cause()));
@@ -42,7 +42,7 @@ public class Deferreds {
         return result;
     }
 
-    public static final DeferredResult reject(DeferredResult result, Throwable thr) {
+    public static final <S> DeferredResult<S> reject(DeferredResult<S> result, Throwable thr) {
         if (result.isPending()) {
             Errors.dump(System.err, thr);
             Failure failure = Failure.builder().cause(thr).build();
@@ -51,7 +51,7 @@ public class Deferreds {
         return result;
     }
 
-    public static final DeferredResult reject(DeferredResult result, Throwable thr, String fmt, Object... args) {
+    public static final <S> DeferredResult<S> reject(DeferredResult<S> result, Throwable thr, String fmt, Object... args) {
         if (result.isPending()) {
             Failure failure = Failure.builder().cause(thr).message(fmt, args).build();
             Errors.dump(System.err, new Exception(failure.message(), failure.cause()));
@@ -60,7 +60,7 @@ public class Deferreds {
         return result;
     }
 
-    public static final DeferredResult reject(DeferredResult result, Failure failure) {
+    public static final <S> DeferredResult<S> reject(DeferredResult<S> result, Failure failure) {
         if (result.isPending()) {
             result.reject(failure);
         }

@@ -105,6 +105,26 @@ public class Assertions {
     }
 
     /**
+     * Retorna el primer elemento no nulo de la coleccion.
+     *
+     * @param args Elementos.
+     * @return Primer elemento no nulo, si hubiere.
+     */
+    public static Object coalesce(Object... args) {
+        if (isNullOrEmpty(args)) {
+            return null;
+        }
+
+        for (Object arg : args) {
+            if (arg != null) {
+                return arg;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Verifica si una cadena de texto es nula o vacía.
      *
      * @param value Cadena de texto.
