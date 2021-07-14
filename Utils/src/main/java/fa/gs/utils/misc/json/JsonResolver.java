@@ -322,17 +322,13 @@ public class JsonResolver {
         return values;
     }
 
-    public static <T extends Enum<T> & Codificable> T codificable(JsonObject json, String path, Class<T> klass) {
-        /**
-         * En tiempo de ejecucion, {@code klass.getEnumConstants()} no coincide
-         * con el tipo requerido para el metodo {@code codificable} que espera
-         * un array de datos. Los tipos no coinciden, principalmente en entornos
-         * android.
-         */
+    public static <T extends Codificable> T codificable(JsonObject json, String path, Class<T> klass) {
         String codigo = JsonResolver.string(json, path);
-        for (T value : klass.getEnumConstants()) {
-            if (Assertions.equals(value.codigo(), codigo)) {
-                return value;
+        if (klass.isEnum()) {
+            for (T value : klass.getEnumConstants()) {
+                if (Assertions.equals(value.codigo(), codigo)) {
+                    return value;
+                }
             }
         }
         return null;

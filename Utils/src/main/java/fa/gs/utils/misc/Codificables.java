@@ -15,16 +15,21 @@ import java.util.Objects;
 public class Codificables {
 
     public static <T extends Codificable> T fromCodigo(String codigo, T[] values) {
-        for (T value : values) {
-            if (Objects.equals(codigo, value.codigo())) {
-                return value;
+        if (!Assertions.isNullOrEmpty(values)) {
+            for (T value : values) {
+                if (Objects.equals(codigo, value.codigo())) {
+                    return value;
+                }
             }
         }
         throw Errors.illegalArgument();
     }
 
-    public static <T extends Enum<T> & Codificable> T fromCodigo(String codigo, Class<T> klass) {
-        return fromCodigo(codigo, klass.getEnumConstants());
+    public static <T extends Codificable> T fromCodigo(String codigo, Class<T> klass) {
+        if (klass.isEnum()) {
+            return fromCodigo(codigo, klass.getEnumConstants());
+        }
+        throw Errors.illegalArgument();
     }
 
 }

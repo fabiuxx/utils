@@ -154,7 +154,7 @@ public class Maps {
         return get(map, key, fallback, Date.class);
     }
 
-    public static <K, V, T extends Enum<T> & Codificable> T codificable(Map<K, V> map, K key, Class<T> klass) {
+    public static <K, V, T extends Codificable> T codificable(Map<K, V> map, K key, Class<T> klass) {
         String value = string(map, key);
         return Codificables.fromCodigo(value, klass);
     }
