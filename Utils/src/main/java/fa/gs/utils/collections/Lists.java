@@ -79,6 +79,21 @@ public class Lists {
     }
 
     /**
+     * Encapsula un objeto en una coleccion.
+     *
+     * @param <T> Parametro de tipo.
+     * @param element Objecto.
+     * @return Coleccion.
+     */
+    public static <T> List<T> wrap(T element) {
+        ArrayList<T> items = new ArrayList<>();
+        if (element != null) {
+            items.add(element);
+        }
+        return items;
+    }
+
+    /**
      * Encapsula un array de objetos en una coleccion.
      *
      * @param <T> Parametro de tipo.
