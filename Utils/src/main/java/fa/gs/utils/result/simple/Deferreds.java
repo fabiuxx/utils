@@ -26,6 +26,13 @@ public class Deferreds {
         return result;
     }
 
+    public static final DeferredResult<Void> resolve(DeferredResult<Void> result) {
+        if (result.isPending()) {
+            result.resolve(null);
+        }
+        return result;
+    }
+
     public static final <S> DeferredResult<S> resolve(DeferredResult<S> result, S value) {
         if (result.isPending()) {
             result.resolve(value);

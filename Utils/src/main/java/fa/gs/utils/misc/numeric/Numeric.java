@@ -361,6 +361,38 @@ public class Numeric {
     }
 
     /**
+     * Obtiene el valor menor entre dos valores posibles.
+     *
+     * @param a Valor numerico.
+     * @param b Valor numerico.
+     * @return {@code a} si es estrictamente menor que {@code b}. Caso
+     * contrario, {@code b}.
+     */
+    public static BigDecimal min(BigDecimal a, BigDecimal b) {
+        if (menor(a, b)) {
+            return a;
+        } else {
+            return b;
+        }
+    }
+
+    /**
+     * Obtiene el valor mayor entre dos valores posibles.
+     *
+     * @param a Valor numerico.
+     * @param b Valor numerico.
+     * @return {@code a} si es estrictamente mayor que {@code b}. Caso
+     * contrario, {@code b}.
+     */
+    public static BigDecimal max(BigDecimal a, BigDecimal b) {
+        if (mayor(a, b)) {
+            return a;
+        } else {
+            return b;
+        }
+    }
+
+    /**
      * Verifica si un valor numerico es multiplo de otro.
      *
      * @param a Valor numerico comparado.
@@ -803,7 +835,7 @@ public class Numeric {
             int count = 0;
             while (actMult.multiply(actor).compareTo(num) < 1) {
                 lastMult = actor; //Keep the old squares
-                actor = actor.multiply(actor); //Square the base repeatedly until the value exceeds 
+                actor = actor.multiply(actor); //Square the base repeatedly until the value exceeds
                 if (count > 0) {
                     incrementor = incrementor.multiply(BigInteger.valueOf(2));
                 }
@@ -816,8 +848,8 @@ public class Numeric {
 
             /* If there is no way to multiply the "actMult"
          * with squares of the base (including the base itself)
-         * without keeping it below the actual value, 
-         * it is the end of the computation 
+         * without keeping it below the actual value,
+         * it is the end of the computation
              */
             actMult = actMult.multiply(lastMult);
             resultSet = resultSet.add(incrementor);
