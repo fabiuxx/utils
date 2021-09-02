@@ -12,6 +12,7 @@ import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
 import fa.gs.utils.result.simple.Result;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -210,6 +211,19 @@ public class Jsf {
         }
     }
     //</editor-fold>
+
+    /**
+     * Permite enviar un archivo como respuesta a una peticion JSF no ajax.
+     *
+     * @param data Bytes de datos a procesar.
+     * @param fileName Nombre de archivo para el lado del cliente.
+     * @param contentType MIME Type del archivo.
+     * @throws Exception Si no se puede enviar el archivo.
+     */
+    public static void sendFile(byte[] data, String fileName, String contentType) throws Exception {
+        InputStream stream = new ByteArrayInputStream(data);
+        Jsf.sendFile(stream, fileName, data.length, contentType);
+    }
 
     /**
      * Permite enviar un archivo como respuesta a una peticion JSF no ajax.
