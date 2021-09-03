@@ -55,7 +55,12 @@ public class JsonSerializer {
             return resolveArray(ctx, instance, sourceClass, field);
         }
 
-        // Procesamiento de objeto.
+        // Procesamiento de objeto JsonElement.
+        if (Reflection.isInstanceOf(sourceClass, JsonElement.class)) {
+            return resolveJObject(ctx, instance, sourceClass);
+        }
+
+        // Procesamiento de objeto java.
         return resolveObject(ctx, instance, sourceClass);
     }
 
@@ -93,6 +98,10 @@ public class JsonSerializer {
         }
 
         return builder.build();
+    }
+
+    private static JsonElement resolveJObject(final SerializationContext ctx, Object instance, Class<?> sourceClass) throws Throwable {
+        return (JsonElement) instance;
     }
 
     private static JsonElement resolveObject(final SerializationContext ctx, Object instance, Class<?> sourceClass) throws Throwable {
