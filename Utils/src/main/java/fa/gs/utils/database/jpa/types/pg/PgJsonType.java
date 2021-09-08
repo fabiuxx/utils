@@ -55,7 +55,7 @@ public class PgJsonType extends PgScalarType<JsonElementSerializableWrapper> {
             });
 
             JsonElement json = Json.fromString(value0);
-            return new JsonElementSerializableWrapper(json);
+            return JsonElementSerializableWrapper.instance(json);
         }
 
         throw Errors.unsupported("Instancia de '%s' para columna '%s' no corresponde al tipo 'PGobject'.", value.getClass().getCanonicalName(), names[0]);

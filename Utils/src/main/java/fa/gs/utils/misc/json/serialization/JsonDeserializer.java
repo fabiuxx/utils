@@ -8,6 +8,8 @@ package fa.gs.utils.misc.json.serialization;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.vladmihalcea.hibernate.type.util.Objects;
 import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Maps;
 import fa.gs.utils.misc.Reflection;
@@ -75,7 +77,17 @@ public class JsonDeserializer {
 
         // Procesamiento de objeto.
         if (element.isJsonObject()) {
-            return resolveObject(ctx, element, targetClass);
+            if (Objects.equals(targetClass, JsonElement.class)) {
+                return element;
+            } else if (Objects.equals(targetClass, JsonObject.class)) {
+                if (element.isJsonObject()) {
+                    return element.getAsJsonObject();
+                } else {
+                    throw Errors.illegalArgument("No se pudo establecer el valor resuelto para la propiedad '%s' en la instancia de '%s'.", field.getName(), element.getClass().getCanonicalName());
+                }
+            } else {
+                return resolveJavaObject(ctx, element, targetClass);
+            }
         }
 
         // Error.
@@ -171,6 +183,16 @@ public class JsonDeserializer {
         return Arrays.unwrap(collection, arrayType);
     }
 
+    private static Object resolveObject(final DeserializationContext ctx, JsonElement element, Object instance, Field field) throws Throwable {
+        // Asignar valor de propiedad.
+        boolean ok = Reflection.set(instance, field, element);
+        if (!ok) {
+            throw Errors.illegalArgument("No se pudo establecer el valor resuelto para la propiedad '%s' en la instancia de '%s'", field.getName(), instance.getClass().getCanonicalName());
+        }
+
+        return null;
+    }
+
     /**
      * Reduce un elemento JSON a un POJO.
      *
@@ -190,7 +212,7 @@ public class JsonDeserializer {
      * objetivo.</li>
      * </ul>
      */
-    private static Object resolveObject(final DeserializationContext ctx, JsonElement element, Class<?> targetClass) throws Throwable {
+    private static Object resolveJavaObject(final DeserializationContext ctx, JsonElement element, Class<?> targetClass) throws Throwable {
         // Control.
         if (element.isJsonPrimitive()) {
             throw Errors.illegalArgument("La clase '%s' no acepta valores json primitivos.", targetClass.getCanonicalName());
@@ -210,7 +232,7 @@ public class JsonDeserializer {
             JsonProperty annotation = Reflection.getAnnotation(field, JsonProperty.class);
             if (annotation != null) {
                 // Resolver propiedad de objeto json.
-                Object resolvedProperty = resolveObjectProperty(ctx, element, field, annotation);
+                Object resolvedProperty = resolveJavaObjectProperty(ctx, element, field, annotation);
                 if (resolvedProperty != null && !Reflection.isInstanceOf(resolvedProperty.getClass(), field.getType())) {
                     throw Errors.illegalArgument("No se pudo establecer el valor resuelto para la propiedad '%s'. No se puede convertir '%s' a '%s'.", field.getName(), resolvedProperty.getClass().getCanonicalName(), field.getType().getCanonicalName());
                 }
@@ -244,7 +266,7 @@ public class JsonDeserializer {
      * la propiedad JSON.
      * @return Valor reducido.
      */
-    private static Object resolveObjectProperty(final DeserializationContext ctx, JsonElement element, Field field, JsonProperty annotation) {
+    private static Object resolveJavaObjectProperty(final DeserializationContext ctx, JsonElement element, Field field, JsonProperty annotation) {
         // Resolver propiedad en objeto json.
         String propertyName = Text.select(annotation.name(), field.getName());
         JsonElement property = Json.resolvePath(element.getAsJsonObject(), propertyName);

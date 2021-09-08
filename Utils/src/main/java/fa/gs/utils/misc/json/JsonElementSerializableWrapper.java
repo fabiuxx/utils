@@ -27,6 +27,14 @@ public class JsonElementSerializableWrapper implements Serializable {
         this.wrapped = wrapped;
     }
 
+    public static JsonElementSerializableWrapper instance() {
+        return new JsonElementSerializableWrapper();
+    }
+
+    public static JsonElementSerializableWrapper instance(JsonElement wrapped) {
+        return new JsonElementSerializableWrapper(wrapped);
+    }
+
     public JsonElement getJsonElement() {
         return wrapped;
     }

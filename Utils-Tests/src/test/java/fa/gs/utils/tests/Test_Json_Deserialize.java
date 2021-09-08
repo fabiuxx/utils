@@ -5,10 +5,12 @@
  */
 package fa.gs.utils.tests;
 
+import com.google.gson.JsonObject;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.misc.json.serialization.JsonDeserializer;
 import fa.gs.utils.tests.json.Payload0;
 import fa.gs.utils.tests.json.Payload1;
+import fa.gs.utils.tests.json.Payload10;
 import fa.gs.utils.tests.json.Payload2;
 import fa.gs.utils.tests.json.Payload3;
 import fa.gs.utils.tests.json.Payload4;
@@ -311,6 +313,26 @@ public class Test_Json_Deserialize {
         Assertions.assertEquals((Integer) 1, payload.id);
         Assertions.assertEquals("admin", payload.username);
         Assertions.assertEquals("123", payload.password);
+    }
+    
+    @Test
+    public void test21() throws Throwable {
+        String json = "{ \"id\": 1, \"items\": [ { \"id\": 1, \"data\": { \"v\": 1, \"texto\": \"asdasd\", \"selections\": [\"1\", \"2\"] } } ] }";
+        Payload10 payload = JsonDeserializer.deserialize(json, Payload10.class);
+        Assertions.assertTrue(payload != null);
+        Assertions.assertTrue(payload.items != null && payload.items.length == 1);
+        Assertions.assertTrue(payload.items[0] != null);
+        Assertions.assertTrue(payload.items[0].data != null);
+        Assertions.assertTrue(payload.items[0].data.isJsonObject());
+        
+        JsonObject data = payload.items[0].data.getAsJsonObject();
+        Assertions.assertTrue(data.has("v"));
+        Assertions.assertTrue(data.get("v").isJsonPrimitive());
+        Assertions.assertTrue(data.has("texto"));
+        Assertions.assertTrue(data.get("texto").isJsonPrimitive());
+        Assertions.assertTrue(data.has("selections"));
+        Assertions.assertTrue(data.get("selections").isJsonArray());
+        Assertions.assertTrue(data.getAsJsonArray("selections").size() == 2);
     }
 
 }

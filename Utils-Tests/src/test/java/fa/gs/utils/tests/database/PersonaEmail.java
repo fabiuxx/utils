@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.tests.database;
 
-import fa.gs.utils.database.dto.annotations.FgConverter;
 import fa.gs.utils.database.dto.annotations.FgDto;
 import fa.gs.utils.database.dto.annotations.FgJoin;
 import fa.gs.utils.database.dto.annotations.FgOrderBy;
@@ -32,7 +31,6 @@ public class PersonaEmail implements Serializable {
     public Integer idPersona;
 
     @FgProjection(value = FILTERS.ID_EMAIL, as = "x")
-    @FgConverter(converter = EnumTestConverter.class)
     public EnumTest enumTest;
 
     public static final class FILTERS {
