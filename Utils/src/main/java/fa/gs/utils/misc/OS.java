@@ -29,4 +29,13 @@ public class OS {
         return osName.contains("sunos");
     }
 
+    public static String getEnvVar(String name) {
+        return getEnvVar(name, "");
+    }
+
+    public static String getEnvVar(String name, String fallback) {
+        ProcessBuilder pb = new ProcessBuilder();
+        return pb.environment().getOrDefault(name, fallback);
+    }
+
 }

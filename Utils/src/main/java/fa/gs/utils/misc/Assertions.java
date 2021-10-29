@@ -6,6 +6,7 @@
 package fa.gs.utils.misc;
 
 import fa.gs.utils.misc.errors.Errors;
+import fa.gs.utils.misc.numeric.Numeric;
 import fa.gs.utils.misc.text.Strings;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -209,8 +210,8 @@ public class Assertions {
      */
     public static boolean isInteger(String value) {
         try {
-            BigInteger bi = new BigInteger(value);
-            return true;
+            Integer number = Integer.valueOf(value);
+            return number != null;
         } catch (Throwable thr) {
             return false;
         }
@@ -225,8 +226,8 @@ public class Assertions {
      */
     public static boolean isPositiveInteger(String value) {
         try {
-            Long number = Long.valueOf(value);
-            return number > 0L;
+            Integer number = Integer.valueOf(value);
+            return number != null && number > 0;
         } catch (Throwable thr) {
             return false;
         }
@@ -241,7 +242,88 @@ public class Assertions {
      */
     public static boolean isPositiveInteger(Number value) {
         try {
-            return value.longValue() > 0L;
+            String value0 = String.valueOf(value);
+            return isPositiveInteger(value0);
+        } catch (Throwable thr) {
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si una cadena representa un valor numerico entero.
+     *
+     * @param value Cadena de texto.
+     * @return {@code true} si la cadena es una valor numerico entero,
+     * {@code false} caso contrario.
+     */
+    public static boolean isLong(String value) {
+        try {
+            Long number = Long.valueOf(value);
+            return number != null;
+        } catch (Throwable thr) {
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si una cadena representa un valor numerico entero positivo.
+     *
+     * @param value Cadena de texto.
+     * @return {@code true} si la cadena es una valor numerico entero,
+     * {@code false} caso contrario.
+     */
+    public static boolean isPositiveLong(String value) {
+        try {
+            Long number = Long.valueOf(value);
+            return number != null && number > 0L;
+        } catch (Throwable thr) {
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si un valor numerico representa un valor entero positivo.
+     *
+     * @param value Valor numerico.
+     * @return {@code true} si el numero es un entero positivo, {@code false}
+     * caso contrario.
+     */
+    public static boolean isPositiveLong(Number value) {
+        try {
+            String value0 = String.valueOf(value);
+            return isPositiveLong(value0);
+        } catch (Throwable thr) {
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si una cadena representa un valor numerico entero positivo.
+     *
+     * @param value Cadena de texto.
+     * @return {@code true} si la cadena es una valor numerico entero,
+     * {@code false} caso contrario.
+     */
+    public static boolean isPositiveBigInteger(String value) {
+        try {
+            BigInteger bi = Numeric.adaptAsBigInteger(value);
+            return (bi != null && bi.compareTo(BigInteger.ZERO) > 0);
+        } catch (Throwable thr) {
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si un valor numerico representa un valor entero positivo.
+     *
+     * @param value Valor numerico.
+     * @return {@code true} si el numero es un entero positivo, {@code false}
+     * caso contrario.
+     */
+    public static boolean isPositiveBigInteger(Number value) {
+        try {
+            String value0 = String.valueOf(value);
+            return isPositiveBigInteger(value0);
         } catch (Throwable thr) {
             return false;
         }

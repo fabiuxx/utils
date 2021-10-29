@@ -114,6 +114,14 @@ public class Maps {
         return get(map, key, fallback, Character.class);
     }
 
+    public static <K, V> Short short0(Map<K, V> map, K key) {
+        return short0(map, key, null);
+    }
+
+    public static <K, V> Short short0(Map<K, V> map, K key, Short fallback) {
+        return get(map, key, fallback, Short.class);
+    }
+
     public static <K, V> Integer integer(Map<K, V> map, K key) {
         return integer(map, key, null);
     }

@@ -5,17 +5,16 @@
  */
 package fa.gs.utils.database.jpa.types.pg;
 
-import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Units;
 import fa.gs.utils.misc.errors.Errors;
-import java.sql.Array;
-import java.sql.Connection;
+import fa.gs.utils.misc.text.Joiner;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
 
@@ -23,18 +22,13 @@ import org.hibernate.engine.spi.SessionImplementor;
  *
  * @author Fabio A. González Sosa
  */
-public abstract class PgArrayType<T> extends PgType {
+public class PgTextAggregationType extends PgType {
 
     public static final int SQL_TYPE = java.sql.Types.ARRAY;
 
-    private final Class<T> javaType;
+    private static final String SEPARATOR = ";";
 
-    private final String sqlTypename;
-
-    public PgArrayType(Class<T> javaType, String sqlTypename) {
-        this.javaType = javaType;
-        this.sqlTypename = sqlTypename;
-    }
+    public static final String QNAME = "fa.gs.utils.database.jpa.types.pg.PgTextAggregationType";
 
     @Override
     public int[] sqlTypes() {
@@ -48,24 +42,21 @@ public abstract class PgArrayType<T> extends PgType {
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        Array array = Units.execute(() -> rs.getArray(names[0]));
-        if (array == null) {
+        String text = Units.execute(() -> rs.getString(names[0]));
+        if (Assertions.stringNullOrEmpty(text)) {
             return null;
         }
 
-        Object[] javaArray = (Object[]) array.getArray();
-        List<T> javaList = Lists.empty();
-        if (!Assertions.isNullOrEmpty(javaArray)) {
-            for (Object javaArrayElement : javaArray) {
-                T javaListElement = nullSafeGetElement(javaArrayElement);
-                Lists.add(javaList, javaListElement);
+        List<String> javaList = Lists.empty();
+        if (!Assertions.stringNullOrEmpty(text)) {
+            String[] parts = text.split(Pattern.quote(SEPARATOR));
+            if (!Assertions.isNullOrEmpty(parts)) {
+                Lists.add(javaList, parts);
             }
         }
 
         return javaList;
     }
-
-    protected abstract T nullSafeGetElement(Object arrayElement) throws HibernateException, SQLException;
 
     @Override
     public void nullSafeSet(PreparedStatement statement, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
@@ -75,10 +66,8 @@ public abstract class PgArrayType<T> extends PgType {
         }
 
         if (value instanceof List) {
-            T[] javaArray = Arrays.unwrap((List<T>) value, javaType);
-            Connection connection = statement.getConnection();
-            Array array = connection.createArrayOf(sqlTypename, javaArray);
-            statement.setArray(index, array);
+            String text = Joiner.of((List<String>) value).separator(SEPARATOR).join();
+            statement.setString(index, text);
             return;
         }
 
