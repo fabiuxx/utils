@@ -45,6 +45,31 @@ import java.util.Collection;
  */
 public class DtoQuery implements Serializable {
 
+    public static Collection<Projection> extractProjections(Class klass) {
+        return extractProjections(klass, null);
+    }
+
+    /**
+     * Obtiene el mapeo de cada atributo valido encontrado dentro de una
+     * definicion de clase dada.
+     *
+     * @param klass Clase que se desea mapear.
+     * @param tableAlias Permite especificar un alias de tabla para
+     * identificador mejor los campos. Util para generacion de query nativas con
+     * multiples joins. Puede ser nulo en caso de no necesitarse.
+     * @return Mapa con el alias correpsondiente a cada atributo valido de
+     * clase.
+     */
+    public static Collection<Projection> extractProjections(Class klass, String tableAlias) {
+        // Validar definicion.
+        validate(klass);
+
+        // Inicializar datos.
+        PreparationContext ctx = new PreparationContext(klass);
+        prepareProjectionExpressions(ctx, tableAlias);
+        return ctx.projections;
+    }
+
     public static SelectQuery prepareSelectStatement(Class klass) {
         // Validar definicion.
         validate(klass);
@@ -54,7 +79,7 @@ public class DtoQuery implements Serializable {
         prepareCommonTableExpressions(ctx);
         prepareTableExpression(ctx);
         prepareTableJoinClauses(ctx);
-        prepareProjectionExpressions(ctx);
+        prepareProjectionExpressions(ctx, null);
         prepareWhereClauses(ctx);
         prepareHavingClauses(ctx);
         prepareGroupClauses(ctx);
@@ -108,7 +133,7 @@ public class DtoQuery implements Serializable {
         }
     }
 
-    private static void prepareProjectionExpressions(PreparationContext ctx) {
+    private static void prepareProjectionExpressions(PreparationContext ctx, String tableAlias) {
         Collection<Projection> projections = Lists.empty();
 
         Collection<Field> declaredFields = Reflection.getAllFields(ctx.klass);
@@ -116,7 +141,7 @@ public class DtoQuery implements Serializable {
             FgProjection projectionAnnotation = Reflection.getAnnotation(field, AnnotationTypes.FGPROJECTION);
             if (projectionAnnotation != null) {
                 // 1) Resolver proyeccion.
-                Object projection0 = ctx.resolveProjection(field, projectionAnnotation);
+                Object projection0 = ctx.resolveProjection(field, projectionAnnotation, tableAlias);
 
                 // 2) Resolver alias.
                 String alias0 = ctx.resolveAlias(field, projectionAnnotation);
@@ -357,12 +382,16 @@ public class DtoQuery implements Serializable {
             return counter++;
         }
 
-        public Object resolveProjection(Field field, FgProjection projectionAnnotation) {
+        public Object resolveProjection(Field field, FgProjection projectionAnnotation, String tableAlias) {
             Object projection0;
             if (projectionAnnotation.useRaw()) {
                 projection0 = projectionAnnotation.value();
             } else {
-                projection0 = new Name(projectionAnnotation.value());
+                if (!Assertions.stringNullOrEmpty(tableAlias)) {
+                    projection0 = new Name(tableAlias + "." + projectionAnnotation.value());
+                } else {
+                    projection0 = new Name(projectionAnnotation.value());
+                }
             }
             return projection0;
         }

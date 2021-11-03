@@ -8,6 +8,7 @@ package fa.gs.utils.database.query.elements.utils;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Projection;
 import fa.gs.utils.database.query.elements.build.ProjectionBuilder;
+import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.errors.Errors;
 
 /**
@@ -15,6 +16,10 @@ import fa.gs.utils.misc.errors.Errors;
  * @author Fabio A. González Sosa
  */
 public class Projections {
+
+    public static Projection build(Object projection) {
+        return build(projection, null);
+    }
 
     public static Projection build(Object projection, String alias) {
         ProjectionBuilder builder = ProjectionBuilder.instance();
@@ -29,7 +34,9 @@ public class Projections {
         }
 
         // Alias.
-        builder.as(alias);
+        if (!Assertions.stringNullOrEmpty(alias)) {
+            builder.as(alias);
+        }
 
         return builder.build();
     }

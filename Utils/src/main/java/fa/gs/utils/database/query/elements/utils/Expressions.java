@@ -12,6 +12,7 @@ import fa.gs.utils.database.query.elements.Expression;
 import fa.gs.utils.database.query.elements.build.ExpressionBuilder;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.text.StringBuilder2;
+import fa.gs.utils.misc.text.Strings;
 import java.util.Collection;
 import java8.util.function.Supplier;
 
@@ -106,7 +107,8 @@ public class Expressions {
         return exp;
     }
 
-    public static Expression build(final String raw) {
+    public static Expression build(String fmt, Object... args) {
+        String raw = Strings.format(fmt, args);
         ExpressionImpl exp = new ExpressionImpl();
         exp.add(raw);
         return exp;

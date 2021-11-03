@@ -116,6 +116,11 @@ public class SelectQuery extends AbstractQuery {
         return this;
     }
 
+    public SelectQuery projections(Collection<Projection> projections) {
+        Lists.add(this.projections, projections);
+        return this;
+    }
+
     public Projection[] projections() {
         return Arrays.unwrap(projections, Projection.class);
     }
