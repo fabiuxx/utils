@@ -49,6 +49,10 @@ public class SQLStringLiterals {
         return Strings.format("%%%s", value);
     }
 
+    public static String bool(boolean value) {
+        return (value) ? "true" : "false";
+    }
+
     public static String fecha(Date fecha) {
         return fecha(fecha, true);
     }

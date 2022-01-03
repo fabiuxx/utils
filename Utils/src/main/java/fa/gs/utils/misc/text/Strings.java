@@ -19,6 +19,24 @@ public class Strings {
     };
 
     /**
+     * Retorna la primera cadena no nula ni vacia de un conjunto de valores
+     * posibles.
+     *
+     * @param values Conjunto de valores posibles.
+     * @return Cadena no vacia, si hubiere.
+     */
+    public static String coalesce(String... values) {
+        if (!Assertions.isNullOrEmpty(values)) {
+            for (String value : values) {
+                if (!Assertions.stringNullOrEmpty(value)) {
+                    return value;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Formatea una cadena y sus argumentos, si hubieren.
      *
      * @param fmt Formato de cadena.

@@ -31,6 +31,11 @@ public class JsonElementSerializableWrapper implements Serializable {
         return new JsonElementSerializableWrapper();
     }
 
+    public static JsonElementSerializableWrapper instance(String wrapped) {
+        JsonElement wrapped0 = (wrapped == null) ? null : Json.fromString(wrapped);
+        return instance(wrapped0);
+    }
+
     public static JsonElementSerializableWrapper instance(JsonElement wrapped) {
         return new JsonElementSerializableWrapper(wrapped);
     }
