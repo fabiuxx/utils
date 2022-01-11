@@ -65,4 +65,9 @@ public class Formats {
      * Formato para la presentacion de fechas en forma de texto compacto.
      */
     public static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
+
+    /**
+     * Formato para la presentacion de fechas en forma de texto compacto.
+     */
+    public static final String YYYYMMDDHHMMSSSSS = "yyyyMMddHHmmssSSS";
 }

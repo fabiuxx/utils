@@ -60,7 +60,7 @@ public class Lists {
             return null;
         }
     }
-    
+
     /**
      * Encapsula una iteracion de objetos en una coleccion.
      *

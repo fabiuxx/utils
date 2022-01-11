@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.misc.fechas;
 
+import fa.gs.utils.collections.Lists;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Locales;
 import fa.gs.utils.misc.text.Strings;
@@ -12,6 +13,7 @@ import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -50,6 +52,8 @@ public class Fechas {
     private static final String[] monthNamesShort = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
 
     private static final String[] dayNames = {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"};
+
+    public static final Dia[] dias = {Dia.DOMINGO, Dia.LUNES, Dia.MARTES, Dia.MIERCOLES, Dia.JUEVES, Dia.VIERNES, Dia.SABADO};
 
     private static final String[] dayNamesShort = {"Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"};
 
@@ -123,6 +127,33 @@ public class Fechas {
     }
 
     /**
+     * Obtiene una referencia del dia correspondiente a la fecha indicada.
+     *
+     * @param input Fecha de referencia.
+     * @return Dia de la semana.
+     */
+    public static Dia getDia(Date input) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(input);
+        int dia = calendar.get(Calendar.DAY_OF_WEEK);
+        return dias[dia - 1];
+    }
+
+    /**
+     * Obtiene el numero de semana en el mes correspondiente a la fecha
+     * indicada.
+     *
+     * @param input Fecha de referencia.
+     * @return Nro de semana.
+     */
+    public static int getNroSemana(Date input) {
+        Calendar c = Calendar.getInstance();
+        c.setFirstDayOfWeek(Calendar.SUNDAY);
+        c.setTime(input);
+        return c.get(Calendar.WEEK_OF_MONTH);
+    }
+
+    /**
      * Obtiene el nombre del mes correspondiente al entero entre 1 y 12.
      *
      * @param m Entero entre 1 y 12 que representa numericamente al mes.
@@ -133,6 +164,32 @@ public class Fechas {
             throw Errors.illegalArgument("Se esperaba un valor entre 1 y 12");
         }
         return meses[m - 1];
+    }
+
+    public static Collection<DateInfo> obtenerInformacionMes(Date fecha) {
+        Date inicio = primerDiaMes(fecha);
+        Date fin = ultimoDiaMes(fecha);
+        return obtenerInformacionFechas(inicio, fin);
+    }
+
+    public static Collection<DateInfo> obtenerInformacionFechas(Date inicio, Date fin) {
+        Collection<DateInfo> infos = Lists.empty();
+        Date dia = inicio;
+        while (true) {
+            // Procesar dia.
+            DateInfo info = new DateInfo();
+            info.setFecha(dia);
+            info.setDia(getDia(dia));
+            info.setNroSemana(getNroSemana(dia));
+            infos.add(info);
+
+            // Avanzar a siguiente dia.
+            dia = addDias(dia, 1);
+            if (dia.compareTo(fin) > 0) {
+                break;
+            }
+        }
+        return infos;
     }
 
     /**
@@ -288,6 +345,17 @@ public class Fechas {
         calendar.setTime(input);
         calendar.add(field, value);
         return calendar.getTime();
+    }
+
+    /**
+     * Agrega una cierta cantidad de dias a la fecha indicada.
+     *
+     * @param input Fecha de entrada.
+     * @param n Cantidad de dias de incremento.
+     * @return Nueva fecha.
+     */
+    public static Date addDias(Date input, int n) {
+        return addValue(input, Calendar.DAY_OF_MONTH, n);
     }
 
     /**
@@ -540,6 +608,16 @@ public class Fechas {
     public static boolean mayorIgual(Date a, Date b) {
         int compare = a.compareTo(b);
         return compare >= 0;
+    }
+
+    public static enum Dia {
+        DOMINGO,
+        LUNES,
+        MARTES,
+        MIERCOLES,
+        JUEVES,
+        VIERNES,
+        SABADO;
     }
 
 }
