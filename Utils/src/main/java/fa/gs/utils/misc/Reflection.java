@@ -100,6 +100,28 @@ public class Reflection {
     }
 
     /**
+     * Obtiene el atributo con un nombre especificado. Si la clase actual no
+     * define al atributo, se busca en la jerarquia de clases padre hasta llegar
+     * a la clase raiz si es necesario (Object).
+     *
+     * @param klass Clase.
+     * @param name Nombre de atributo.
+     * @return Campo.
+     */
+    public static Field getFieldRecursively(Class klass, String name) {
+        Class<?> klass0 = klass;
+        while (klass0 != null && klass0 != Object.class) {
+            for (Field field : klass0.getDeclaredFields()) {
+                if (field.getName().equals(name)) {
+                    return field;
+                }
+            }
+            klass0 = klass0.getSuperclass();
+        }
+        return null;
+    }
+
+    /**
      * Obtiene todos los atributos posibles contenidos en una clase. Se escaneaa
      * toda la jerarquia de clases, ya que el metodo {@code getDeclaredFields}
      * obtiene todos los atributos propios de la clase sin incluir los campos
