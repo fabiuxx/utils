@@ -19,6 +19,12 @@ public class PersistenceUnitProperties {
         props.put("hibernate.generate_statistics", false);
     }
 
+    public static void disableSqlLogging(Properties props) {
+        props.put("hibernate.show_sql", false);
+        props.put("hibernate.format_sql", false);
+        props.put("hibernate.generate_statistics", false);
+    }
+
     public static void enableHibernateForPostgresql94(Properties props) {
         props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL9Dialect");
     }

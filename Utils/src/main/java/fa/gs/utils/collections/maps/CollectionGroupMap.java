@@ -39,6 +39,10 @@ public class CollectionGroupMap<K, V> {
         }
 
         Set<V> set = Maps.get(map, key, Sets.<V>empty());
+        if (mustClearBeforePut(set)) {
+            set.clear();
+        }
+
         set.add(value);
         map.put(key, set);
     }
@@ -47,6 +51,21 @@ public class CollectionGroupMap<K, V> {
         Set<V> set = Maps.get(map, key, Sets.<V>empty());
         set.addAll(values);
         map.put(key, set);
+    }
+
+    private boolean mustClearBeforePut(Set<V> set) {
+        /**
+         * Al inicializar cada "slot" del grupo, se utiliza el valor null para
+         * rellenar el slot. Al agregar un nuevo valor, se debe omitir el valor
+         * "nulo" de relleno para evitar inconsistencias.
+         */
+        if (set.size() == 1) {
+            V value = set.iterator().next();
+            if (value == null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Map<K, Collection<V>> getMap() {
