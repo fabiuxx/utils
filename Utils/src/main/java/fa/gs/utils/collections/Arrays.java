@@ -34,6 +34,19 @@ public class Arrays {
         return values[0];
     }
 
+    public static <T> T argv(Object[] args, int pos, T fallback) {
+        if (args == null || args.length < pos) {
+            return fallback;
+        } else {
+            Object value = args[pos];
+            if (value == null) {
+                return fallback;
+            } else {
+                return (T) value;
+            }
+        }
+    }
+
     /**
      * Aplica una conversion de tipo a los elementos dentro de un array
      * generico.

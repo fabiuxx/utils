@@ -12,6 +12,7 @@ import fa.gs.utils.misc.fechas.Formats;
 import fa.gs.utils.misc.numeric.Currency;
 import fa.gs.utils.misc.numeric.Numeric;
 import java.io.File;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Iterator;
@@ -40,10 +41,21 @@ public class Excel {
      * @throws Throwable Si no es posible cargar el archivo.
      */
     public static XSSFWorkbook load(File file) throws Throwable {
-        XSSFWorkbook wb;
-        try (OPCPackage fs = OPCPackage.openOrCreate(file)) {
-            wb = new XSSFWorkbook(fs);
-        }
+        OPCPackage fs = OPCPackage.open(file);
+        XSSFWorkbook wb = new XSSFWorkbook(fs);
+        return wb;
+    }
+
+    /**
+     * Carga un archivo fisico a la memoria.
+     *
+     * @param stream Archivo Excel.
+     * @return Representacion en memoria.
+     * @throws Throwable Si no es posible cargar el archivo.
+     */
+    public static XSSFWorkbook load(InputStream stream) throws Throwable {
+        OPCPackage fs = OPCPackage.open(stream);
+        XSSFWorkbook wb = new XSSFWorkbook(fs);
         return wb;
     }
 
@@ -77,11 +89,28 @@ public class Excel {
      * @return Fila, si hubiere. Caso contrario {@code null}.
      */
     public static XSSFRow row(XSSFSheet sheet, int row) {
+        return row(sheet, row, true);
+    }
+
+    /**
+     * Obtiene (o crea) una fila especifica de una hoja excel.
+     *
+     * @param sheet Hoja excel.
+     * @param row Numero de fila.
+     * @param createIfMissing Si se debe crear la fila en caso que no exista.
+     * @return Fila, si hubiere. Caso contrario {@code null}.
+     */
+    public static XSSFRow row(XSSFSheet sheet, int row, boolean createIfMissing) {
         if (Assertions.isNull(sheet)) {
             return null;
         }
 
-        return sheet.getRow(row);
+        XSSFRow row_ = sheet.getRow(row);
+        if (row_ == null) {
+            row_ = sheet.createRow(row);
+        }
+
+        return row_;
     }
 
     /**
@@ -131,7 +160,7 @@ public class Excel {
             return null;
         }
 
-        return row.getCell(col);
+        return row.getCell(col, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
     }
 
     /**
