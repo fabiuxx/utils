@@ -6,12 +6,15 @@
 package fa.gs.utils.misc.errors;
 
 import fa.gs.utils.misc.Assertions;
+import fa.gs.utils.misc.text.Charsets;
 import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.utils.Failure;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 
 /**
  *
@@ -132,6 +135,21 @@ public class Errors {
         String msg = Strings.format(fmt, args);
         stream.println(msg);
         dumpThrowable(stream, thr, 0);
+    }
+
+    public synchronized static String dump(Throwable thr) {
+        return dump(thr, Text.select(thr.getMessage(), "ERROR"));
+    }
+
+    public synchronized static String dump(Throwable thr, String fmt, Object... args) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            Charset charset = Charsets.UTF8;
+            PrintStream ps = new PrintStream(baos, true, charset.name());
+            dump(ps, thr, fmt, args);
+            return new String(baos.toByteArray(), charset);
+        } catch (IOException ioe) {
+            return Strings.format("IOException: %s", ioe.getMessage());
+        }
     }
 
     private static void dumpThrowable(PrintStream stream, Throwable thr, int ident) {

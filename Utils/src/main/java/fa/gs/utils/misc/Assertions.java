@@ -58,6 +58,40 @@ public class Assertions {
     }
 
     /**
+     * Verifica que al menos uno de los elementos sea nulo.
+     *
+     * @param values Valores.
+     * @return Si al menos uno de los valores es nulo.
+     */
+    public static boolean anyNull(Object... values) {
+        if (!Assertions.isNullOrEmpty(values)) {
+            for (Object value : values) {
+                if (value == null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Verifica que todas los elementos sean nulos.
+     *
+     * @param values Valores.
+     * @return Si todos los valores son nulos.
+     */
+    public static boolean allNull(Object... values) {
+        if (!Assertions.isNullOrEmpty(values)) {
+            for (Object value : values) {
+                if (value == null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * Verifica que dos objetos sean iguales.
      *
      * @param a Objeto a.

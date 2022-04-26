@@ -36,6 +36,16 @@ public class Strings {
         return null;
     }
 
+    public static String truncate(String value, int len) {
+        if (Assertions.stringNullOrEmpty(value)) {
+            return value;
+        } else if (value.length() > len) {
+            return value.substring(0, len);
+        } else {
+            return value;
+        }
+    }
+
     /**
      * Formatea una cadena y sus argumentos, si hubieren.
      *

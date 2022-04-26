@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.database.query.elements.build;
 
+import fa.gs.utils.database.query.QueryPart;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Order;
 import fa.gs.utils.mixins.Self;
@@ -15,7 +16,7 @@ import fa.gs.utils.mixins.Self;
  */
 public class OrderBuilder<T extends OrderBuilder<T>> implements Self<T> {
 
-    private Name value;
+    private QueryPart value;
     private Order.Type type;
 
     OrderBuilder() {
@@ -32,7 +33,7 @@ public class OrderBuilder<T extends OrderBuilder<T>> implements Self<T> {
         return self();
     }
 
-    public T column(Name name) {
+    public T column(QueryPart name) {
         this.value = name;
         return self();
     }
@@ -51,7 +52,7 @@ public class OrderBuilder<T extends OrderBuilder<T>> implements Self<T> {
     }
 
     public Order build() {
-        Name value0 = value;
+        QueryPart value0 = value;
         Order.Type type0 = type;
         return new Order(value0, type0);
     }

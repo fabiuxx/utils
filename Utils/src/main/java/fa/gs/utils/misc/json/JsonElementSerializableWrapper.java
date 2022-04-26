@@ -40,6 +40,19 @@ public class JsonElementSerializableWrapper implements Serializable {
         return new JsonElementSerializableWrapper(wrapped);
     }
 
+    public static boolean isEmpty(JsonElementSerializableWrapper instance) {
+        if (instance == null) {
+            return true;
+        }
+        if (instance.getJsonElement() == null) {
+            return true;
+        }
+        if (instance.getJsonElement().isJsonNull()) {
+            return true;
+        }
+        return false;
+    }
+
     public JsonElement getJsonElement() {
         return wrapped;
     }

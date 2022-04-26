@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.database.query.elements.utils;
 
+import fa.gs.utils.database.query.QueryPart;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Order;
 import fa.gs.utils.database.query.elements.build.OrderBuilder;
@@ -27,8 +28,8 @@ public class Orders {
         if (name instanceof String) {
             String name0 = (String) name;
             builder.column(name0);
-        } else if (name instanceof Name) {
-            Name name0 = (Name) name;
+        } else if (name instanceof QueryPart) {
+            QueryPart name0 = (QueryPart) name;
             builder.column(name0);
         } else {
             throw Errors.illegalArgument("Columna no soportada.");

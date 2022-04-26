@@ -131,6 +131,24 @@ public class ServiceResponse {
     }
 
     /**
+     * Construye una respuesta generica utilizando texto plano como contenido de
+     * carga utiñ-
+     *
+     * @param payload Carga util de la respuesta.
+     * @param status Codigo de estado HTTP de la respuesta.
+     * @return Respuesta.
+     */
+    public static Response response(String payload, int status) {
+        Response.ResponseBuilder builder = Response
+                .status(status)
+                .entity(payload)
+                .type(MediaType.TEXT_PLAIN);
+
+        Response response = builder.build();
+        return response;
+    }
+
+    /**
      * Construye una respuesta segun el formato base definido por el servicio
      * del API REST.
      *
@@ -138,7 +156,7 @@ public class ServiceResponse {
      * @param status Codigo de estado HTTP de la respuesta.
      * @return Respuesta.
      */
-    private static Response response(JsonElement payload, int status) {
+    public static Response response(JsonElement payload, int status) {
         Response.ResponseBuilder builder = Response
                 .status(status)
                 .entity(payload)
