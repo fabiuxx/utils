@@ -6,7 +6,6 @@
 package fa.gs.utils.database.query.elements.utils;
 
 import fa.gs.utils.database.query.QueryPart;
-import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Order;
 import fa.gs.utils.database.query.elements.build.OrderBuilder;
 import fa.gs.utils.misc.errors.Errors;

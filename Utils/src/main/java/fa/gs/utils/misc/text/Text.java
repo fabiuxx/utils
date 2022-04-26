@@ -212,7 +212,7 @@ public class Text {
         String[] pairs = query.split("&");
         for (String pair : pairs) {
             try {
-                int pos = pair.indexOf("=");
+                int pos = pair.indexOf('=');
                 String name = URLDecoder.decode(pair.substring(0, pos), Charsets.UTF8.name());
                 String value = URLDecoder.decode(pair.substring(pos + 1), Charsets.UTF8.name());
                 params.put(name, value);

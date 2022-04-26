@@ -3,6 +3,7 @@ package fa.gs.utils.collections;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.errors.Errors;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -103,9 +104,7 @@ public class Lists {
     public static <T> List<T> wrap(T[] array) {
         ArrayList<T> items = new ArrayList<>();
         if (!Assertions.isNullOrEmpty(array)) {
-            for (T item0 : array) {
-                items.add(item0);
-            }
+            items.addAll(Arrays.asList(array));
         }
         return items;
     }

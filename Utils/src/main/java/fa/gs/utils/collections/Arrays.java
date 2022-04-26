@@ -20,10 +20,10 @@ import java8.util.stream.Stream;
  */
 public class Arrays {
 
-    public static <T> T[] wrap(T ... values) {
+    public static <T> T[] wrap(T... values) {
         return values;
     }
-    
+
     /**
      * Obtiene el primer elemento de un array de elementos.
      *
