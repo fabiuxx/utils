@@ -69,6 +69,19 @@ public class Results {
     }
 
     /**
+     * Permite obtener un tipo de resultado que no contiene un valor especifico
+     * como resultado de una operacion exitosa.
+     *
+     * @return Resutado de operacion.
+     */
+    public static Result<Void> empty() {
+        return Results.ok()
+                .value(null)
+                .nullable(true)
+                .build();
+    }
+
+    /**
      * Obtiene el valor encapsulado dentro de un resultado o lanza una excepcion
      * si el resultado representa un fallo.
      *

@@ -163,10 +163,15 @@ public abstract class RestController implements Serializable {
      * @param msg Mensaje de ayuda que indica la causa del error.
      */
     private void logError(Throwable thr, String msg) {
-        getLog().error()
-                .cause(thr)
-                .message(msg)
-                .log();
+        AppLogger logger = getLog();
+        if (logger == null) {
+            Errors.dump(System.err, thr);
+        } else {
+            logger.error()
+                    .cause(thr)
+                    .message(msg)
+                    .log();
+        }
     }
 
 }

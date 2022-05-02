@@ -480,4 +480,14 @@ public class Assertions {
         return (collection == null || collection.length == 0);
     }
 
+    /**
+     * Verifica si una coleccion de elementos es nula o esta vacia.
+     *
+     * @param collection Collection de datos.
+     * @return si la coleccion es nula o vacia, {@code false} caso contrario.
+     */
+    public static boolean isNullOrEmpty(byte[] collection) {
+        return (collection == null || collection.length == 0);
+    }
+
 }
