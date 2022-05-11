@@ -71,8 +71,14 @@ public class DtoQuery implements Serializable {
     }
 
     public static SelectQuery prepareSelectStatement(Class klass) {
+        return prepareSelectStatement(klass, true);
+    }
+
+    public static SelectQuery prepareSelectStatement(Class klass, boolean validate) {
         // Validar definicion.
-        validate(klass);
+        if (validate) {
+            validate(klass);
+        }
 
         // Inicializar datos.
         PreparationContext ctx = new PreparationContext(klass);

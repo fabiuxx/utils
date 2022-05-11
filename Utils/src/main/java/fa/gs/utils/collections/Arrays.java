@@ -38,6 +38,14 @@ public class Arrays {
         return values[0];
     }
 
+    public static <T> T last(T[] values) {
+        if (Assertions.isNullOrEmpty(values)) {
+            return null;
+        }
+        int l = values.length;
+        return values[l - 1];
+    }
+
     public static <T> T argv(Object[] args, int pos, T fallback) {
         if (args == null || args.length < pos) {
             return fallback;

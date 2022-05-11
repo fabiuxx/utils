@@ -11,7 +11,7 @@ import java8.util.function.Supplier;
  *
  * @author Fabio A. González Sosa
  */
-public class StringBuilder2 {
+public class StringBuilder2 implements Appendable, CharSequence {
 
     //<editor-fold defaultstate="collapsed" desc="Atributos">
     /**
@@ -37,6 +37,23 @@ public class StringBuilder2 {
         this.builder = builder;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="Wrappers para implementacion de CharSequence">
+    @Override
+    public int length() {
+        return builder.length();
+    }
+
+    @Override
+    public char charAt(int index) {
+        return builder.charAt(index);
+    }
+
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        return builder.subSequence(start, end);
+    }
+    //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="Wrappers de metodos existentes en StringBuilder">
     public StringBuilder2 append(Object obj) {
         builder.append(obj);
@@ -53,11 +70,13 @@ public class StringBuilder2 {
         return this;
     }
 
+    @Override
     public StringBuilder2 append(CharSequence s) {
         builder.append(s);
         return this;
     }
 
+    @Override
     public StringBuilder2 append(CharSequence s, int start, int end) {
         builder.append(s, start, end);
         return this;
@@ -78,6 +97,7 @@ public class StringBuilder2 {
         return this;
     }
 
+    @Override
     public StringBuilder2 append(char c) {
         builder.append(c);
         return this;
