@@ -2,9 +2,11 @@ package fa.gs.utils.collections;
 
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.errors.Errors;
+import fa.gs.utils.misc.text.Strings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
@@ -59,6 +61,28 @@ public class Lists {
             return items.iterator().next();
         } catch (Throwable thr) {
             return null;
+        }
+    }
+
+    public static <T> T at(Collection<T> items, int pos) {
+        if (Assertions.isNullOrEmpty(items)) {
+            throw new IndexOutOfBoundsException(Strings.format("%s >= (empty)", pos));
+        }
+
+        if (items instanceof List) {
+            List<T> list = (List<T>) items;
+            return list.get(pos);
+        } else {
+            int i = 0;
+            Iterator<T> it = items.iterator();
+            while (it.hasNext()) {
+                T item = it.next();
+                if (i == pos) {
+                    return item;
+                }
+                i++;
+            }
+            throw new IndexOutOfBoundsException(Strings.format("%s >= %s", pos, Lists.size(items)));
         }
     }
 
