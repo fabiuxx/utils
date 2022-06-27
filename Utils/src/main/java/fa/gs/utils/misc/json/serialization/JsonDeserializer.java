@@ -183,16 +183,6 @@ public class JsonDeserializer {
         return Arrays.unwrap(collection, arrayType);
     }
 
-    private static Object resolveObject(final DeserializationContext ctx, JsonElement element, Object instance, Field field) throws Throwable {
-        // Asignar valor de propiedad.
-        boolean ok = Reflection.set(instance, field, element);
-        if (!ok) {
-            throw Errors.illegalArgument("No se pudo establecer el valor resuelto para la propiedad '%s' en la instancia de '%s'", field.getName(), instance.getClass().getCanonicalName());
-        }
-
-        return null;
-    }
-
     /**
      * Reduce un elemento JSON a un POJO.
      *
@@ -238,9 +228,11 @@ public class JsonDeserializer {
                 }
 
                 // Asignar valor de propiedad.
-                boolean ok = Reflection.set(instance, field, resolvedProperty);
-                if (!ok) {
-                    throw Errors.illegalArgument("No se pudo establecer el valor resuelto para la propiedad '%s' en la clase '%s'", field.getName(), targetClass.getCanonicalName());
+                if (resolvedProperty != null) {
+                    boolean ok = Reflection.set(instance, field, resolvedProperty);
+                    if (!ok) {
+                        throw Errors.illegalArgument("No se pudo establecer el valor resuelto para la propiedad '%s' en la clase '%s'", field.getName(), targetClass.getCanonicalName());
+                    }
                 }
             }
         }

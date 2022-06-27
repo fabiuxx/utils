@@ -27,6 +27,9 @@ public class Orders {
         if (name instanceof String) {
             String name0 = (String) name;
             builder.column(name0);
+        } else if (name instanceof Integer) {
+            Integer name0 = (Integer) name;
+            builder.column(name0);
         } else if (name instanceof QueryPart) {
             QueryPart name0 = (QueryPart) name;
             builder.column(name0);

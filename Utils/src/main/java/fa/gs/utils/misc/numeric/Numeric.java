@@ -115,6 +115,14 @@ public class Numeric {
             return ((Long) obj).intValue();
         }
 
+        if (obj instanceof Float) {
+            return ((Float) obj).intValue();
+        }
+
+        if (obj instanceof Double) {
+            return ((Double) obj).intValue();
+        }
+
         if (obj instanceof BigInteger) {
             return ((BigInteger) obj).intValue();
         }
@@ -152,6 +160,14 @@ public class Numeric {
 
         if (obj instanceof Long) {
             return (Long) obj;
+        }
+
+        if (obj instanceof Float) {
+            return ((Float) obj).longValue();
+        }
+
+        if (obj instanceof Double) {
+            return ((Double) obj).longValue();
         }
 
         if (obj instanceof BigInteger) {
@@ -193,6 +209,14 @@ public class Numeric {
 
         if (obj instanceof Long) {
             return BigInteger.valueOf((Long) obj);
+        }
+
+        if (obj instanceof Float) {
+            return BigInteger.valueOf(((Float) obj).longValue());
+        }
+
+        if (obj instanceof Double) {
+            return BigInteger.valueOf(((Double) obj).longValue());
         }
 
         if (obj instanceof BigInteger) {

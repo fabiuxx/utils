@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-import org.joda.time.DateTime;
 
 /**
  *
@@ -79,8 +78,23 @@ public class Fechas {
      * @return Fecha actual.
      */
     public static Date now() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(Locales.es_ES);
         return calendar.getTime();
+    }
+
+    /**
+     * Obtiene el "offset" en milisegundos de la zona horaria actual respecto a
+     * UTC-0.
+     * <br/>
+     * Ej.: Para Paraguay, considerando UTC-4 el offset corresponderia a -0400,
+     * es decir -14400000 milisegundos (-4 horas).
+     *
+     * @return "offset" en milisegundos de la zona horaria local.
+     */
+    public static long timeZoneOffset() {
+        TimeZone tz = TimeZone.getDefault();
+        Calendar cl = Calendar.getInstance(Locales.es_ES);
+        return tz.getOffset(cl.getTimeInMillis());
     }
 
     /**
@@ -133,7 +147,7 @@ public class Fechas {
      * @return Dia de la semana.
      */
     public static Dia getDia(Date input) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(Locales.es_ES);
         calendar.setTime(input);
         int dia = calendar.get(Calendar.DAY_OF_WEEK);
         return dias[dia - 1];
@@ -147,7 +161,7 @@ public class Fechas {
      * @return Nro de semana.
      */
     public static int getNroSemana(Date input) {
-        Calendar c = Calendar.getInstance();
+        Calendar c = Calendar.getInstance(Locales.es_ES);
         c.setFirstDayOfWeek(Calendar.SUNDAY);
         c.setTime(input);
         return c.get(Calendar.WEEK_OF_MONTH);
@@ -199,7 +213,7 @@ public class Fechas {
      */
     public static final int[] diezAnhos() {
         int[] anhos = new int[10];
-        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int year = Calendar.getInstance(Locales.es_ES).get(Calendar.YEAR);
         for (int i = 0; i < 10; i++) {
             anhos[i] = year + i;
         }
@@ -218,13 +232,13 @@ public class Fechas {
      * hh:mm).
      */
     public static Date combinarFechaHora(Date fecha, Date hora) {
-        Calendar cFecha = Calendar.getInstance();
+        Calendar cFecha = Calendar.getInstance(Locales.es_ES);
         cFecha.setTime(fecha);
 
-        Calendar cHora = Calendar.getInstance();
+        Calendar cHora = Calendar.getInstance(Locales.es_ES);
         cHora.setTime(hora);
 
-        Calendar cFechaHora = Calendar.getInstance();
+        Calendar cFechaHora = Calendar.getInstance(Locales.es_ES);
         cFechaHora.set(Calendar.ERA, GregorianCalendar.AD);
         cFechaHora.set(Calendar.YEAR, cFecha.get(Calendar.YEAR));
         cFechaHora.set(Calendar.MONTH, cFecha.get(Calendar.MONTH));
@@ -247,16 +261,16 @@ public class Fechas {
      * de tiempo (hh:mm).
      */
     public static Date[] separarFechaHora(Date fecha) {
-        Calendar cFechaHora = Calendar.getInstance();
+        Calendar cFechaHora = Calendar.getInstance(Locales.es_ES);
         cFechaHora.setTime(fecha);
 
-        Calendar cFecha = Calendar.getInstance();
+        Calendar cFecha = Calendar.getInstance(Locales.es_ES);
         cFecha.set(Calendar.ERA, GregorianCalendar.AD);
         cFecha.set(Calendar.YEAR, cFechaHora.get(Calendar.YEAR));
         cFecha.set(Calendar.MONTH, cFechaHora.get(Calendar.MONTH));
         cFecha.set(Calendar.DAY_OF_MONTH, cFechaHora.get(Calendar.DAY_OF_MONTH));
 
-        Calendar cHora = Calendar.getInstance();
+        Calendar cHora = Calendar.getInstance(Locales.es_ES);
         cHora.set(Calendar.HOUR_OF_DAY, cFechaHora.get(Calendar.HOUR_OF_DAY));
         cHora.set(Calendar.MINUTE, cFechaHora.get(Calendar.MINUTE));
         cHora.set(Calendar.SECOND, cFechaHora.get(Calendar.SECOND));
@@ -281,7 +295,7 @@ public class Fechas {
             return null;
         }
 
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(Locales.es_ES);
         cal.setTime(input);
         cal.set(Calendar.ERA, GregorianCalendar.AD);
         cal.set(Calendar.YEAR, anho);
@@ -320,7 +334,7 @@ public class Fechas {
             return null;
         }
 
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(Locales.es_ES);
         cal.setTime(input);
         cal.set(Calendar.ERA, GregorianCalendar.AD);
         cal.set(Calendar.HOUR_OF_DAY, hora);
@@ -341,7 +355,7 @@ public class Fechas {
      * @return Fecha modificada.
      */
     public static Date addValue(Date input, int field, int value) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(Locales.es_ES);
         calendar.setTime(input);
         calendar.add(field, value);
         return calendar.getTime();
@@ -367,7 +381,7 @@ public class Fechas {
      * @return Valor del campo.
      */
     public static int getFieldValue(Date input, int field) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(Locales.es_ES);
         calendar.setTime(input);
         return calendar.get(field);
     }
@@ -381,7 +395,7 @@ public class Fechas {
      * @return Objeto fecha modificado.
      */
     public static Date setFieldValue(Date input, int field, int value) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(Locales.es_ES);
         calendar.setTime(input);
         calendar.set(field, value);
         return calendar.getTime();
@@ -405,7 +419,7 @@ public class Fechas {
      * @return Objeto fecha modificado.
      */
     public static Date ultimoDiaMes(Date input) {
-        Calendar c = Calendar.getInstance();
+        Calendar c = Calendar.getInstance(Locales.es_ES);
         c.setTime(input);
         c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date fecha = c.getTime();
@@ -550,8 +564,7 @@ public class Fechas {
         if (date == null) {
             return -1L;
         } else {
-            DateTime dt = new DateTime(date);
-            return dt.toInstant().getMillis();
+            return date.getTime();
         }
     }
 
@@ -580,8 +593,7 @@ public class Fechas {
         if (epoch <= 0) {
             return null;
         } else {
-            DateTime dt = new DateTime(epoch);
-            return dt.toDate();
+            return new Date(epoch);
         }
     }
 

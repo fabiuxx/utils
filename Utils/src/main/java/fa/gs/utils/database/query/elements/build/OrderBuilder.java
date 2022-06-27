@@ -8,6 +8,7 @@ package fa.gs.utils.database.query.elements.build;
 import fa.gs.utils.database.query.QueryPart;
 import fa.gs.utils.database.query.elements.Name;
 import fa.gs.utils.database.query.elements.Order;
+import fa.gs.utils.database.query.elements.utils.Literals;
 import fa.gs.utils.mixins.Self;
 
 /**
@@ -30,6 +31,11 @@ public class OrderBuilder<T extends OrderBuilder<T>> implements Self<T> {
 
     public T column(String... parts) {
         this.value = new Name(parts);
+        return self();
+    }
+
+    public T column(int pos) {
+        this.value = Literals.build(pos);
         return self();
     }
 
