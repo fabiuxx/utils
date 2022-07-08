@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -55,6 +56,31 @@ public class JsonElementSerializableWrapper implements Serializable {
 
     public JsonElement getJsonElement() {
         return wrapped;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof JsonElementSerializableWrapper)) {
+            return false;
+        }
+
+        JsonElementSerializableWrapper self = this;
+        JsonElementSerializableWrapper other = (JsonElementSerializableWrapper) o;
+
+        boolean a = isEmpty(self);
+        boolean b = isEmpty(other);
+        if (a || b && a != b) {
+            return false;
+        }
+
+        return Json.equals(self.wrapped, other.wrapped);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.wrapped);
+        return hash;
     }
 
     private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
