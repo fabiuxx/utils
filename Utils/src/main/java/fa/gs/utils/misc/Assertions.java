@@ -8,6 +8,7 @@ package fa.gs.utils.misc;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.numeric.Numeric;
 import fa.gs.utils.misc.text.Strings;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -268,6 +269,22 @@ public class Assertions {
     }
 
     /**
+     * Verifica si una cadena representa un valor numerico entero positivo.
+     *
+     * @param value Cadena de texto.
+     * @return {@code true} si la cadena es una valor numerico entero,
+     * {@code false} caso contrario.
+     */
+    public static boolean isZeroOrPositiveInteger(String value) {
+        try {
+            Integer number = Integer.valueOf(value);
+            return number != null && number >= 0;
+        } catch (Throwable thr) {
+            return false;
+        }
+    }
+
+    /**
      * Verifica si un valor numerico representa un valor entero positivo.
      *
      * @param value Valor numerico.
@@ -326,6 +343,22 @@ public class Assertions {
         try {
             String value0 = String.valueOf(value);
             return isPositiveLong(value0);
+        } catch (Throwable thr) {
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si una cadena representa un valor numerico entero.
+     *
+     * @param value Cadena de texto.
+     * @return {@code true} si la cadena es una valor numerico entero,
+     * {@code false} caso contrario.
+     */
+    public static boolean isBigInteger(String value) {
+        try {
+            BigInteger bi = Numeric.adaptAsBigInteger(value);
+            return bi != null;
         } catch (Throwable thr) {
             return false;
         }
@@ -405,6 +438,54 @@ public class Assertions {
     public static boolean isPositiveDecimal(Number value) {
         try {
             return value.doubleValue() > 0.0;
+        } catch (Throwable thr) {
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si una cadena representa un valor numerico decimal.
+     *
+     * @param value Cadena de texto.
+     * @return {@code true} si la cadena es una valor numerico decimal,
+     * {@code false} caso contrario.
+     */
+    public static boolean isBigDecimal(String value) {
+        try {
+            BigDecimal bi = Numeric.adaptAsBigDecimal(value);
+            return bi != null;
+        } catch (Throwable thr) {
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si una cadena representa un valor numerico decimal positivo.
+     *
+     * @param value Cadena de texto.
+     * @return {@code true} si la cadena es una valor numerico decimal,
+     * {@code false} caso contrario.
+     */
+    public static boolean isPositiveBigDecimal(String value) {
+        try {
+            BigDecimal bi = Numeric.adaptAsBigDecimal(value);
+            return (bi != null && bi.compareTo(BigDecimal.ZERO) > 0);
+        } catch (Throwable thr) {
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si un valor numerico representa un valor decimal positivo.
+     *
+     * @param value Valor numerico.
+     * @return {@code true} si el numero es un decimal positivo, {@code false}
+     * caso contrario.
+     */
+    public static boolean isPositiveBigDecimal(Number value) {
+        try {
+            String value0 = String.valueOf(value);
+            return isPositiveBigDecimal(value0);
         } catch (Throwable thr) {
             return false;
         }

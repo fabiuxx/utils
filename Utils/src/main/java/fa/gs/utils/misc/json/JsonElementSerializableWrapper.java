@@ -6,6 +6,7 @@
 package fa.gs.utils.misc.json;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -52,6 +53,18 @@ public class JsonElementSerializableWrapper implements Serializable {
             return true;
         }
         return false;
+    }
+
+    public static JsonElement unwrap(JsonElementSerializableWrapper instance) {
+        if (instance == null) {
+            return JsonNull.INSTANCE;
+        }
+
+        if (instance.getJsonElement() == null) {
+            return JsonNull.INSTANCE;
+        }
+
+        return instance.getJsonElement();
     }
 
     public JsonElement getJsonElement() {

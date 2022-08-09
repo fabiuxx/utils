@@ -168,6 +168,17 @@ public class Fechas {
     }
 
     /**
+     * Obtiene una referencia del anho actual.
+     *
+     * @param input Fecha de referencia.
+     * @return Dia de la semana.
+     */
+    public static int getAnho() {
+        Date now = Fechas.now();
+        return now.getYear() + 1900;
+    }
+
+    /**
      * Obtiene el nombre del mes correspondiente al entero entre 1 y 12.
      *
      * @param m Entero entre 1 y 12 que representa numericamente al mes.
