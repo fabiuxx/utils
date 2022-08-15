@@ -16,6 +16,7 @@ import fa.gs.utils.misc.Type;
 import fa.gs.utils.misc.Units;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.fechas.Fechas;
+import fa.gs.utils.misc.numeric.Numeric;
 import fa.gs.utils.misc.text.Strings;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -265,7 +266,16 @@ public class JsonResolver {
 
     public static Long long0(JsonObject json, String path, Long fallback) {
         Object value = JsonResolver.opt(json, path, Type.LONG, fallback);
-        return Long.class.cast(value);
+        return Numeric.adaptAsLong(value);
+    }
+
+    public static Double double0(JsonObject json, String path) {
+        return double0(json, path, null);
+    }
+
+    public static Double double0(JsonObject json, String path, Double fallback) {
+        Object value = JsonResolver.opt(json, path, Type.DOUBLE, fallback);
+        return Double.class.cast(value);
     }
 
     public static Collection<Integer> integerCollection(JsonObject json, String path) {
@@ -278,7 +288,7 @@ public class JsonResolver {
 
     public static BigInteger biginteger(JsonObject json, String path, BigInteger fallback) {
         Object value = JsonResolver.opt(json, path, Type.BIGINTEGER, fallback);
-        return BigInteger.class.cast(value);
+        return Numeric.adaptAsBigInteger(value);
     }
 
     public static Collection<BigInteger> bigintegerCollection(JsonObject json, String path) {
@@ -291,7 +301,7 @@ public class JsonResolver {
 
     public static BigDecimal bigdecimal(JsonObject json, String path, BigDecimal fallback) {
         Object value = JsonResolver.opt(json, path, Type.BIGDECIMAL, fallback);
-        return BigDecimal.class.cast(value);
+        return Numeric.adaptAsBigDecimal(value);
     }
 
     public static Collection<BigDecimal> bigdecimalCollection(JsonObject json, String path) {
