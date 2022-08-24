@@ -43,7 +43,7 @@ public abstract class Log4j2LoggerFactory implements LoggerFactory {
      * @return Si la configuracion tuvo exito o no.
      */
     public static boolean configure(InputStream configurationInput) {
-        try (InputStream is = configurationInput) {
+        try ( InputStream is = configurationInput) {
             ConfigurationSource source = new ConfigurationSource(is);
             Configurator.initialize(null, source);
             return true;

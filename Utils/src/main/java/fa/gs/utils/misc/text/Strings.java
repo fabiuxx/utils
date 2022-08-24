@@ -6,6 +6,7 @@
 package fa.gs.utils.misc.text;
 
 import fa.gs.utils.misc.Assertions;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -18,6 +19,25 @@ public class Strings {
         '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
     };
 
+    public static String random(int length, String alphabet) {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(alphabet.length());
+            char randomChar = alphabet.charAt(index);
+            sb.append(randomChar);
+        }
+        return sb.toString();
+    }
+
+    public static String guard(String value) {
+        if (value == null) {
+            return "";
+        } else {
+            return value.trim();
+        }
+    }
+
     /**
      * Retorna la primera cadena no nula ni vacia de un conjunto de valores
      * posibles.
@@ -26,8 +46,24 @@ public class Strings {
      * @return Cadena no vacia, si hubiere.
      */
     public static String coalesce(String... values) {
+        return coalesce(false, values);
+    }
+
+    /**
+     * Retorna la primera cadena no nula ni vacia de un conjunto de valores
+     * posibles.
+     *
+     * @param acceptEmptyString Si se puede considerar el valor vacio como un
+     * valor valido.
+     * @param values Conjunto de valores posibles.
+     * @return Cadena no vacia, si hubiere.
+     */
+    public static String coalesce(boolean acceptEmptyString, String... values) {
         if (!Assertions.isNullOrEmpty(values)) {
             for (String value : values) {
+                if (value.isEmpty() && acceptEmptyString) {
+                    return value;
+                }
                 if (!Assertions.stringNullOrEmpty(value)) {
                     return value;
                 }

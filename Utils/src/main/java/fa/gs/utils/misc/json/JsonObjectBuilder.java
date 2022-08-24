@@ -45,7 +45,7 @@ public class JsonObjectBuilder {
         json.add(property, JsonNull.INSTANCE);
         return this;
     }
-    
+
     public JsonObjectBuilder add(String property, String value) {
         if (value != null) {
             json.addProperty(property, value);

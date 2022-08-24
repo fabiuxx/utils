@@ -39,7 +39,7 @@ public class GsonMessageBodyWriter implements MessageBodyWriter<JsonElement> {
 
     @Override
     public void writeTo(JsonElement t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
-        try (OutputStreamWriter writer = new OutputStreamWriter(entityStream, UTF_8)) {
+        try ( OutputStreamWriter writer = new OutputStreamWriter(entityStream, UTF_8)) {
             String plain = t.toString();
             writer.write(plain);
         }
