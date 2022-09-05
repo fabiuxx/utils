@@ -164,14 +164,16 @@ public class Fechas {
         Calendar c = Calendar.getInstance(Locales.es_ES);
         c.setFirstDayOfWeek(Calendar.SUNDAY);
         c.setTime(input);
-        return c.get(Calendar.WEEK_OF_MONTH);
+
+        int min = c.getActualMinimum(Calendar.WEEK_OF_MONTH);
+        int diff = (min == 0) ? 1 : 0;
+        return c.get(Calendar.WEEK_OF_MONTH) + diff;
     }
 
     /**
      * Obtiene una referencia del anho actual.
      *
-     * @param input Fecha de referencia.
-     * @return Dia de la semana.
+     * @return Anho corriente.
      */
     public static int getAnho() {
         Date now = Fechas.now();

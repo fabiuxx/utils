@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.vladmihalcea.hibernate.type.util.Objects;
 import fa.gs.utils.collections.Arrays;
 import fa.gs.utils.collections.Maps;
 import fa.gs.utils.misc.Reflection;
@@ -23,6 +22,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  *
