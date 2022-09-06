@@ -22,12 +22,10 @@ public class Base64 {
         // Compatibilidad para versiones inferiores de apache commons codec.
         // Fuente: https://stackoverflow.com/a/2533538
         byte[] b64 = org.apache.commons.codec.binary.Base64.encodeBase64(plain);
-        String B64 = Strings.getString(b64);
-        return B64.replace('+', '-').replace('/', '_');
+        return Strings.getString(b64);
     }
 
     public static byte[] decodeString(String b64) {
-        b64 = b64.replace('_', '/').replace('-', '+');
         byte[] bytes = Strings.getBytes(b64);
         return decodeBytes(bytes);
     }

@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.misc.text;
 
-import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.errors.Errors;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -233,15 +232,23 @@ public class Text {
      * @return Texto no vacio.
      */
     public static String select(String a, String b) {
-        if (!Assertions.stringNullOrEmpty(a)) {
-            return a;
-        }
+        return Strings.coalesce(a, b, nd());
+    }
 
-        if (!Assertions.stringNullOrEmpty(b)) {
-            return b;
-        }
+    public static String urlEncode(String input) {
+        String output = input;
+        output = output.replace("+", ".");
+        output = output.replace("/", "_");
+        output = output.replace("=", "-");
+        return output;
+    }
 
-        return nd();
+    public static String urlDecode(String input) {
+        String output = input;
+        output = output.replace("-", "=");
+        output = output.replace("_", "/");
+        output = output.replace(".", "+");
+        return output;
     }
 
 }

@@ -26,7 +26,7 @@ public class ServiceRequests {
         String json = response.readEntity(String.class);
         return Json.fromString(json);
     }
-    
+
     public static String readTextContent(Response response) {
         String text = response.readEntity(String.class);
         return text;
