@@ -17,8 +17,10 @@ import javax.faces.convert.FacesConverter;
  *
  * @author Fabio A. González Sosa
  */
-@FacesConverter("fags.JObjectConverter")
+@FacesConverter(JObjectConverter.CONVERTER_ID)
 public class JObjectConverter implements Converter {
+
+    public static final String CONVERTER_ID = "fags.JObjectConverter";
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
