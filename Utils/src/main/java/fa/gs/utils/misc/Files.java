@@ -6,6 +6,7 @@
 package fa.gs.utils.misc;
 
 import fa.gs.utils.crypto.SHA256;
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Charsets;
 import fa.gs.utils.misc.text.StringBuilder2;
 import fa.gs.utils.misc.text.Strings;
@@ -19,6 +20,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 
 /**
@@ -58,16 +63,48 @@ public class Files {
         }
     }
 
-    public static String hash(File file) throws Throwable {
-        MessageDigest digest = MessageDigest.getInstance(SHA256.ALGORITHM_FAMILY);
-        try ( InputStream is = new FileInputStream(file)) {
-            byte[] block = new byte[4096];
-            int read;
-            while ((read = is.read(block)) > 0) {
-                digest.update(block, 0, read);
+    public static void deleteFolderRecursively(File folder) throws IOException {
+        if (folder.exists() && folder.isDirectory()) {
+            Path path = folder.toPath();
+            java.nio.file.Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    delete(dir.toFile());
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    delete(file.toFile());
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+    }
+
+    public static String hash(File file) throws IOException {
+        try {
+            MessageDigest digest = MessageDigest.getInstance(SHA256.ALGORITHM_FAMILY);
+            try ( InputStream is = new FileInputStream(file)) {
+                byte[] block = new byte[4096];
+                int read;
+                while ((read = is.read(block)) > 0) {
+                    digest.update(block, 0, read);
+                }
+                byte[] hash = digest.digest();
+                return Strings.bytesToHexString(hash);
             }
-            byte[] hash = digest.digest();
-            return Strings.bytesToHexString(hash);
+        } catch (Throwable thr) {
+            throw Errors.io(thr, "No se pudo calcular el hash del archivo.");
+        }
+    }
+
+    public static void touch(File file) throws IOException {
+        if (!file.exists()) {
+            try ( PrintWriter writer = new PrintWriter(file)) {
+                writer.write("");
+                writer.flush();
+            }
         }
     }
 
@@ -104,7 +141,7 @@ public class Files {
     }
 
     public static PrintWriter getWriter(File file, Charset charset) throws IOException {
-        return new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), charset));
+        return new PrintWriter(new OutputStreamWriter(new FileOutputStream(file, false), charset));
     }
 
 }
