@@ -2,11 +2,39 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fa.gs.utils</groupId>
+    <groupId>io.github.fabiuxx</groupId>
     <artifactId>utils</artifactId>
-    <name>utils</name>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
+
+    <name>utils</name>
+    <url>https://github.com/fabiuxx/utils</url>
+    <scm>
+        <url>https://github.com/fabiuxx/utils</url>
+        <tag>HEAD</tag>
+    </scm>
+    <description>
+        Utilerías (a medida) para soporte de mis proyectos Java.
+    </description>
+
+    <developers>
+        <developer>
+            <name>Fabio Antonio Gonzalez Sosa</name>
+            <email>fa.gon.3103@gmail.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>America/Asuncion</timezone>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,7 +48,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.10.1</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
@@ -30,27 +58,87 @@
 
     <profiles>
         <!--
-        ** PERFIL POR DEFECTO PARA ENTORNOS DESKTOP
+        ** PERFIL POR DEFECTO PARA ENTORNOS DESKTOP, PUBLICACION
+        ** EN MAVEN CENTRAL (SONATYPE).
         -->
         <profile>
             <id>java-desktop</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            
-            <properties>
-                <artifactory.repo.target>librerias-java</artifactory.repo.target>
-            </properties>
-    
-            <!-- CONFIGURACION DE REPOSITORIO DE DISTRIBUCION: librerias-java -->
+
+            <!-- CONFIGURACION DE REPOSITORIO DE DISTRIBUCION: Sonatype -->
             <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
                 <repository>
-                    <id>librerias-java</id>
-                    <name>librerias-java</name>
-                    <url>${artifactory.url.base}/${artifactory.repo.target}</url>
+                    <id>ossrh</id>
+                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
-    
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.13</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.4.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <keyname>1F52CFDE</keyname>
+                                    <passphraseServerId>fags123456</passphraseServerId>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
             <!--
              ** DEPENDENCIAS: TODAS LAS DEPENDENCIAS LISTADAS EN ESTE PERFIL CORRESPONDEN
              ** A DEPDENDENCIAS EXPLICITAS NECESARIAS PARA ENTORNOS DESKTOP. PARA OTROS
@@ -71,31 +159,34 @@
                     <version>2.1.1</version>
                     <scope>provided</scope>
                 </dependency>
-        
+
                 <dependency>
                     <groupId>org.hibernate</groupId>
                     <artifactId>hibernate-core</artifactId>
                     <version>5.1.16.Final</version>
+                    <scope>provided</scope>
                 </dependency>
 
                 <dependency>
                     <groupId>org.hibernate</groupId>
                     <artifactId>hibernate-entitymanager</artifactId>
                     <version>5.1.16.Final</version>
+                    <scope>provided</scope>
                 </dependency>
-        
+
                 <dependency>
                     <groupId>com.vladmihalcea</groupId>
                     <artifactId>hibernate-types-5</artifactId>
                     <version>2.10.4</version>
                 </dependency>
-                
+
                 <dependency>
                     <groupId>org.postgresql</groupId>
                     <artifactId>postgresql</artifactId>
                     <version>42.2.18</version>
+                    <scope>provided</scope>
                 </dependency>
-                
+
                 <dependency>
                     <groupId>org.jdeferred</groupId>
                     <artifactId>jdeferred-core</artifactId>
@@ -137,7 +228,7 @@
                     <artifactId>poi-ooxml</artifactId>
                     <version>4.1.2</version>
                 </dependency>
-        
+
                 <dependency>
                     <groupId>org.apache.logging.log4j</groupId>
                     <artifactId>log4j-core</artifactId>
@@ -155,7 +246,7 @@
                     <artifactId>jbcrypt</artifactId>
                     <version>0.4</version>
                 </dependency>
-                
+
                 <dependency>
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
@@ -186,209 +277,6 @@
                     <version>3.8</version>
                 </dependency>
             </dependencies>
-        </profile>
-
-        <!--
-         ** PERFIL PARA ENTORNOS ANDROID: SE REUTILIZA CODIGO COMPATIBLE PARA
-         ** MANTENER UNA MISMA BASE DE CODIGO, PERO SE ELIMINAN FUNCIONALIDADES
-         ** Y DEPENDENCIAS NO COMPATIBLES O NO REQUERIDAS.
-        -->
-        <profile>
-            <id>java-android</id>
-            
-            <properties>
-                <artifactory.repo.target>librerias-android</artifactory.repo.target>
-            </properties>
-            
-            <!-- CONFIGURACION DE REPOSITORIO DE DISTRIBUCION: librerias-android -->
-            <distributionManagement>
-                <repository>
-                    <id>librerias-android</id>
-                    <name>librerias-android</name>
-                    <url>${artifactory.url.base}/${artifactory.repo.target}</url>
-                </repository>
-            </distributionManagement>
-    
-            <!--
-             ** LISTA DE DEPENDENCIAS COPIADA DE PERFIL PRINCIPAL. LAS DEPENDENCIAS
-             ** NO UTILIZADAS SE MARCAN CON EL SCOPE "provided".
-            -->
-            <dependencies>
-                <dependency>
-                    <groupId>javax</groupId>
-                    <artifactId>javaee-api</artifactId>
-                    <version>7.0</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>javax.ws.rs</groupId>
-                    <artifactId>javax.ws.rs-api</artifactId>
-                    <version>2.1.1</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-core</artifactId>
-                    <version>5.1.16.Final</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-entitymanager</artifactId>
-                    <version>5.1.16.Final</version>
-                    <scope>provided</scope>
-                </dependency>
-                
-                <dependency>
-                    <groupId>org.postgresql</groupId>
-                    <artifactId>postgresql</artifactId>
-                    <version>42.2.18</version>
-                    <scope>provided</scope>
-                </dependency>
-                
-                <dependency>
-                    <groupId>org.jdeferred</groupId>
-                    <artifactId>jdeferred-core</artifactId>
-                    <version>1.2.6</version>
-                </dependency>
-
-                <dependency>
-                    <groupId>com.google.code.gson</groupId>
-                    <artifactId>gson</artifactId>
-                    <version>2.8.6</version>
-                </dependency>
-                
-                <dependency>
-                    <groupId>net.sourceforge.streamsupport</groupId>
-                    <artifactId>streamsupport</artifactId>
-                    <version>1.7.2</version>
-                </dependency>
-
-                <dependency>
-                    <groupId>joda-time</groupId>
-                    <artifactId>joda-time</artifactId>
-                    <version>2.10.6</version>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.apache.poi</groupId>
-                    <artifactId>poi</artifactId>
-                    <version>4.1.2</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.apache.poi</groupId>
-                    <artifactId>poi-ooxml</artifactId>
-                    <version>4.1.2</version>
-                    <scope>provided</scope>
-                </dependency>
-        
-                <dependency>
-                    <groupId>com.lmax</groupId>
-                    <artifactId>disruptor</artifactId>
-                    <version>3.4.2</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-core</artifactId>
-                    <version>2.13.3</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>com.jwt4j</groupId>
-                    <artifactId>jwt4j</artifactId>
-                    <version>0.1.1</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.mindrot</groupId>
-                    <artifactId>jbcrypt</artifactId>
-                    <version>0.4</version>
-                    <scope>provided</scope>
-                </dependency>
-                
-                <dependency>
-                    <groupId>commons-codec</groupId>
-                    <artifactId>commons-codec</artifactId>
-                    <version>1.14</version>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.bouncycastle</groupId>
-                    <artifactId>bcprov-jdk15on</artifactId>
-                    <version>1.65.01</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.projectlombok</groupId>
-                    <artifactId>lombok</artifactId>
-                    <version>1.18.12</version>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.springframework.security</groupId>
-                    <artifactId>spring-security-web</artifactId>
-                    <version>5.2.0.RELEASE</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.omnifaces</groupId>
-                    <artifactId>omnifaces</artifactId>
-                    <version>2.7</version>
-                    <scope>provided</scope>
-                </dependency>
-            </dependencies>
-    
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-install-plugin</artifactId>
-                        <version>3.0.0-M1</version>
-                        <configuration>
-                            <!-- DESHABILITA LA INSTALACION DE ESTE ARTIFACT EN EL REPOSITORIO LOCAL (PERJUDICA EN AMBIENTES DESKTOP) -->
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <version>3.2.0</version>
-                        <executions>
-                            <execution>
-                                <id>default-jar</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                                <configuration>
-                                    <!-- SE EXCLUYEN PAQUETES CON FUNCIONALIDADES NO UTILIZADAS O NO COMPATIBLES CON ANDROID -->
-                                    <excludes>
-                                        <exclude>fa/gs/utils/authentication/**</exclude>
-                                        <exclude>fa/gs/utils/crypto/**</exclude>
-                                        <exclude>fa/gs/utils/database/**</exclude>
-                                        <exclude>fa/gs/utils/injection/**</exclude>
-                                        <exclude>fa/gs/utils/jsf/**</exclude>
-                                        <exclude>fa/gs/utils/logging/**</exclude>
-                                        <exclude>fa/gs/utils/rest/**</exclude>
-                                        <exclude>fa/gs/utils/workers/**</exclude>
-                                    </excludes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 </project>

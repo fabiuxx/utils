@@ -28,7 +28,7 @@ public class Arrays {
      * Obtiene el primer elemento de un array de elementos.
      *
      * @param <T> Parametro de tipo.
-     * @param items Array de objetos.
+     * @param values Array de objetos.
      * @return Primer objeto del array, si hubiere. Caso contrario {@code null}.
      */
     public static <T> T first(T[] values) {

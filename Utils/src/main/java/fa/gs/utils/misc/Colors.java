@@ -46,9 +46,12 @@ public class Colors {
     }
 
     /**
+     * <p>
      * Mapea una cadena de texto arbitraria a una cadena hexadecimal RGB.
-     * <br/>
-     * Fuente: https://stackoverflow.com/a/16348977.
+     * </p>
+     * <p>
+     * Fuente: https://stackoverflow.com/a/16348977
+     * </p>
      *
      * @param text Texto original.
      * @param monotone Si se debe generar la misma cadena RGB independientemente
@@ -86,10 +89,13 @@ public class Colors {
     }
 
     /**
+     * <p>
      * Dada una cadena RGB hexadecimal, se determina el color de texto apropiado
      * para el color indicado como fondo.
-     * <br/>
+     * </p>
+     * <p>
      * Fuente: https://stackoverflow.com/a/49092130.
+     * </p>
      *
      * @param backgroundColor Color de fondo.
      * @return Color para texto.

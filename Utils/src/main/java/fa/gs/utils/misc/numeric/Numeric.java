@@ -28,8 +28,8 @@ public class Numeric {
     /**
      * Patron para formateo de valores numericos a cadenas de texto.
      * Correspondiente con los valores establecidos para
-     * {@link Numeric#MAX_INTEGER_DIGITS MAX_INTEGER_DIGITS} y
-     * {@link Numeric#MAX_FRACTION_DIGITS MAX_FRACTION_DIGITS}.
+     * {@code DEFAULT_MAX_INTEGER_DIGITS} y
+     * {@code DEFAULT_MAX_FRACTION_DIGITS}.
      */
     public static final String DEFAULT_NUMBER_PATTERN = "###,###,###,###,###,###,###,###,###,###.######";
 
@@ -727,14 +727,17 @@ public class Numeric {
     }
 
     /**
+     * <p>
      * Obtiene el valor que representa el {@code porcentaje} del valor indicado.
      * Se asume que:
-     * <p>
-     * {@code value -- 100%}
-     * <br/> {@code x -- porcentaje}
      * </p>
-     * <br/>
+     * <ul>
+     * <li>{@code value -- 100%}</li>
+     * <li>{@code x -- porcentaje}</li>
+     * </ul>
+     * <p>
      * Por tanto {@code x = (value * porcentaje) / 100}.
+     * </p>
      *
      * @param value Valor original que representa el 100%.
      * @param porcentaje Porcentaje que se desea calcular.
@@ -745,18 +748,21 @@ public class Numeric {
     }
 
     /**
+     * <p>
      * Obtiene el valor que representa el {@code porcentaje} del valor indicado,
      * pero con la posibilidad de especificar la cantidad maxima de decimales y
      * el tipo de redondeo. Util en contextos monetarios.
+     * </p>
      * <p>
      * Se asume que:
      * </p>
+     * <ul>
+     * <li>{@code value -- 100%}</li>
+     * <li>{@code x -- porcentaje}</li>
+     * </ul>
      * <p>
-     * {@code value -- 100%}
-     * <br/> {@code x -- porcentaje}
-     * </p>
-     * <br/>
      * Por tanto {@code x = (value * porcentaje) / 100}.
+     * </p>
      *
      * @param value Valor original que representa el 100%.
      * @param porcentaje Porcentaje que se desea calcular.
@@ -772,16 +778,17 @@ public class Numeric {
     }
 
     /**
-     * Obtiene el porcentaje que representa la {@code parte} del valor indicado.
      * <p>
+     * Obtiene el porcentaje que representa la {@code parte} del valor indicado.
      * Se asume que:
      * </p>
+     * <ul>
+     * <li>{@code value -- 100%}</li>
+     * <li>{@code parte -- x}</li>
+     * </ul>
      * <p>
-     * {@code value -- 100%}
-     * <br/> {@code parte -- x}
-     * </p>
-     * <br/>
      * Por tanto {@code x = (parte * 100) / value}.
+     * </p>
      *
      * @param value Valor original que representa el 100%.
      * @param parte Parte del valor original.
@@ -792,17 +799,19 @@ public class Numeric {
     }
 
     /**
+     * <p>
      * Obtiene el porcentaje que representa la {@code parte} del valor indicado,
      * pero con la posibilidad de especificar la cantidad maxima de decimales y
-     * el tipo de redondeo.Util en contextos monetarios.<p>
+     * el tipo de redondeo.Util en contextos monetarios.
      * Se asume que:
      * </p>
+     * <ul>
+     * <li>{@code value -- 100%}</li>
+     * <li> {@code parte -- x}</li>
+     * </ul>
      * <p>
-     * {@code value -- 100%}
-     * <br/> {@code parte -- x}
-     * </p>
-     * <br/>
      * Por tanto {@code x = (parte * 100) / value}.
+     * </p>
      *
      * @param value Valor original que representa el 100%.
      * @param parte Parte del valor original.

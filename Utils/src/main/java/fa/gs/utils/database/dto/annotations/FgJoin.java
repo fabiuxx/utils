@@ -24,14 +24,14 @@ public @interface FgJoin {
     /**
      * Tipo de join.
      *
-     * @return
+     * @return Tipo de join.
      */
     Join.Type type() default Join.Type.NORMAL;
 
     /**
      * Nombre de tabla.
      *
-     * @return
+     * @return Nombre de tabla.
      */
     String table();
 
@@ -40,21 +40,21 @@ public @interface FgJoin {
      * como una expresion y no como un nombre de tabla. Esto permite especificar
      * subquerys como tablas.
      *
-     * @return
+     * @return {@code true} si debe utilizarse de forma literal y no como nombre calificado de tabla.
      */
     boolean useRawTableDefinition() default false;
 
     /**
      * Alias para nombre o expresion de tabla.
      *
-     * @return
+     * @return Alias para nombre o expresion de tabla.
      */
     String as();
 
     /**
      * Condicion de join.
      *
-     * @return
+     * @return Condicion de join.
      */
     String on();
 

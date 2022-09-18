@@ -41,7 +41,7 @@ public interface Result<S> extends fa.gs.utils.result.Result<S, Failure> {
     /**
      * Permite lanzar una excepcion, si el resultado es especificamente de
      * fallo.
-     *
+     * 
      * @throws AppErrorException Error de resultado.
      */
     public void raise() throws AppErrorException;

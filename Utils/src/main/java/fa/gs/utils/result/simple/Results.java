@@ -38,7 +38,7 @@ public class Results {
      * @param <F> Parametro de tipo para valores de fallo.
      * @param successValue Valor de exito.
      * @param failureValue Valor de fallo.
-     * @return
+     * @return Resultado de operacion.
      */
     public static <S, F> BaseResult<S, F> simple(S successValue, F failureValue) {
         Value<S> s = Value.builder().value(successValue).build();

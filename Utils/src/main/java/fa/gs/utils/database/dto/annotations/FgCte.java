@@ -29,11 +29,13 @@ public @interface FgCte {
 
     /**
      * Cuerpo de CTE, sin posibilidad de parametrizaciones.
+     * @return Cuerpo de CTE.
      */
     String body() default "";
 
     /**
      * Indica si la CTE es de tipo recursiva.
+     * @return {@code true} si el CTE es de naturaleza recursiva, caso contrario {@code false}.
      */
     boolean recursive() default false;
 

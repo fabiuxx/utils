@@ -387,7 +387,7 @@ public class JsonResolver {
          * Convierte una elemento JSON a un objeto Java.
          *
          * @param json Elemento JSON.
-         * @return
+         * @return Valor mapeado.
          */
         public T map(JsonElement json);
 

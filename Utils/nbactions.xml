@@ -2,7 +2,7 @@
 <actions>
     <action>
         <actionName>CUSTOM-Publish</actionName>
-        <displayName>Publicar en Artifactory (java desktop)</displayName>
+        <displayName>Publicar en Maven Central (java desktop)</displayName>
         <goals>
             <goal>deploy</goal>
         </goals>

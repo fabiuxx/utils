@@ -245,6 +245,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
          *
          * @return Esta misma instancia.
          */
+        @SuppressWarnings("unchecked")
         protected T self() {
             return (T) this;
         }
@@ -306,6 +307,7 @@ public abstract class ParametrizedLogger<T extends ParametrizedLogger.Driver<T>>
          * @param values Coleccion de parametros.
          * @return Esta misma instancia.
          */
+        @SuppressWarnings("unchecked")
         public T tags(Map<String, Object> values) {
             if (!Assertions.isNullOrEmpty(values)) {
                 msg.putAll(values);

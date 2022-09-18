@@ -56,6 +56,7 @@ public abstract class AbstractApplicationWorker implements ApplicationWorker {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Map<String, String> getExecutionProperties() {
         return Collections.EMPTY_MAP;
     }

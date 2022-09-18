@@ -83,11 +83,14 @@ public class Fechas {
     }
 
     /**
+     * <p>
      * Obtiene el "offset" en milisegundos de la zona horaria actual respecto a
      * UTC-0.
-     * <br/>
+     * </p>
+     * <p>
      * Ej.: Para Paraguay, considerando UTC-4 el offset corresponderia a -0400,
      * es decir -14400000 milisegundos (-4 horas).
+     * </p>
      *
      * @return "offset" en milisegundos de la zona horaria local.
      */

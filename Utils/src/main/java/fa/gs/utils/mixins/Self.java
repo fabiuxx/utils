@@ -11,6 +11,7 @@ package fa.gs.utils.mixins;
  */
 public interface Self<T> {
 
+    @SuppressWarnings("unchecked")
     default T self() {
         return (T) this;
     }

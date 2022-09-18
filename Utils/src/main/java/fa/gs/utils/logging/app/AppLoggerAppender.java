@@ -37,6 +37,7 @@ public class AppLoggerAppender extends AbstractAppender {
      * @param ignoreExceptions Indica si las excepciones, producidas durante la
      * ejecucion del appender, seran logueadas o no.
      */
+    @SuppressWarnings("deprecation")
     protected AppLoggerAppender(String name, Filter filter, Layout<? extends Serializable> layout, final boolean ignoreExceptions) {
         super(name, filter, layout, ignoreExceptions);
     }

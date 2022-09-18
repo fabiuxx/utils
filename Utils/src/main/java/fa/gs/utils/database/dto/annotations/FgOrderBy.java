@@ -21,13 +21,24 @@ import java.lang.annotation.Target;
 @Repeatable(FgOrderBys.class)
 public @interface FgOrderBy {
 
+    /**
+     * Tipo de ordenacion.
+     * @return Tipo de ordenacion.
+     */
     Order.Type type() default Order.Type.ASC;
 
+    /**
+     * Valor a utilizar como criterio de ordenacion.
+     * @return Valor a utilizar como criterio de ordenacion.
+     */
     String value();
 
     /**
      * Indica si se hace referencia a una posicion de columna de la fila en
      * lugar de un nombre concreto de columna.
+     *
+     * @return {@code true} si el atributo {@link #value() value} hace
+     * referencia a una proyeccion puntual o a la posicion de una proyeccion.
      */
     boolean positional() default false;
 

@@ -13,6 +13,7 @@ import java8.util.function.Function;
 /**
  *
  * @author Fabio A. González Sosa
+ * @param <T> Parametro de tipo.
  */
 public class Joiner<T> {
 
@@ -68,6 +69,7 @@ public class Joiner<T> {
     /**
      * Inicializador estatico.
      *
+     * @param <T> Parametro de tipo de los objetos a unir.
      * @param objects Cantidad arbitraria de objetos a unir.
      * @return Instancia de esta clase.
      */

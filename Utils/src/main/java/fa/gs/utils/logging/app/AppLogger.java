@@ -189,6 +189,7 @@ public class AppLogger extends ParametrizedLogger<AppLogger.Driver> {
          * diagnostico.
          */
         @Override
+        @SuppressWarnings("unchecked")
         public final void log() {
             msg.putAll(getLogger().fixedTags);
             msg.putAll(getLogger().getContext().peekAll());
