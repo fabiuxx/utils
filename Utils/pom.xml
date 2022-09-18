@@ -20,7 +20,7 @@
     <developers>
         <developer>
             <name>Fabio Antonio González Sosa</name>
-            <email>fa.gon.3103@gmail.com</email>
+            <email>fab.gon.3103@gmail.com</email>
             <roles>
                 <role>developer</role>
             </roles>
@@ -174,12 +174,6 @@
                 </dependency>
 
                 <dependency>
-                    <groupId>com.vladmihalcea</groupId>
-                    <artifactId>hibernate-types-5</artifactId>
-                    <version>2.10.4</version>
-                </dependency>
-
-                <dependency>
                     <groupId>org.postgresql</groupId>
                     <artifactId>postgresql</artifactId>
                     <version>42.2.18</version>
@@ -202,12 +196,6 @@
                     <groupId>net.sourceforge.streamsupport</groupId>
                     <artifactId>streamsupport</artifactId>
                     <version>1.7.2</version>
-                </dependency>
-
-                <dependency>
-                    <groupId>joda-time</groupId>
-                    <artifactId>joda-time</artifactId>
-                    <version>2.10.6</version>
                 </dependency>
 
                 <dependency>
