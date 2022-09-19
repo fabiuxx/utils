@@ -1,11 +1,30 @@
-# utils [![Maven Central](https://img.shields.io/maven-central/v/io.github.fabiuxx/utils.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.fabiuxx%22%20AND%20a:%22utils%22)
+# utils
 Utilerías (a medida) para soporte de mis proyectos Java.
 
 ## Instalación
 Existe una rama propia para cada versión puntual existente, que da soporte a proyectos que utilizan
-diferentes versiones de esta librería a lo largo de sus respectivos desarrollos.
+cada versión específica de esta librería.
 
-La versión mas actualizada a la fecha es la versión 0.0.3 y puede encontrarse directamente en Maven Central.
+La versión mas actualizada a la fecha es la versión `0.0.3` y puede encontrarse directamente en Sonatype como una versión snapshot.
+
+```xml
+<dependency>
+    <groupId>io.github.fabiuxx</groupId>
+    <artifactId>utils</artifactId>
+    <version>0.0.3-SNAPSHOT</version>
+</dependency>
+```
+
+Para poder descargar la dependencia desde Sonatype, se debe agregar la siguiente configuración al archivo `pom.xml` (o también de forma general en `settings.xml` de maven).
+
+```xml
+<repositories>
+    <repository>
+        <id>ossrh</id>
+        <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+</repositories>
+```
 
 ## Licencia
 Este software está distribuido bajo la licencia MIT. Ver `LICENSE.txt` para más información.
