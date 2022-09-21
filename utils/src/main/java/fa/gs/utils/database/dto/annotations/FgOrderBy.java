@@ -23,12 +23,14 @@ public @interface FgOrderBy {
 
     /**
      * Tipo de ordenacion.
+     *
      * @return Tipo de ordenacion.
      */
     Order.Type type() default Order.Type.ASC;
 
     /**
      * Valor a utilizar como criterio de ordenacion.
+     *
      * @return Valor a utilizar como criterio de ordenacion.
      */
     String value();

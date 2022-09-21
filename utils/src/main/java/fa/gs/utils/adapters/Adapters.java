@@ -68,7 +68,8 @@ public class Adapters {
      * @param adapterClass Clase del adaptador a utilizar.
      * @param objs Objetos a adaptar.
      * @param args Argumentos opcionales para el adaptador.
-     * @return Objetos adaptados, si la operacion tiene exito. Caso contrario {@code null}.
+     * @return Objetos adaptados, si la operacion tiene exito. Caso contrario
+     * {@code null}.
      */
     public static <TFrom, TTo> Collection<TTo> adapt(Class<? extends Adapter<TFrom, TTo>> adapterClass, Collection<TFrom> objs, Object... args) {
         Collection<TTo> list = Lists.empty();

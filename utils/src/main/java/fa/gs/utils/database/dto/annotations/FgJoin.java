@@ -40,7 +40,8 @@ public @interface FgJoin {
      * como una expresion y no como un nombre de tabla. Esto permite especificar
      * subquerys como tablas.
      *
-     * @return {@code true} si debe utilizarse de forma literal y no como nombre calificado de tabla.
+     * @return {@code true} si debe utilizarse de forma literal y no como nombre
+     * calificado de tabla.
      */
     boolean useRawTableDefinition() default false;
 

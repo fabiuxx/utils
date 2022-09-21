@@ -28,8 +28,7 @@ public class Numeric {
     /**
      * Patron para formateo de valores numericos a cadenas de texto.
      * Correspondiente con los valores establecidos para
-     * {@code DEFAULT_MAX_INTEGER_DIGITS} y
-     * {@code DEFAULT_MAX_FRACTION_DIGITS}.
+     * {@code DEFAULT_MAX_INTEGER_DIGITS} y {@code DEFAULT_MAX_FRACTION_DIGITS}.
      */
     public static final String DEFAULT_NUMBER_PATTERN = "###,###,###,###,###,###,###,###,###,###.######";
 
@@ -802,8 +801,7 @@ public class Numeric {
      * <p>
      * Obtiene el porcentaje que representa la {@code parte} del valor indicado,
      * pero con la posibilidad de especificar la cantidad maxima de decimales y
-     * el tipo de redondeo.Util en contextos monetarios.
-     * Se asume que:
+     * el tipo de redondeo.Util en contextos monetarios. Se asume que:
      * </p>
      * <ul>
      * <li>{@code value -- 100%}</li>

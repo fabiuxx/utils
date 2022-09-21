@@ -90,7 +90,8 @@ public class Json {
      * Determinar si dos elementos JSON son iguales.
      * </p>
      * <p>
-     * Fuente: http://blog.sodhanalibrary.com/2016/02/compare-json-with-java-using-google.html#.Ysh9ynbMKUk
+     * Fuente:
+     * http://blog.sodhanalibrary.com/2016/02/compare-json-with-java-using-google.html#.Ysh9ynbMKUk
      * </p>
      *
      * @param json1 Elemento 1.
