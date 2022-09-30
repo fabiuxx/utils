@@ -64,6 +64,26 @@ public class Lists {
         }
     }
 
+    /**
+     * Obtiene el ultimo elemento de una coleccion.
+     *
+     * @param <T> Parametro de tipo.
+     * @param items Coleccion de objetos.
+     * @return Ultimo objeto de la coleccion, si hubiere. Caso contrario
+     * {@code null}.
+     */
+    public static <T> T last(Collection<T> items) {
+        try {
+            if (Assertions.isNullOrEmpty(items)) {
+                return null;
+            }
+
+            return at(items, items.size() - 1);
+        } catch (Throwable thr) {
+            return null;
+        }
+    }
+
     public static <T> T at(Collection<T> items, int pos) {
         if (Assertions.isNullOrEmpty(items)) {
             throw new IndexOutOfBoundsException(Strings.format("%s >= (empty)", pos));
@@ -171,6 +191,22 @@ public class Lists {
      * algun elemento nulo por agregar.
      */
     public static <T> void add(Collection<T> collection, boolean acceptsNull, T... elements) {
+        add(collection, acceptsNull, true, elements);
+    }
+
+    /**
+     * Agrega elementos a una coleccion del mismo tipo.
+     *
+     * @param <T> Parametro de tipo.
+     * @param collection Coleccion de elementos.
+     * @param acceptsNull Bandera que indica si se aceptan valores nulos.
+     * @param exceptionOnNull Bandera que indica si se genera una excepcion al
+     * encontrar valores nulos.
+     * @param elements Elementos a agregar.
+     * @throws IllegalArgumentException Si {@code acceptsNull == true} y existe
+     * algun elemento nulo por agregar.
+     */
+    public static <T> void add(Collection<T> collection, boolean acceptsNull, boolean exceptionOnNull, T... elements) {
         if (Assertions.isNull(collection)) {
             return;
         }
@@ -184,7 +220,7 @@ public class Lists {
                 collection.add(element);
             } else if (element == null && acceptsNull) {
                 collection.add(element);
-            } else {
+            } else if (element == null && !acceptsNull && exceptionOnNull) {
                 throw Errors.illegalArgument("No se permiten elementos nulos.");
             }
         }
