@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
- * @author Acer
+ * @author Fabio A. González Sosa
  */
 public class Strings {
 

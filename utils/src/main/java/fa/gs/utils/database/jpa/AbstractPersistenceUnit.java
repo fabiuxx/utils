@@ -19,7 +19,7 @@ import org.hibernate.jpa.HibernatePersistenceProvider;
 
 /**
  *
- * @author Fabio A. GonzÃ¡lez Sosa
+ * @author Fabio A. González Sosa
  */
 public abstract class AbstractPersistenceUnit implements PersistenceUnitInfo {
 
