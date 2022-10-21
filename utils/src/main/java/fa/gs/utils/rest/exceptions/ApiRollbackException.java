@@ -16,14 +16,9 @@ import javax.ws.rs.core.Response;
  * base de datos. La anotación
  * {@link javax.ejb.ApplicationException ApplicationException} indica
  * precisamente al contenedor de aplicaciones que cuando esta excepcion es
- * lanzada, las transacciones JPA deben ser "rollbackeadas".
- * </p>
- * <p>
- * Fuentes:
- * <ul>
- * <li><a href="https://stackoverflow.com/a/19563956">[1]</a></li>
- * <li><a href="https://docs.oracle.com/javaee/7/api/javax/ejb/ApplicationException.html">[2]</a></li>
- * </ul>
+ * lanzada, las transacciones JPA deben ser "rollbackeadas". Ver
+ * (<a href="https://stackoverflow.com/a/19563956">[1]</a>,
+ * <a href="https://docs.oracle.com/javaee/7/api/javax/ejb/ApplicationException.html">[2]</a>)
  * </p>
  *
  * @author Fabio A. González Sosa

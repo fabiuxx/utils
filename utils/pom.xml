@@ -42,6 +42,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <apache.poi.version>4.1.2</apache.poi.version>
         <hibernate.version>5.1.16.Final</hibernate.version>
+        <lombok.version>1.18.12</lombok.version>
     </properties>
 
     <build>
@@ -208,7 +209,7 @@
                 <dependency>
                     <groupId>org.projectlombok</groupId>
                     <artifactId>lombok</artifactId>
-                    <version>1.18.12</version>
+                    <version>${lombok.version}</version>
                 </dependency>
                 
                 <dependency>
