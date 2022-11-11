@@ -7,6 +7,7 @@ package fa.gs.utils.misc;
 
 import fa.gs.utils.misc.text.Strings;
 import java.awt.Color;
+import java.util.Random;
 
 /**
  *
@@ -14,6 +15,27 @@ import java.awt.Color;
  */
 public class Colors {
 
+    /**
+     * Calcula la luminosidad de un color dado.
+     *
+     * @param rgbHex Definición de color en hexadecimal.
+     * @return Luminancia de color.
+     */
+    private static float luminance(String rgbHex) {
+        Color color = decode(rgbHex);
+        float r = color.getRed();
+        float g = color.getGreen();
+        float b = color.getBlue();
+        return (0.2126f * r + 0.7152f * g + 0.0722f * b);
+    }
+
+    /**
+     * "Aclara" un color en un factor dado.
+     *
+     * @param rgbHex Definicion de color en hexadecimal.
+     * @param factor Factor de aclarado.
+     * @return Color aclarado, en hexadecimal.
+     */
     public static String ligthen(String rgbHex, int factor) {
         Color color = decode(rgbHex);
         double percentage = factor / 100.0;
@@ -33,6 +55,17 @@ public class Colors {
         String g = rgbHex.substring(2, 4);
         String b = rgbHex.substring(4, 6);
         return new Color(Integer.valueOf(r, 16), Integer.valueOf(g, 16), Integer.valueOf(b, 16));
+    }
+
+    /**
+     * Genera una definicion de color en hexadecimal, de forma aleatoria.
+     *
+     * @param r Generador de aleatoriedad.
+     * @return Definicion de color en hexadecimal.
+     */
+    public String random(Random r) {
+        int n = r.nextInt(0xffffff + 1);
+        return String.format("#%06x", n);
     }
 
     /**
@@ -78,14 +111,6 @@ public class Colors {
         }
 
         return color;
-    }
-
-    private static float luminance(String rgbHex) {
-        Color color = decode(rgbHex);
-        float r = color.getRed();
-        float g = color.getGreen();
-        float b = color.getBlue();
-        return (0.2126f * r + 0.7152f * g + 0.0722f * b);
     }
 
     /**

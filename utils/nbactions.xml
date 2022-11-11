@@ -10,14 +10,4 @@
             <activatedProfile>java-desktop</activatedProfile>
         </activatedProfiles>
     </action>
-    <action>
-        <actionName>CUSTOM-Publish</actionName>
-        <displayName>Publicar en Artifactory (ANDROID)</displayName>
-        <goals>
-            <goal>deploy</goal>
-        </goals>
-        <activatedProfiles>
-            <activatedProfile>java-android</activatedProfile>
-        </activatedProfiles>
-    </action>
 </actions>
