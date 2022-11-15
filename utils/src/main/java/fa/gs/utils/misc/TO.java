@@ -3,18 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fa.gs.utils.authentication.user;
-
-import java.io.Serializable;
+package fa.gs.utils.misc;
 
 /**
  *
  * @author Fabio A. González Sosa
  */
-public interface PermisoInfo extends Serializable {
+public class TO {
 
-    Number id();
-
-    String name();
+    public static void DO() {
+        ;
+    }
 
 }

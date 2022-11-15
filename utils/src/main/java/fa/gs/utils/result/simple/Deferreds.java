@@ -42,8 +42,7 @@ public class Deferreds {
 
     public static final <S> DeferredResult<S> reject(DeferredResult<S> result, String fmt, Object... args) {
         if (result.isPending()) {
-            Failure failure = Failure.builder().message(fmt, args).build();
-            Errors.dump(System.err, new Exception(failure.message(), failure.cause()));
+            Failure failure = Failure.builder().cause(Errors.error(fmt, args)).build();
             result.reject(failure);
         }
         return result;
@@ -51,17 +50,7 @@ public class Deferreds {
 
     public static final <S> DeferredResult<S> reject(DeferredResult<S> result, Throwable thr) {
         if (result.isPending()) {
-            Errors.dump(System.err, thr);
             Failure failure = Failure.builder().cause(thr).build();
-            result.reject(failure);
-        }
-        return result;
-    }
-
-    public static final <S> DeferredResult<S> reject(DeferredResult<S> result, Throwable thr, String fmt, Object... args) {
-        if (result.isPending()) {
-            Failure failure = Failure.builder().cause(thr).message(fmt, args).build();
-            Errors.dump(System.err, new Exception(failure.message(), failure.cause()));
             result.reject(failure);
         }
         return result;

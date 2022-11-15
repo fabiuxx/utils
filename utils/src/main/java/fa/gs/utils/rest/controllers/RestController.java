@@ -77,7 +77,7 @@ public abstract class RestController implements Serializable {
             // Error de aplicacion.
             logError(cause, "Error de aplicación.");
             response = ServiceResponse.ko()
-                    .cause(((AppErrorException) cause).message())
+                    .cause(((AppErrorException) cause))
                     .errno(((AppErrorException) cause).errno())
                     .build();
         } else {
@@ -167,10 +167,7 @@ public abstract class RestController implements Serializable {
         if (logger == null) {
             Errors.dump(System.err, thr);
         } else {
-            logger.error()
-                    .cause(thr)
-                    .message(msg)
-                    .log();
+            logger.error(thr, msg);
         }
     }
 

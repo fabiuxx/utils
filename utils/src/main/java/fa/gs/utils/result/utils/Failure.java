@@ -20,14 +20,12 @@ public final class Failure extends Failure_Attributes implements Serializable {
     /**
      * Constructor.
      *
-     * @param message Mensaje de error para el error producido.
      * @param cause Excepcion generada como causa de un error producido.
      * @param errno Código numérico que mapea el error producido.
      * @param tags Coleccion de objetos asociados que sirven como contexto para
      * entender el error producido.
      */
-    Failure(String message, Throwable cause, Errno errno, Map<String, Object> tags) {
-        this.message = message;
+    Failure(Throwable cause, Errno errno, Map<String, Object> tags) {
         this.cause = cause;
         this.errno = errno;
         this.tags = tags;
@@ -40,15 +38,6 @@ public final class Failure extends Failure_Attributes implements Serializable {
      */
     public static Failure.Builder builder() {
         return new Failure_Builder();
-    }
-
-    /**
-     * Obtiene el valor de {@link #message message}.
-     *
-     * @return Texto.
-     */
-    public String message() {
-        return message;
     }
 
     /**

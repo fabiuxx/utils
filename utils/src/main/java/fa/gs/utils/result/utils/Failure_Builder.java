@@ -5,10 +5,8 @@
  */
 package fa.gs.utils.result.utils;
 
-import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.errors.AppErrorException;
 import fa.gs.utils.misc.errors.Errno;
-import fa.gs.utils.misc.text.Strings;
 import java.util.Map;
 
 /**
@@ -17,19 +15,8 @@ import java.util.Map;
  */
 class Failure_Builder extends Failure_Attributes implements Failure.Builder {
 
-    private boolean overrideMessage;
-
     Failure_Builder() {
         super();
-        this.overrideMessage = true;
-    }
-
-    @Override
-    public Failure.Builder message(String fmt, Object... args) {
-        if (overrideMessage) {
-            this.message = Strings.format(fmt, args);
-        }
-        return this;
     }
 
     @Override
@@ -39,12 +26,6 @@ class Failure_Builder extends Failure_Attributes implements Failure.Builder {
             AppErrorException ex = (AppErrorException) cause;
             this.tags(ex.tags());
             this.errno(ex.errno());
-
-            String msg = ex.getMessage();
-            if (!Assertions.stringNullOrEmpty(msg)) {
-                this.message(msg);
-                this.overrideMessage = false;
-            }
         }
         return this;
     }
@@ -69,7 +50,7 @@ class Failure_Builder extends Failure_Attributes implements Failure.Builder {
 
     @Override
     public Failure build() {
-        return new Failure(message, cause, errno, tags);
+        return new Failure(cause, errno, tags);
     }
 
 }

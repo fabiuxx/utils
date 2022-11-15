@@ -17,11 +17,6 @@ import java.util.Map;
 class Failure_Attributes implements Serializable {
 
     /**
-     * Mensaje descriptivo para el error producido.
-     */
-    protected String message;
-
-    /**
      * Excepcion generada como causa de un error producido.
      */
     protected Throwable cause;
@@ -41,7 +36,6 @@ class Failure_Attributes implements Serializable {
      * Constructor.
      */
     public Failure_Attributes() {
-        this.message = "";
         this.cause = null;
         this.errno = null;
         this.tags = new HashMap<>();

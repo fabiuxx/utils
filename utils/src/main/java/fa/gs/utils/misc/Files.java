@@ -5,11 +5,8 @@
  */
 package fa.gs.utils.misc;
 
-import fa.gs.utils.crypto.SHA256;
-import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Charsets;
 import fa.gs.utils.misc.text.StringBuilder2;
-import fa.gs.utils.misc.text.Strings;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +21,6 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.security.MessageDigest;
 
 /**
  *
@@ -79,23 +75,6 @@ public class Files {
                     return FileVisitResult.CONTINUE;
                 }
             });
-        }
-    }
-
-    public static String hash(File file) throws IOException {
-        try {
-            MessageDigest digest = MessageDigest.getInstance(SHA256.ALGORITHM_FAMILY);
-            try ( InputStream is = new FileInputStream(file)) {
-                byte[] block = new byte[4096];
-                int read;
-                while ((read = is.read(block)) > 0) {
-                    digest.update(block, 0, read);
-                }
-                byte[] hash = digest.digest();
-                return Strings.bytesToHexString(hash);
-            }
-        } catch (Throwable thr) {
-            throw Errors.io(thr, "No se pudo calcular el hash del archivo.");
         }
     }
 

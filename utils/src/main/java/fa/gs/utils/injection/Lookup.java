@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.injection;
 
+import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.simple.Results;
 import javax.enterprise.context.spi.CreationalContext;
@@ -20,7 +21,6 @@ import javax.naming.InitialContext;
  */
 public class Lookup {
 
-    //<editor-fold defaultstate="collapsed" desc="JNDI">
     /**
      * Realiza una búsqueda manual para la inyección de beans a través de JNDI.
      *
@@ -37,7 +37,7 @@ public class Lookup {
         } catch (Throwable thr) {
             result = Results.ko()
                     .cause(thr)
-                    .message("Ocurrió un error inyectando objeto")
+                    .cause(Errors.error(thr, "Ocurrió un error inyectando objeto"))
                     .tag("jndi", jndi)
                     .build();
         }
@@ -58,7 +58,7 @@ public class Lookup {
 
         if (context == null) {
             return Results.ko()
-                    .message("Contexto de inyección inválido")
+                    .cause(Errors.error("Contexto de inyección inválido"))
                     .build();
         }
 
@@ -72,7 +72,6 @@ public class Lookup {
         } catch (Throwable thr) {
             result = Results.ko()
                     .cause(thr)
-                    .message("Ocurrió un error inyectando objeto")
                     .tag("jndi", jndi)
                     .tag("context", context.getClass().getCanonicalName())
                     .build();
@@ -80,9 +79,7 @@ public class Lookup {
 
         return result;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="CDI">
     /**
      * Realiza una busqueda para la inyeccion de beans CDI.
      *
@@ -101,8 +98,7 @@ public class Lookup {
                     .build();
         } catch (Throwable thr) {
             result = Results.ko()
-                    .cause(thr)
-                    .message("Ocurrió un error resolviendo bean via cdi.")
+                    .cause(Errors.error(thr, "Ocurrió un error resolviendo bean via cdi."))
                     .tag("bean.class", klass.getCanonicalName())
                     .build();
         }
@@ -133,14 +129,12 @@ public class Lookup {
                     .build();
         } catch (Throwable thr) {
             result = Results.ko()
-                    .cause(thr)
-                    .message("Ocurrió un error resolviendo bean via BeanManager.")
+                    .cause(Errors.error(thr, "Ocurrió un error resolviendo bean via BeanManager."))
                     .tag("bean.class", klass.getCanonicalName())
                     .build();
         }
 
         return result;
     }
-    //</editor-fold>
 
 }

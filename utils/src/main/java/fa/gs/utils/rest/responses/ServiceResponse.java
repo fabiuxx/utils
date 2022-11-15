@@ -12,6 +12,7 @@ import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.rest.exceptions.ApiRollbackException;
 import fa.gs.utils.result.simple.Result;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -165,6 +166,11 @@ public class ServiceResponse {
         Response response = builder.build();
         return response;
     }
+    
+    public static Entity jsonEntity(JsonElement json) {
+        Entity entity = Entity.entity(json.toString(), MediaType.APPLICATION_JSON);
+        return entity;
+    }
 
     /**
      * Clase que abstrae la construccion de respuestas HTTP validas.
@@ -313,7 +319,7 @@ public class ServiceResponse {
         public KO cause(Result result) {
             if (result.isFailure()) {
                 errno(result.failure().errno());
-                cause(result.failure().message());
+                cause(result.failure().cause());
             }
             return this;
         }

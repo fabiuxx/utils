@@ -4,10 +4,10 @@
 
     <groupId>io.github.fabiuxx</groupId>
     <artifactId>utils</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>utils</name>
+    <name>utils-${project.version}</name>
     <url>https://github.com/fabiuxx/utils</url>
     <scm>
         <url>https://github.com/fabiuxx/utils</url>
@@ -43,6 +43,7 @@
         <apache.poi.version>4.1.2</apache.poi.version>
         <hibernate.version>5.1.16.Final</hibernate.version>
         <lombok.version>1.18.12</lombok.version>
+        <slf4j.version>2.0.3</slf4j.version>
     </properties>
 
     <build>
@@ -168,27 +169,6 @@
                 </dependency>
 
                 <dependency>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-core</artifactId>
-                    <version>${hibernate.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-entitymanager</artifactId>
-                    <version>${hibernate.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.postgresql</groupId>
-                    <artifactId>postgresql</artifactId>
-                    <version>42.2.18</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
                     <groupId>org.jdeferred</groupId>
                     <artifactId>jdeferred-core</artifactId>
                     <version>1.2.6</version>
@@ -205,78 +185,23 @@
                     <artifactId>commons-codec</artifactId>
                     <version>1.14</version>
                 </dependency>
-                
+
                 <dependency>
                     <groupId>org.projectlombok</groupId>
                     <artifactId>lombok</artifactId>
                     <version>${lombok.version}</version>
                 </dependency>
-                
+
                 <dependency>
                     <groupId>net.sourceforge.streamsupport</groupId>
                     <artifactId>streamsupport</artifactId>
-                    <version>1.7.2</version>
+                    <version>1.7.4</version>
                 </dependency>
 
                 <dependency>
-                    <groupId>org.apache.poi</groupId>
-                    <artifactId>poi</artifactId>
-                    <version>${apache.poi.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.apache.poi</groupId>
-                    <artifactId>poi-ooxml</artifactId>
-                    <version>${apache.poi.version}</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.bouncycastle</groupId>
-                    <artifactId>bcprov-jdk15on</artifactId>
-                    <version>1.65.01</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-core</artifactId>
-                    <version>2.16.0</version>
-                </dependency>
-                
-                <dependency>
-                    <groupId>com.lmax</groupId>
-                    <artifactId>disruptor</artifactId>
-                    <version>3.4.2</version>
-                </dependency>
-                
-                <dependency>
-                    <groupId>org.springframework.security</groupId>
-                    <artifactId>spring-security-web</artifactId>
-                    <version>5.2.0.RELEASE</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.omnifaces</groupId>
-                    <artifactId>omnifaces</artifactId>
-                    <version>3.8</version>
-                    <scope>provided</scope>
-                </dependency>
-                
-                <dependency>
-                    <groupId>com.jwt4j</groupId>
-                    <artifactId>jwt4j</artifactId>
-                    <version>0.1.1</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.mindrot</groupId>
-                    <artifactId>jbcrypt</artifactId>
-                    <version>0.4</version>
-                    <scope>provided</scope>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                    <version>${slf4j.version}</version>
                 </dependency>
             </dependencies>
         </profile>

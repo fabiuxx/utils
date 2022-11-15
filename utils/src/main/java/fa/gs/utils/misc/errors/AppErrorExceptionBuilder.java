@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @author Fabio A. González Sosa
  */
-class AppErrorExceptionBuilder implements AppErrorException.Builder {
+public class AppErrorExceptionBuilder implements AppErrorException.Builder {
 
     private final Failure.Builder builder;
 
@@ -24,7 +24,6 @@ class AppErrorExceptionBuilder implements AppErrorException.Builder {
     public AppErrorException.Builder failure(Failure failure) {
         if (failure != null) {
             this.builder.cause(failure.cause());
-            this.builder.message(failure.message());
             this.builder.errno(failure.errno());
             this.builder.tags(failure.tags());
         }
@@ -34,12 +33,6 @@ class AppErrorExceptionBuilder implements AppErrorException.Builder {
     @Override
     public AppErrorException.Builder cause(Throwable thr) {
         builder.cause(thr);
-        return this;
-    }
-
-    @Override
-    public AppErrorException.Builder message(String fmt, Object... args) {
-        builder.message(fmt, args);
         return this;
     }
 

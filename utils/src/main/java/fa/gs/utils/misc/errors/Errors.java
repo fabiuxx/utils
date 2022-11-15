@@ -5,16 +5,15 @@
  */
 package fa.gs.utils.misc.errors;
 
+import fa.gs.utils.logging.app.AppLogger;
 import fa.gs.utils.misc.Assertions;
-import fa.gs.utils.misc.text.Charsets;
+import fa.gs.utils.misc.text.StringBuilder2;
 import fa.gs.utils.misc.text.Strings;
 import fa.gs.utils.misc.text.Text;
 import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.utils.Failure;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.Charset;
 
 /**
  *
@@ -53,13 +52,38 @@ public class Errors {
         }
     }
 
+    public static String message(Throwable thr) {
+        if (thr != null) {
+            return Strings.coalesce(thr.getMessage(), thr.getLocalizedMessage());
+        } else {
+            return "";
+        }
+    }
+
+    public static AppErrorException error() {
+        return error("ERROR");
+    }
+
+    public static AppErrorException error(String fmt, Object... args) {
+        return error(null, fmt, args);
+    }
+
+    public static AppErrorException error(Throwable cause, String fmt, Object... args) {
+        String msg = Strings.format(fmt, args);
+        return builder().cause(new RuntimeException(msg, cause)).build();
+    }
+
     public static UnsupportedOperationException unsupported() {
         return unsupported("TODO");
     }
 
     public static UnsupportedOperationException unsupported(String fmt, Object... args) {
+        return unsupported(null, fmt, args);
+    }
+
+    public static UnsupportedOperationException unsupported(Throwable cause, String fmt, Object... args) {
         String msg = Strings.format(fmt, args);
-        return new UnsupportedOperationException(msg);
+        return new UnsupportedOperationException(msg, cause);
     }
 
     public static IllegalArgumentException illegalArgument() {
@@ -105,10 +129,6 @@ public class Errors {
         return new AppErrorExceptionBuilder();
     }
 
-    public static AppErrorException failure(Failure failure) {
-        return new AppErrorException(failure);
-    }
-
     public static void popStackTrace(Throwable throwable) {
         popStackTrace(throwable, 1);
     }
@@ -123,7 +143,7 @@ public class Errors {
     public synchronized static void dump(PrintStream stream, Result result) {
         if (result.isFailure()) {
             Failure failure = result.failure();
-            dump(stream, failure.cause(), Text.select(failure.message(), "ERROR"));
+            dump(stream, failure.cause());
         }
     }
 
@@ -137,51 +157,65 @@ public class Errors {
         dumpThrowable(stream, thr, 0);
     }
 
-    public synchronized static String dump(Throwable thr) {
-        return dump(thr, Text.select(thr.getMessage(), "ERROR"));
+    private static void dumpThrowable(PrintStream stream, Throwable thr, int ident) {
+        String err = throwable2String(thr, ident);
+        stream.println(err);
     }
 
-    public synchronized static String dump(Throwable thr, String fmt, Object... args) {
-        try ( ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            Charset charset = Charsets.UTF8;
-            PrintStream ps = new PrintStream(baos, true, charset.name());
-            dump(ps, thr, fmt, args);
-            return new String(baos.toByteArray(), charset);
-        } catch (IOException ioe) {
-            return Strings.format("IOException: %s", ioe.getMessage());
+    public synchronized static void dump(AppLogger logger, Result result) {
+        if (result.isFailure()) {
+            Failure failure = result.failure();
+            dump(logger, failure.cause());
         }
     }
 
-    private static void dumpThrowable(PrintStream stream, Throwable thr, int ident) {
+    public synchronized static void dump(AppLogger logger, Throwable thr) {
+        dumpThrowable(logger, thr, 0);
+    }
+
+    public synchronized static void dump(AppLogger logger, Throwable thr, String fmt, Object... args) {
+        logger.trace(fmt, args);
+        dumpThrowable(logger, thr, 0);
+    }
+
+    private static void dumpThrowable(AppLogger logger, Throwable thr, int ident) {
+        String err = throwable2String(thr, ident);
+        logger.trace(err);
+    }
+
+    private static String throwable2String(Throwable thr, int ident) {
+        StringBuilder2 builder = new StringBuilder2();
+        while (thr != null) {
+            throwable2String(builder, thr, ident);
+            thr = thr.getCause();
+            ident = ident + 4;
+        }
+        return builder.toString();
+    }
+
+    private static void throwable2String(StringBuilder2 builder, Throwable thr, int ident) {
+        // Control.
         if (thr == null) {
             return;
         }
 
-        synchronized (stream) {
-            try {
-                String spaces = Text.ident(ident);
+        String spaces = Text.ident(ident);
+        String msg = Strings.format("%sERROR: %s / %s (%s)", spaces, thr.getMessage(), thr.getLocalizedMessage(), thr.getClass().getCanonicalName());
+        builder.appendln(msg);
 
-                String msg = Strings.format("%sERROR: %s / %s (%s)", spaces, thr.getMessage(), thr.getLocalizedMessage(), thr.getClass().getCanonicalName());
-                stream.println(msg);
+        for (StackTraceElement element : thr.getStackTrace()) {
+            String ste = Strings.format("%s%s", spaces, element.toString());
+            builder.appendln(ste);
+        }
 
-                for (StackTraceElement element : thr.getStackTrace()) {
-                    String ste = Strings.format("%s%s", spaces, element.toString());
-                    stream.println(ste);
-                }
-
-                Throwable[] suppreseds = thr.getSuppressed();
-                if (suppreseds != null && suppreseds.length > 0) {
-                    stream.println("---------------------- <START SUPRESSED> ----------------------");
-                    for (Throwable supressed : suppreseds) {
-                        dumpThrowable(stream, supressed, ident);
-                    }
-                    stream.println("----------------------- <END SUPRESSED> -----------------------");
-                }
-            } finally {
-                stream.flush();
+        Throwable[] suppreseds = thr.getSuppressed();
+        if (suppreseds != null && suppreseds.length > 0) {
+            builder.appendln("%s====================== <START SUPRESSED> ======================", spaces);
+            builder.appendln("%s---------------------------------------------------------------", spaces);
+            for (Throwable supressed : suppreseds) {
+                throwable2String(builder, supressed, ident);
             }
-
-            dumpThrowable(stream, thr.getCause(), ident + 4);
+            builder.appendln("%s======================= <END SUPRESSED> =======================", spaces);
         }
     }
 

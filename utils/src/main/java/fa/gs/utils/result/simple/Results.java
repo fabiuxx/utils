@@ -95,7 +95,7 @@ public class Results {
         try {
             result.raise();
         } catch (Throwable thr) {
-            Errors.dump(System.err, result.failure().cause(), result.failure().message());
+            Errors.dump(System.err, result.failure().cause());
             throw thr;
         }
 
@@ -118,7 +118,7 @@ public class Results {
         try {
             result.raise();
         } catch (Throwable thr) {
-            Errors.dump(System.err, result.failure().cause(), result.failure().message());
+            Errors.dump(System.err, result.failure().cause());
             throw thr;
         }
 
@@ -140,7 +140,7 @@ public class Results {
         try {
             result.raise(true);
         } catch (Throwable thr) {
-            Errors.dump(System.err, result.failure().cause(), result.failure().message());
+            Errors.dump(System.err, result.failure().cause());
             throw thr;
         }
 
@@ -220,12 +220,6 @@ public class Results {
         @Override
         public Builder<S> cause(Throwable cause) {
             failureBuilder.cause(cause);
-            return this;
-        }
-
-        @Override
-        public Builder<S> message(String fmt, Object... args) {
-            failureBuilder.message(fmt, args);
             return this;
         }
 

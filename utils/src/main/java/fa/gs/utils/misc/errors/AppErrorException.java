@@ -17,12 +17,8 @@ public class AppErrorException extends Exception {
     private final Failure failure;
 
     AppErrorException(Failure failure) {
-        super(failure.message(), failure.cause());
+        super(Errors.message(failure.cause()), failure.cause());
         this.failure = failure;
-    }
-
-    public String message() {
-        return failure.message();
     }
 
     public Throwable cause() {
@@ -42,8 +38,6 @@ public class AppErrorException extends Exception {
         public AppErrorException.Builder failure(Failure failure);
 
         public AppErrorException.Builder cause(Throwable thr);
-
-        public AppErrorException.Builder message(String fmt, Object... args);
 
         public AppErrorException.Builder errno(Errno errno);
 

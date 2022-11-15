@@ -82,14 +82,14 @@ final class SimpleResult<T> extends BaseResult<T, Failure> implements Result<T> 
     public void raise(boolean raiseIfNoValue) throws AppErrorException {
         if (isFailure()) {
             Failure failure = failure();
-            AppErrorException cause = Errors.failure(failure);
+            AppErrorException cause = Errors.error(failure.cause(), "Sin Valor");
             Errors.popStackTrace(cause);
             throw cause;
         }
 
         if (raiseIfNoValue && !isSuccess()) {
             AppErrorException cause = Errors.builder()
-                    .message("Se esperaba un resultado no nulo")
+                    .cause(Errors.error("Se esperaba un resultado no nulo"))
                     .build();
             Errors.popStackTrace(cause);
             throw cause;

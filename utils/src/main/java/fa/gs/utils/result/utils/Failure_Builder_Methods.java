@@ -17,16 +17,6 @@ public interface Failure_Builder_Methods<B extends Failure_Builder_Methods<B>> {
 
     /**
      * Establece el valor para
-     * {@link fa.gs.utils.result.utils.Failure#message message}.
-     *
-     * @param fmt Formato de mensaje.
-     * @param args Parametros de formato de mensaje.
-     * @return Esta misma instancia.
-     */
-    public B message(String fmt, Object... args);
-
-    /**
-     * Establece el valor para
      * {@link fa.gs.utils.result.utils.Failure#cause cause}.
      *
      * @param cause Causa de fallo.
