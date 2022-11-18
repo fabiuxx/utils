@@ -166,7 +166,7 @@ public class ServiceResponse {
         Response response = builder.build();
         return response;
     }
-    
+
     public static Entity jsonEntity(JsonElement json) {
         Entity entity = Entity.entity(json.toString(), MediaType.APPLICATION_JSON);
         return entity;

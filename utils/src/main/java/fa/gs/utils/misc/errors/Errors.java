@@ -54,7 +54,7 @@ public class Errors {
 
     public static String message(Throwable thr) {
         if (thr != null) {
-            return Strings.coalesce(thr.getMessage(), thr.getLocalizedMessage());
+            return Strings.coalesce(thr.getMessage(), thr.getLocalizedMessage(), thr.getClass().getCanonicalName());
         } else {
             return "";
         }
@@ -138,6 +138,10 @@ public class Errors {
         StackTraceElement[] cleanedUpStackTrace = new StackTraceElement[originalStackTrace.length - n];
         System.arraycopy(originalStackTrace, n, cleanedUpStackTrace, 0, cleanedUpStackTrace.length);
         throwable.setStackTrace(cleanedUpStackTrace);
+    }
+
+    public static String dump(Throwable thr) {
+        return throwable2String(thr, 0);
     }
 
     public synchronized static void dump(PrintStream stream, Result result) {
