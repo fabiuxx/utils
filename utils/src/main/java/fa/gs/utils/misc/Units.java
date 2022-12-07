@@ -24,4 +24,13 @@ public class Units {
         }
     }
 
+    public static <U extends Unit<T>, T> Throwable capture(U unit) {
+        try {
+            unit.execute();
+            return null;
+        } catch (Throwable thr) {
+            return thr;
+        }
+    }
+
 }

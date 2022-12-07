@@ -9,6 +9,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import java.io.StringReader;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -25,8 +27,21 @@ public class Json {
      * @return Elemento JSON.
      */
     public static JsonElement fromString(String text) {
-        JsonParser parser = new JsonParser();
-        return parser.parse(text);
+        return fromString(text, false);
+    }
+
+    /**
+     * Convierte una cadena de texto a un elemento JSON.
+     *
+     * @param text Cadena de texto.
+     * @param lenient Si se debe flexibilizar el proceso de parseo de la cadena
+     * de texto.
+     * @return Elemento JSON.
+     */
+    public static JsonElement fromString(String text, boolean lenient) {
+        JsonReader reader = new JsonReader(new StringReader(text));
+        reader.setLenient(lenient);
+        return JsonParser.parseReader(reader);
     }
 
     /**
