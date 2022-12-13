@@ -93,64 +93,27 @@ public class Colors {
      * @return Colores generados.
      */
     public static List<Color> random(int N) {
+        final ColorWheelProvider cwp = new Colors.ColorWheelProvider1();
+        return random(N, cwp);
+    }
+
+    /**
+     * Genera N colores distribuidos en el espectro del arcoiris.
+     *
+     * @param N Cantidad de colores a generar.
+     * @param cwp Abstracción de rueda de colores.
+     * @return Colores generados.
+     */
+    public static List<Color> random(int N, ColorWheelProvider cwp) {
         float step = 360f / N;
         List<Color> colors = Lists.empty();
         for (int i = 0; i < N; i++) {
             float h = i * step;
-            int[] rgb = toRGB(h);
+            int[] rgb = cwp.getColor(h);
             Color color = new Color(rgb[0], rgb[1], rgb[2]);
             colors.add(color);
         }
         return colors;
-    }
-
-    /**
-     * Dado un angulo entre 0 y 360, calcula el color correspondiente asumiendo
-     * una rueda del espectro RGB. Fuente:
-     * http://www.cs.utsa.edu/~cs1063/projects/Spring2011/Project2/project2.html
-     *
-     * @param angle Angulo de rotacion.
-     * @return Componentes r,g,b de color asociado.
-     */
-    private static int[] toRGB(double angle) {
-        int r = 0, g = 0, b = 0;
-        if (angle >= 0 && angle <= 60) {
-            r = 255;
-            g = (int) (255 * angle / 60);
-            b = 0;
-        }
-
-        if (angle >= 61 && angle <= 120) {
-            r = (int) (255 * (120 - angle) / 60);
-            g = 255;
-            b = 0;
-        }
-
-        if (angle >= 121 && angle <= 180) {
-            r = 0;
-            g = 255;
-            b = (int) (255 * (angle - 120) / 60);
-        }
-
-        if (angle >= 181 && angle <= 240) {
-            r = 0;
-            g = (int) (255 * (240 - angle) / 60);
-            b = 255;
-        }
-
-        if (angle >= 241 && angle <= 300) {
-            r = (int) (255 * (angle - 240) / 60);
-            g = 0;
-            b = 255;
-        }
-
-        if (angle >= 301 && angle <= 360) {
-            r = 255;
-            g = 0;
-            b = (int) (255 * (360 - angle) / 60);
-        }
-
-        return new int[]{r, g, b};
     }
 
     /**
@@ -214,6 +177,106 @@ public class Colors {
         Color color = decode(backgroundColor);
         float L = luminance(color);
         return (L < 140.0) ? "#fff" : "#000";
+    }
+
+    public static class ColorWheelProvider1 implements ColorWheelProvider {
+
+        /**
+         * <p>
+         * {@inheritDoc }.
+         * </p>
+         * <p>
+         * Fuente:
+         * http://www.cs.utsa.edu/~cs1063/projects/Spring2011/Project2/project2.html
+         * </p>
+         */
+        @Override
+        public int[] getColor(double angle) {
+            int r = 0, g = 0, b = 0;
+            if (angle >= 0 && angle <= 60) {
+                r = 255;
+                g = (int) (255 * angle / 60);
+                b = 0;
+            } else if (angle >= 61 && angle <= 120) {
+                r = (int) (255 * (120 - angle) / 60);
+                g = 255;
+                b = 0;
+            } else if (angle >= 121 && angle <= 180) {
+                r = 0;
+                g = 255;
+                b = (int) (255 * (angle - 120) / 60);
+            } else if (angle >= 181 && angle <= 240) {
+                r = 0;
+                g = (int) (255 * (240 - angle) / 60);
+                b = 255;
+            } else if (angle >= 241 && angle <= 300) {
+                r = (int) (255 * (angle - 240) / 60);
+                g = 0;
+                b = 255;
+            } else if (angle >= 301 && angle <= 360) {
+                r = 255;
+                g = 0;
+                b = (int) (255 * (360 - angle) / 60);
+            } else {
+                r = 0;
+                g = 0;
+                b = 0;
+            }
+            return new int[]{r, g, b};
+        }
+
+    }
+
+    public static class ColorWheelProvider2 implements ColorWheelProvider {
+
+        /**
+         * <p>
+         * {@inheritDoc }.
+         * </p>
+         * <p>
+         * Fuente: agregar.
+         * </p>
+         */
+        @Override
+        public int[] getColor(double angle) {
+            angle = Colors.guard(angle);
+            angle = angle * (645 - 380) + 380;
+            double R, B, G;
+            if (angle >= 380 && angle < 440) {
+                R = -(angle - 440) / (440 - 350);
+                G = 0.0;
+                B = 1.0;
+            } else if (angle >= 440 && angle < 490) {
+                R = 0.0;
+                G = (angle - 440) / (490 - 440);
+                B = 1.0;
+            } else if (angle >= 490 && angle < 510) {
+                R = 0.0;
+                G = 1.0;
+                B = (510 - angle) / (510 - 490);
+            } else if (angle >= 510 && angle < 580) {
+                R = (angle - 510) / (580 - 510);
+                G = 1.0;
+                B = 0.0;
+            } else if (angle >= 580 && angle < 645) {
+                R = 1.0;
+                G = -(angle - 645) / (645 - 580);
+                B = 0.0;
+            } else if (angle >= 645 && angle <= 780) {
+                R = 1.0;
+                G = 0.0;
+                B = 0.0;
+            } else {
+                R = 0.0;
+                G = 0.0;
+                B = 0.0;
+            }
+            int r = (int) (R * 255);
+            int g = (int) (G * 255);
+            int b = (int) (B * 255);
+            return new int[]{r, g, b};
+        }
+
     }
 
 }
