@@ -236,7 +236,6 @@
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bcprov-jdk15on</artifactId>
                     <version>1.65.01</version>
-                    <scope>provided</scope>
                 </dependency>
 
                 <dependency>
@@ -262,7 +261,6 @@
                     <groupId>org.omnifaces</groupId>
                     <artifactId>omnifaces</artifactId>
                     <version>3.8</version>
-                    <scope>provided</scope>
                 </dependency>
                 
                 <dependency>

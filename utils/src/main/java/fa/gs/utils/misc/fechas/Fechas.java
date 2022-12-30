@@ -639,13 +639,22 @@ public class Fechas {
     }
 
     public static enum Dia {
-        DOMINGO,
-        LUNES,
-        MARTES,
-        MIERCOLES,
-        JUEVES,
-        VIERNES,
-        SABADO;
+        DOMINGO("Domingo"),
+        LUNES("Lunes"),
+        MARTES("Martes"),
+        MIERCOLES("Miércoles"),
+        JUEVES("Jueves"),
+        VIERNES("Vieres"),
+        SABADO("Sábado");
+        private final String descripcion;
+
+        private Dia(String descripcion) {
+            this.descripcion = descripcion;
+        }
+
+        public String descripcion() {
+            return descripcion;
+        }
     }
 
 }
