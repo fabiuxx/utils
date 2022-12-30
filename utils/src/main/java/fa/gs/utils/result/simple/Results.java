@@ -82,6 +82,37 @@ public class Results {
     }
 
     /**
+     * Obtiene el valor encapsulado dentro de un resultado de operación. En caso
+     * que el resultado represente un fallo o que no acepte valores nulos, se
+     * retorna {@code null}.
+     *
+     * @param <S> Parametro de tipo.
+     * @param result Resultado de una operacion.
+     * @return Valor de resultado en caso de extio.
+     */
+    public static <S> S value(Result<S> result) {
+        return value(result, null);
+    }
+
+    /**
+     * Obtiene el valor encapsulado dentro de un resultado de operación. En caso
+     * que el resultado represente un fallo o que no acepte valores nulos, se
+     * retorna un valor alternativo.
+     *
+     * @param <S> Parametro de tipo.
+     * @param result Resultado de una operacion.
+     * @param fallback Valor alternativo.
+     * @return Valor de resultado en caso de extio.
+     */
+    public static <S> S value(Result<S> result, S fallback) {
+        try {
+            return valueOrRaise(result);
+        } catch (Throwable thr) {
+            return fallback;
+        }
+    }
+
+    /**
      * Obtiene el valor encapsulado dentro de un resultado o lanza una excepcion
      * si el resultado representa un fallo.
      *
