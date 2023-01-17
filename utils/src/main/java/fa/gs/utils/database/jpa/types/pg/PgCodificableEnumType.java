@@ -32,7 +32,7 @@ public class PgCodificableEnumType extends PgScalarType<Codificable> {
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        Object value = rs.getObject(names[0]);
+        Object value = isPosition(names[0]) ? rs.getObject(getAsPosition(names[0])) : rs.getObject(names[0]);
         if (value == null) {
             return null;
         }

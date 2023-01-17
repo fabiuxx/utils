@@ -7,7 +7,6 @@ package fa.gs.utils.database.jpa.types.pg;
 
 import fa.gs.utils.collections.Lists;
 import fa.gs.utils.misc.Assertions;
-import fa.gs.utils.misc.Units;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Joiner;
 import java.sql.PreparedStatement;
@@ -42,7 +41,7 @@ public class PgTextAggregationType extends PgType {
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        String text = Units.execute(() -> rs.getString(names[0]));
+        String text = isPosition(names[0]) ? rs.getString(getAsPosition(names[0])) : rs.getString(names[0]);
         if (Assertions.stringNullOrEmpty(text)) {
             return null;
         }

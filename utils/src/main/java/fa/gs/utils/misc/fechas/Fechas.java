@@ -6,6 +6,7 @@
 package fa.gs.utils.misc.fechas;
 
 import fa.gs.utils.collections.Lists;
+import fa.gs.utils.misc.Codificable;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.text.Locales;
 import fa.gs.utils.misc.text.Strings;
@@ -638,20 +639,28 @@ public class Fechas {
         return compare >= 0;
     }
 
-    public static enum Dia {
-        DOMINGO("Domingo"),
-        LUNES("Lunes"),
-        MARTES("Martes"),
-        MIERCOLES("Miércoles"),
-        JUEVES("Jueves"),
-        VIERNES("Vieres"),
-        SABADO("Sábado");
+    public static enum Dia implements Codificable {
+        DOMINGO("0001", "Domingo"),
+        LUNES("0002", "Lunes"),
+        MARTES("0003", "Martes"),
+        MIERCOLES("0004", "Miércoles"),
+        JUEVES("0005", "Jueves"),
+        VIERNES("0006", "Vieres"),
+        SABADO("0007", "Sábado");
+        private final String codigo;
         private final String descripcion;
 
-        private Dia(String descripcion) {
+        private Dia(String codigo, String descripcion) {
+            this.codigo = codigo;
             this.descripcion = descripcion;
         }
 
+        @Override
+        public String codigo() {
+            return codigo;
+        }
+
+        @Override
         public String descripcion() {
             return descripcion;
         }

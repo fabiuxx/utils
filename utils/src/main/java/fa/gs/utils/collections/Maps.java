@@ -5,6 +5,7 @@
  */
 package fa.gs.utils.collections;
 
+import com.google.gson.JsonElement;
 import fa.gs.utils.collections.maps.CollectionGroupMap;
 import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Codificable;
@@ -170,6 +171,14 @@ public class Maps {
     public static <K, V, T extends Codificable> T codificable(Map<K, V> map, K key, T[] values) {
         String value = string(map, key);
         return Codificables.fromCodigo(value, values);
+    }
+
+    public static <K, V> JsonElement json(Map<K, V> map, K key) {
+        return json(map, key, null);
+    }
+
+    public static <K, V> JsonElement json(Map<K, V> map, K key, JsonElement fallback) {
+        return get(map, key, fallback, JsonElement.class);
     }
 
 }

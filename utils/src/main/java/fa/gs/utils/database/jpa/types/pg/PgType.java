@@ -63,4 +63,12 @@ public abstract class PgType implements UserType, DynamicParameterizedType {
         return original;
     }
 
+    protected boolean isPosition(String label) {
+        return (label.startsWith("[") && label.endsWith("]"));
+    }
+
+    protected int getAsPosition(String label) {
+        String n = label.substring(1, label.length() - 1);
+        return Integer.valueOf(n, 10);
+    }
 }

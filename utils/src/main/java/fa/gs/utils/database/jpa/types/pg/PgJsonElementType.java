@@ -6,10 +6,10 @@
 package fa.gs.utils.database.jpa.types.pg;
 
 import com.google.gson.JsonElement;
+import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.Units;
 import fa.gs.utils.misc.errors.Errors;
 import fa.gs.utils.misc.json.Json;
-import fa.gs.utils.misc.json.JsonElementSerializableWrapper;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,12 +23,12 @@ import org.postgresql.util.PGobject;
  *
  * @author Fabio A. González Sosa
  */
-public class PgJsonType extends PgScalarType<JsonElementSerializableWrapper> {
+public class PgJsonElementType extends PgScalarType<JsonElement> {
 
-    public static final String QNAME = "fa.gs.utils.database.jpa.types.pg.PgJsonType";
+    public static final String QNAME = "fa.gs.utils.database.jpa.types.pg.PgJsonElementType";
 
-    public PgJsonType() {
-        super(JsonElementSerializableWrapper.class, java.sql.Types.OTHER);
+    public PgJsonElementType() {
+        super(JsonElement.class, java.sql.Types.OTHER);
     }
 
     @Override
@@ -54,8 +54,12 @@ public class PgJsonType extends PgScalarType<JsonElementSerializableWrapper> {
                 return String.class.cast(value1);
             });
 
-            JsonElement json = Json.fromString(value0);
-            return JsonElementSerializableWrapper.instance(json);
+            // Control.
+            if (Assertions.stringNullOrEmpty(value0)) {
+                return null;
+            } else {
+                return Json.fromString(value0);
+            }
         }
 
         throw Errors.unsupported("Instancia de '%s' para columna '%s' no corresponde al tipo 'PGobject'.", value.getClass().getCanonicalName(), names[0]);
@@ -73,8 +77,8 @@ public class PgJsonType extends PgScalarType<JsonElementSerializableWrapper> {
             return;
         }
 
-        if (value instanceof JsonElementSerializableWrapper) {
-            JsonElement json = ((JsonElementSerializableWrapper) value).getJsonElement();
+        if (value instanceof JsonElement) {
+            JsonElement json = ((JsonElement) value);
             PGobject value0 = wrap(json);
             st.setObject(index, value0, sqlTypes()[0]);
             return;

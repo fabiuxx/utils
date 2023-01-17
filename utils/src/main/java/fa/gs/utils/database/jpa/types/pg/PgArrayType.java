@@ -49,7 +49,7 @@ public abstract class PgArrayType<T> extends PgType {
     @Override
     @SuppressWarnings("unchecked")
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        Array array = Units.execute(() -> rs.getArray(names[0]));
+        Array array = Units.execute(() -> isPosition(names[0]) ? rs.getArray(getAsPosition(names[0])) : rs.getArray(names[0]));
         if (array == null) {
             return null;
         }
