@@ -23,5 +23,14 @@ public class Units {
             return fallback;
         }
     }
+    
+    public static Throwable wrap(Runnable r) {
+        try {
+            r.run();
+            return null;
+        } catch(Throwable thr) {
+            return thr;
+        }
+    }
 
 }

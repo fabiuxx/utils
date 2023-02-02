@@ -645,7 +645,7 @@ public class Fechas {
         MARTES("0003", "Martes"),
         MIERCOLES("0004", "Miércoles"),
         JUEVES("0005", "Jueves"),
-        VIERNES("0006", "Vieres"),
+        VIERNES("0006", "Viernes"),
         SABADO("0007", "Sábado");
         private final String codigo;
         private final String descripcion;
