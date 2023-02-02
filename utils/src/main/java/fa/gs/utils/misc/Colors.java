@@ -6,6 +6,7 @@
 package fa.gs.utils.misc;
 
 import fa.gs.utils.collections.Lists;
+import fa.gs.utils.misc.colors.RGBAColors;
 import fa.gs.utils.misc.text.Strings;
 import java.awt.Color;
 import java.util.List;
@@ -14,7 +15,9 @@ import java.util.Random;
 /**
  *
  * @author Fabio A. González Sosa
+ * @deprecated Ver clase {@link RGBAColors RGBAColors}.
  */
+@Deprecated
 public class Colors {
 
     /**
