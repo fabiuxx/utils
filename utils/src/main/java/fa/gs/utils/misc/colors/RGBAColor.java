@@ -49,10 +49,18 @@ public class RGBAColor implements Serializable {
     }
 
     public RGBAColor(int r, int g, int b, int a) {
-        this.r = (byte) r;
-        this.g = (byte) g;
-        this.b = (byte) b;
-        this.a = (byte) a;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+
+    public String toRGBHex() {
+        return String.format("#%02X%02X%02X", r, g, b);
+    }
+
+    public String toRGBAHex() {
+        return String.format("#%02X%02X%02X%02X", r, g, b, a);
     }
 
 }
