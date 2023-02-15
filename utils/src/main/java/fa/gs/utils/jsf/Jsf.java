@@ -250,13 +250,13 @@ public class Jsf {
      */
     public static void sendFile(InputStream stream, String fileName, int contentLength, String contentType) throws Exception {
         FacesContext ctx = FacesContext.getCurrentInstance();
-        try ( InputStream input = stream) {
+        try (InputStream input = stream) {
             ExternalContext ec = ctx.getExternalContext();
             ec.responseReset();
             ec.setResponseContentType(contentType);
             ec.setResponseContentLength(contentLength);
             ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-            try ( OutputStream output = ec.getResponseOutputStream()) {
+            try (OutputStream output = ec.getResponseOutputStream()) {
                 byte[] chunk = new byte[4096];
                 int read;
                 while ((read = input.read(chunk)) >= 0) {

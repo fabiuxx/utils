@@ -142,7 +142,7 @@ public class Errors {
     }
 
     public synchronized static String dump(Throwable thr, String fmt, Object... args) {
-        try ( ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             Charset charset = Charsets.UTF8;
             PrintStream ps = new PrintStream(baos, true, charset.name());
             dump(ps, thr, fmt, args);

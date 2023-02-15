@@ -84,7 +84,7 @@ public class Jpa {
                 Method m = klass.getDeclaredMethod("instance", new Class[]{ResultSet.class, Session.class});
                 if (Modifier.isStatic(m.getModifiers())) {
                     m.setAccessible(true);
-                    try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+                    try (PreparedStatement ps = connection.prepareStatement(sql)) {
                         ps.execute();
                         ResultSet rs = ps.getResultSet();
                         while (rs.next()) {
