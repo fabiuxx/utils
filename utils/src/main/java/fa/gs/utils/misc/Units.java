@@ -11,11 +11,26 @@ package fa.gs.utils.misc;
  */
 public class Units {
 
+    @Deprecated
     public static <U extends Unit<T>, T> T execute(U unit) {
-        return execute(null, unit);
+        return executeFn(unit);
     }
 
+    @Deprecated
     public static <U extends Unit<T>, T> T execute(T fallback, U unit) {
+        return executeFn(fallback, unit);
+    }
+
+    @Deprecated
+    public static <U extends Unit<T>, T> Throwable capture(U unit) {
+        return guardFn(unit);
+    }
+
+    public static <U extends UnitFn<T>, T> T executeFn(U unit) {
+        return executeFn(null, unit);
+    }
+
+    public static <U extends UnitFn<T>, T> T executeFn(T fallback, U unit) {
         try {
             T value = unit.execute();
             return (value != null) ? value : fallback;
@@ -24,7 +39,24 @@ public class Units {
         }
     }
 
-    public static <U extends Unit<T>, T> Throwable capture(U unit) {
+    public static <U extends UnitFn<T>, T> Throwable guardFn(U unit) {
+        try {
+            unit.execute();
+            return null;
+        } catch (Throwable thr) {
+            return thr;
+        }
+    }
+
+    public static <U extends UnitSub<?>> void executeSub(U unit) {
+        try {
+            unit.execute();
+        } catch (Throwable thr) {
+            ;
+        }
+    }
+
+    public static <U extends UnitSub<T>, T> Throwable guardSub(U unit) {
         try {
             unit.execute();
             return null;

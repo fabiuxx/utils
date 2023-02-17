@@ -9,10 +9,10 @@ package fa.gs.utils.misc;
  *
  * @author Fabio A. González Sosa
  * @param <T> Parametro de tipo.
- * @deprecated
  */
-@Deprecated
 @FunctionalInterface
-public interface Unit<T> extends UnitFn<T> {
+public interface UnitFn<T> {
+
+    T execute() throws Throwable;
 
 }
