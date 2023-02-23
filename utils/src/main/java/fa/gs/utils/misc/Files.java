@@ -44,7 +44,7 @@ public class Files {
     }
 
     public static void dump(InputStream input, File target) throws IOException {
-        try ( FileOutputStream fos = new FileOutputStream(target)) {
+        try (FileOutputStream fos = new FileOutputStream(target)) {
             byte[] buffer = new byte[4098];
             int read;
             while ((read = input.read(buffer)) > 0) {
@@ -80,7 +80,7 @@ public class Files {
 
     public static void touch(File file) throws IOException {
         if (!file.exists()) {
-            try ( PrintWriter writer = new PrintWriter(file)) {
+            try (PrintWriter writer = new PrintWriter(file)) {
                 writer.write("");
                 writer.flush();
             }
