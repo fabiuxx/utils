@@ -27,32 +27,44 @@ public class AppLogger {
         this.wrapped = wrapped;
     }
 
-    public String trazaOn() {
+    public static String traza() {
+        String value = MDC.get(KEY_MDC_TRAZA);
+        return (Assertions.stringNullOrEmpty(value)) ? "" : value;
+    }
+
+    public synchronized String trazaOn() {
+        return trazaOn(Ids.randomUuid());
+    }
+
+    public synchronized String trazaOn(String seed) {
         Integer trazaRc = getCurrentTrazaRc();
-        String traza = getCurrentTraza();
+        String traza = getCurrentTraza(seed);
         MDC.put(KEY_MDC_TRAZA, traza);
         MDC.put(KEY_MDC_TRAZA_RC, String.valueOf(trazaRc + 1));
         return traza;
     }
 
-    private String getCurrentTraza() {
+    private synchronized String getCurrentTraza(String fallback) {
         String traza = MDC.get(KEY_MDC_TRAZA);
         if (Assertions.stringNullOrEmpty(traza)) {
-            traza = Ids.randomUuid();
+            traza = fallback;
         }
         return traza;
     }
 
-    private Integer getCurrentTrazaRc() {
+    private synchronized Integer getCurrentTrazaRc() {
         String rc = MDC.get(KEY_MDC_TRAZA_RC);
         return Assertions.stringNullOrEmpty(rc) ? 0 : Integer.valueOf(rc, 10);
     }
 
-    public void trazaOff() {
+    public synchronized void trazaOff() {
         Integer trazaRc = getCurrentTrazaRc();
         trazaRc--;
         if (trazaRc <= 0) {
-            MDC.remove("traza");
+            MDC.remove(KEY_MDC_TRAZA);
+            MDC.remove(KEY_MDC_TRAZA_RC);
+        } else {
+            MDC.put(KEY_MDC_TRAZA_RC, String.valueOf(trazaRc));
         }
     }
 

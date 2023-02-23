@@ -6,6 +6,10 @@
 package fa.gs.utils.misc.text;
 
 import fa.gs.utils.misc.Assertions;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -116,6 +120,10 @@ public class Strings {
         }
     }
 
+    public static InputStream getStream(String text) {
+        return new ByteArrayInputStream(getBytes(text));
+    }
+
     /**
      * Obtiene una cadena conformada por los bytes indicados.
      *
@@ -127,6 +135,18 @@ public class Strings {
             return "";
         } else {
             return new String(bytes, Charsets.UTF8);
+        }
+    }
+
+    public static final String getString(InputStream stream) throws IOException {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[4098];
+            int read;
+            while ((read = stream.read(buffer)) > 0) {
+                baos.write(buffer, 0, read);
+            }
+            byte[] bytes = baos.toByteArray();
+            return getString(bytes);
         }
     }
 
