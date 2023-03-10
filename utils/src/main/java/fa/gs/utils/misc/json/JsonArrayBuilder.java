@@ -7,6 +7,9 @@ package fa.gs.utils.misc.json;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import fa.gs.utils.adapters.Adapter;
+import fa.gs.utils.adapters.Adapters;
+import fa.gs.utils.misc.Assertions;
 import fa.gs.utils.misc.fechas.Fechas;
 import java.util.Collection;
 import java.util.Date;
@@ -30,6 +33,26 @@ public class JsonArrayBuilder {
 
     public static JsonArrayBuilder instance(JsonArray array) {
         return new JsonArrayBuilder(array);
+    }
+
+    public static <T> JsonArray adaptArray(Collection<T> array, Class<? extends Adapter<T, JsonElement>> elementAdapter) {
+        JsonArrayBuilder ab = JsonArrayBuilder.instance();
+
+        // Control.
+        if (Assertions.isNullOrEmpty(array)) {
+            return ab.build();
+        }
+
+        // Rellenar objeto.
+        int i = 1;
+        for (T element : array) {
+            JsonElement jelement = Adapters.adapt(elementAdapter, element);
+            ab.add(jelement);
+            i++;
+        }
+
+        // Datos finales.
+        return ab.build();
     }
 
     public JsonArrayBuilder clear() {

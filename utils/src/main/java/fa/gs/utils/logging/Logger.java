@@ -28,7 +28,7 @@ public interface Logger {
     public String getFqcn();
 
     /**
-     * Obtiene la abstraccion de contexto de diagnostico.
+     * Obtiene la abstracción de contexto de diagnostico.
      *
      * @return Contexto de diagnostico.
      */
