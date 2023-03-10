@@ -67,5 +67,9 @@ public class Array2D<T> implements Serializable {
         int p = j + (i * columns);
         return elements.get(p);
     }
+    
+    public int getTotal() {
+        return rows * columns;
+    }
 
 }
