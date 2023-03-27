@@ -22,6 +22,18 @@ import javassist.Modifier;
  */
 public class Reflection {
 
+    public static <T> T cast(Object instance, Class<T> klass) {
+        if (instance == null) {
+            return null;
+        } else {
+            if (!isInstanceOf(instance.getClass(), klass)) {
+                throw new ClassCastException();
+            } else {
+                return klass.cast(instance);
+            }
+        }
+    }
+
     /**
      * Obtiene el valor de un atributo dentro de un objeto.
      *
