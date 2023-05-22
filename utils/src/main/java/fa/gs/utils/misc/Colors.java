@@ -55,6 +55,18 @@ public class Colors {
         int b = (int) Math.floor(Math.min(255.0, color.getBlue() + 255.0 * percentage));
         return new Color(r, g, b);
     }
+    
+    /**
+     * "Aclara" un color en un factor dado.
+     *
+     * @param color Color a aclarar, en hex #rrggbb.
+     * @param factor Factor de aclarado. Entre 0 y 1.
+     * @return Color aclarado, en hex #rrggbb.
+     */
+    public static String ligthen(String color, double factor) {
+        Color lighten = ligthen(decode(color), factor);
+        return encode(lighten);
+    }
 
     public static Color decode(String rgbHex) {
         if (rgbHex.startsWith("#")) {

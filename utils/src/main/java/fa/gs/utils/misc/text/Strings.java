@@ -61,13 +61,15 @@ public class Strings {
     public static String coalesce(boolean acceptEmptyString, String... values) {
         if (!Assertions.isNullOrEmpty(values)) {
             for (String value : values) {
-                if (value == null && acceptEmptyString) {
-                    return value;
+                if (value == null) {
+                    continue;
                 }
+
                 if (value.isEmpty() && acceptEmptyString) {
                     return value;
                 }
-                if (!Assertions.stringNullOrEmpty(value)) {
+
+                if (!value.isEmpty()) {
                     return value;
                 }
             }
