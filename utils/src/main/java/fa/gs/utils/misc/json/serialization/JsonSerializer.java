@@ -26,7 +26,6 @@ import java.util.Map;
 public class JsonSerializer {
 
     public static JsonElement serialize(Object instance) throws Throwable {
-        //Utils.checkIsJsonProcessable(instance);
         final JsonSerializer.SerializationContext ctx = new JsonSerializer.SerializationContext();
         return resolveInstance(ctx, instance, null);
     }

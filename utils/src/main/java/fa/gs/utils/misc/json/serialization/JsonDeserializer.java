@@ -46,11 +46,16 @@ public class JsonDeserializer {
 
     public static <T> T deserialize(JsonElement json, Class<T> targetClass) throws Throwable {
         debug("[DESERIALIZE START] target=%s", targetClass.getCanonicalName());
-        final DeserializationContext ctx = new DeserializationContext();
-        Object instance0 = resolveElement(ctx, json, targetClass, null);
-        T value = targetClass.cast(instance0);
-        debug("[DESERIALIZE END]");
-        return value;
+        try {
+            final DeserializationContext ctx = new DeserializationContext();
+            Object instance0 = resolveElement(ctx, json, targetClass, null);
+            T value = targetClass.cast(instance0);
+            debug("[DESERIALIZE END]");
+            return value;
+        } catch (Throwable thr) {
+            debug("[DESERIALIZE ERROR] %s", Errors.dump(thr));
+            throw thr;
+        }
     }
 
     private static Object resolveElement(final DeserializationContext ctx, JsonElement element, Class<?> targetClass, Field field) throws Throwable {

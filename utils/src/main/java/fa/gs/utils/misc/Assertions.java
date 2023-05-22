@@ -101,6 +101,15 @@ public class Assertions {
 
         return null;
     }
+    
+    public static boolean in(String value, String[] values) {
+        for(String value0 : values) {
+            if(Objects.equals(value, value0)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static boolean stringNullOrEmpty(String value) {
         return (value == null || value.isEmpty());
