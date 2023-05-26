@@ -11,6 +11,7 @@ package fa.gs.utils.adapters;
  * @param <TFrom> Tipo de Origen.
  * @param <TTo> Tipo de Destino.
  */
+@FunctionalInterface
 public interface Adapter<TFrom, TTo> {
 
     /**
