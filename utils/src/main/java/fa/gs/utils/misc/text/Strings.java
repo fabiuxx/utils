@@ -86,6 +86,14 @@ public class Strings {
         }
     }
 
+    public static String linearize(String input) {
+        // Control.
+        if (Assertions.stringNullOrEmpty(input)) {
+            return input;
+        }
+        return input.replaceAll(System.lineSeparator(), "");
+    }
+
     /**
      * Formatea una cadena y sus argumentos, si hubieren.
      *
