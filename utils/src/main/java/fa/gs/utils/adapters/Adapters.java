@@ -61,7 +61,7 @@ public class Adapters {
     }
 
     /**
-     * Permite adaptar una coleccion de objetos a
+     * Permite adaptar una coleccion de objetos a una colección de elementos JSON.
      *
      * @param <TFrom> Parametro de tipo.
      * @param <TTo> Parametro de tipo.
@@ -75,7 +75,7 @@ public class Adapters {
         Collection<TTo> list = Lists.empty();
         if (!Assertions.isNullOrEmpty(objs)) {
             for (TFrom obj : objs) {
-                TTo obj0 = adapt(adapterClass, obj, args);
+                final TTo obj0 = adapt(adapterClass, obj, args);
                 list.add(obj0);
             }
         }
