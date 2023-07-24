@@ -42,6 +42,10 @@ public class Strings {
         }
     }
 
+    public static String[] split(String text, int size) {
+        return text.split("(?<=\\G.{" + size + "})");
+    }
+
     /**
      * Retorna la primera cadena no nula ni vacia de un conjunto de valores
      * posibles.
