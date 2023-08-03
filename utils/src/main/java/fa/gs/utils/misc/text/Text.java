@@ -170,13 +170,32 @@ public class Text {
      * @return Texto modificado.
      */
     public static String replaceAll(String text, String replace, String replacee) {
+        return replaceAll(text, replace, replacee, true);
+    }
+
+    /**
+     * Reemplaza todas las ocurrencias de un patron de texto por otro. La fase
+     * de reemplazo se aplica varias veces hasta que no exista ninguna
+     * coincidencia del patron de texto que se desea reemplazar.
+     *
+     * @param text Texto original.
+     * @param replace Patron de texto a reemplazar.
+     * @param replacee Patron de texto de reemplazo.
+     * @param trim Indica si al final de los reemplazos se deben eliminar los
+     * caracteres en blanco al inicio y final del texto.
+     * @return Texto modificado.
+     */
+    public static String replaceAll(String text, String replace, String replacee, boolean trim) {
         String a = text;
         String b = text.replace(replace, replacee);
         while (!Objects.equals(a, b)) {
             a = b;
             b = b.replace(replace, replacee);
         }
-        return a.trim();
+        if (trim) {
+            a = a.trim();
+        }
+        return a;
     }
 
     /**
