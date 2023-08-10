@@ -5,7 +5,6 @@
  */
 package fa.gs.utils.collections.maps;
 
-import fa.gs.utils.adapters.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -68,11 +67,10 @@ public class LRUCache<K, V> {
      * @param key Clave.
      * @return Valor almacenado, si hubiere.
      */
-    public Adapter get(K key) {
+    public V get(K key) {
         lock.readLock().lock();
         try {
-            Object obj = storage.get(key);
-            return (obj != null) ? (Adapter) obj : null;
+            return storage.get(key);
         } finally {
             lock.readLock().unlock();
         }
