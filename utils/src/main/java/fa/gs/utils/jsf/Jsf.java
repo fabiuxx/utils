@@ -32,6 +32,8 @@ import javax.faces.view.facelets.FaceletContext;
 import org.omnifaces.util.Ajax;
 import org.omnifaces.util.Components;
 import org.omnifaces.util.Faces;
+import org.primefaces.PF;
+import org.primefaces.PrimeFaces;
 
 /**
  *
@@ -275,7 +277,27 @@ public class Jsf {
      * @param ids Identificadores de componentes.
      */
     public static void update(String... ids) {
-        Ajax.update(ids);
+        if (!Assertions.isNullOrEmpty(ids)) {
+            if (isPrimefaces()) {
+                PrimeFaces current = PF.current();
+                if (current != null && current.isAjaxRequest()) {
+                    current.ajax().update(ids);
+                } else {
+                    Ajax.update(ids);
+                }
+            } else {
+                Ajax.update(ids);
+            }
+        }
+    }
+
+    private static boolean isPrimefaces() {
+        try {
+            PrimeFaces current = PF.current();
+            return current != null;
+        } catch (Throwable thr) {
+            return false;
+        }
     }
 
     /**

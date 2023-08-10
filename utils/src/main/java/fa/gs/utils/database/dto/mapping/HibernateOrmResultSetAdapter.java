@@ -64,6 +64,9 @@ public class HibernateOrmResultSetAdapter implements QueryResultSetAdapter {
         }
 
         // Obtener datos.
+        hibernateQuery.setFetchSize(64);
+        hibernateQuery.setReadOnly(true);
+        hibernateQuery.setCacheable(false);
         hibernateQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
         return (Collection<Map<String, Object>>) hibernateQuery.list();
     }

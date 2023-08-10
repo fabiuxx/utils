@@ -34,6 +34,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import lombok.Data;
 import org.hibernate.SQLQuery;
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -59,6 +61,9 @@ public class Jpa {
     public static Collection<Map<String, Object>> select(String sql, EntityManager em) throws Throwable {
         // Ejecutar la query e indica que necesitamos mapear el resultset a un mapa, valga la redundancia.
         org.hibernate.Query hibernateQuery = em.createNativeQuery(sql).unwrap(org.hibernate.Query.class);
+        hibernateQuery.setFetchSize(64);
+        hibernateQuery.setReadOnly(true);
+        hibernateQuery.setCacheable(false);
         hibernateQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
         return (Collection<Map<String, Object>>) hibernateQuery.list();
     }
@@ -72,6 +77,9 @@ public class Jpa {
                 hibernateQuery.addScalar(scalarInfo.projection, scalarInfo.type);
             }
         }
+        hibernateQuery.setFetchSize(64);
+        hibernateQuery.setReadOnly(true);
+        hibernateQuery.setCacheable(false);
         hibernateQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
         return (Collection<Map<String, Object>>) hibernateQuery.list();
     }
