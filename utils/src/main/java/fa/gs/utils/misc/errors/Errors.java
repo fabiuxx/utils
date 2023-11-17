@@ -14,6 +14,7 @@ import fa.gs.utils.result.simple.Result;
 import fa.gs.utils.result.utils.Failure;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Constructor;
 
 /**
  *
@@ -73,6 +74,21 @@ public class Errors {
         return builder().cause(new RuntimeException(msg, cause)).build();
     }
 
+    public static <T extends Exception> T error(Throwable cause, Class<T> klass, String fmt, Object... args) {
+        try {
+            String msg = Strings.format(fmt, args);
+            if (cause != null) {
+                Constructor<T> ctor = klass.getDeclaredConstructor(String.class, Throwable.class);
+                return ctor.newInstance(msg, cause);
+            } else {
+                Constructor<T> ctor = klass.getDeclaredConstructor(String.class);
+                return ctor.newInstance(msg);
+            }
+        } catch (Throwable thr) {
+            throw runtime(cause, "No se pudo crear instancia de error.");
+        }
+    }
+
     public static UnsupportedOperationException unsupported() {
         return unsupported("TODO");
     }
@@ -123,6 +139,19 @@ public class Errors {
     public static IOException io(Throwable cause, String fmt, Object... args) {
         String msg = Strings.format(fmt, args);
         return new IOException(msg, cause);
+    }
+
+    public static RuntimeException runtime() {
+        return runtime("I/O");
+    }
+
+    public static RuntimeException runtime(String fmt, Object... args) {
+        return runtime(null, fmt, args);
+    }
+
+    public static RuntimeException runtime(Throwable cause, String fmt, Object... args) {
+        String msg = Strings.format(fmt, args);
+        return new RuntimeException(msg, cause);
     }
 
     public static AppErrorException.Builder builder() {
