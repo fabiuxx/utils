@@ -34,8 +34,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import lombok.Data;
 import org.hibernate.SQLQuery;
-import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;

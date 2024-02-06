@@ -15,7 +15,7 @@ import fa.gs.utils.result.simple.Results;
  * @param <TEnum> Parametro de tipo.
  * @param <TDomain> Parametro de tipo.
  */
-public abstract class AbstractEnumeratiosDbValueGenerator<TEnum extends Enum<TEnum>, TDomain> extends DbValueGenerationTask {
+public abstract class AbstractEnumeratiosDbValueGenerator<TEnum extends Enum<TEnum>, TDomain> extends DbValueGenerationTask<Void> {
 
     private final Class<TEnum> enumClass;
 

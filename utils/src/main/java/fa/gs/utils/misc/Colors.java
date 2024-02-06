@@ -55,7 +55,7 @@ public class Colors {
         int b = (int) Math.floor(Math.min(255.0, color.getBlue() + 255.0 * percentage));
         return new Color(r, g, b);
     }
-    
+
     /**
      * "Aclara" un color en un factor dado.
      *
