@@ -58,12 +58,12 @@ public class LinkedList<T> {
             return null;
         }
     }
-    
+
     public T get(int pos) {
         LinkedList.Node<T> node = getNode(pos);
         return (node != null) ? node.data : null;
     }
-    
+
     public void add(T data) {
         LinkedList.Node<T> node = new LinkedList.Node<>(data);
         if (head == null) {
@@ -77,7 +77,7 @@ public class LinkedList<T> {
             size = size + 1;
         }
     }
-    
+
     public void push(T data) {
         add(data);
     }

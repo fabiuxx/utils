@@ -61,7 +61,8 @@ public class Adapters {
     }
 
     /**
-     * Permite adaptar una coleccion de objetos a una colección de elementos JSON.
+     * Permite adaptar una coleccion de objetos a una colección de elementos
+     * JSON.
      *
      * @param <TFrom> Parametro de tipo.
      * @param <TTo> Parametro de tipo.
