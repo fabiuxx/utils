@@ -95,7 +95,6 @@ public class Results {
         try {
             result.raise();
         } catch (Throwable thr) {
-            Errors.dump(System.err, result.failure().cause(), result.failure().message());
             throw thr;
         }
 
@@ -118,7 +117,6 @@ public class Results {
         try {
             result.raise();
         } catch (Throwable thr) {
-            Errors.dump(System.err, result.failure().cause(), result.failure().message());
             throw thr;
         }
 
@@ -140,7 +138,6 @@ public class Results {
         try {
             result.raise(true);
         } catch (Throwable thr) {
-            Errors.dump(System.err, result.failure().cause(), result.failure().message());
             throw thr;
         }
 

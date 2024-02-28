@@ -223,7 +223,6 @@ public class Jpa {
                         boolean ok = stmt.execute(statement);
                         retcodes.add(ok);
                     } catch (Throwable thr) {
-                        Errors.dump(System.err, thr);
                         retcodes.add(Boolean.FALSE);
                     }
                 }
